@@ -3,3 +3,7 @@ export { default as SearchScreen } from './SearchScreen';
 export { default as NotificationScreen } from './NotificationScreen';
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as CreateScreen } from './CreateScreen';
+export { default as LoginScreen } from './LoginScreen';
+export { default as SignUpScreen } from './SignUpScreen';
+export { default as ForgotPasswordScreen } from './ForgotPasswordScreen';
+export { default as OnboardingScreen } from './OnboardingScreen';

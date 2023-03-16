@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Navigation from './src/navigation/Navigation';
+import AppNavigation from './src/navigation/AppNavigation';
 
 function App(): JSX.Element {
   return (
-    <Navigation />
+    <AppNavigation />
   );
 }
 
