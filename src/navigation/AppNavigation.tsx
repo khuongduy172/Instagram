@@ -4,7 +4,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {useColorScheme} from 'react-native';
+import {StatusBar, useColorScheme} from 'react-native';
 import TabNavigation from './TabNavigation';
 import {Provider, useSelector} from 'react-redux';
 import store from '../redux/store';
@@ -30,6 +30,10 @@ const AppNavigation = () => {
   const scheme = useColorScheme();
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar
+        barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor={scheme === 'dark' ? '#000' : '#fff'}
+      />
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {isLoggedIn ? (
           <>
