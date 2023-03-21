@@ -12,7 +12,7 @@ import {
 import React, {useState, useRef} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postLogin, postRegister} from '../apis/userApi';
+import {postLogin, postRegister} from '../apis/authApi';
 import {setLoggedIn} from '../redux/authSlice';
 import {useDispatch} from 'react-redux';
 import {RadioButton} from 'react-native-paper';

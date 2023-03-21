@@ -2,7 +2,7 @@
 // //
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {useMutation, useQueryClient} from 'react-query';
-// import { postLogin } from '../../../apis/userApi';
+// import { postLogin } from '../../../apis/authApi';
 
 // const useLogin = () => {
 //   const queryClient = useQueryClient();
