@@ -7,16 +7,18 @@ import {
   TextInput,
   Alert,
   ToastAndroid,
+  useColorScheme,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postLogin, postRegister} from '../apis/userApi';
+import {postLogin, postRegister} from '../apis/authApi';
 import {setLoggedIn} from '../redux/authSlice';
 import {useDispatch} from 'react-redux';
 import {RadioButton} from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import useCustomTheme from '../theme/CustomTheme';
 
 const SignUpScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
@@ -86,12 +88,29 @@ const SignUpScreen = ({navigation}: any) => {
       navigation.goBack();
     }
   };
+
+  const theme = useCustomTheme();
+  const scheme = useColorScheme();
+
+  const instaLogo =
+    scheme === 'dark'
+      ? require('../assets/images/insta-dark.png')
+      : require('../assets/images/insta.png');
   return (
-    <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
+    <View
+      style={{
+        backgroundColor: theme.colors.background,
+        width: '100%',
+        height: '100%',
+      }}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{padding: 15}}>
-        <MaterialIcons name="arrow-back-ios" size={30} color="black" />
+        <MaterialIcons
+          name="arrow-back-ios"
+          size={30}
+          color={theme.backButton}
+        />
       </TouchableOpacity>
       <View
         style={{
@@ -102,7 +121,7 @@ const SignUpScreen = ({navigation}: any) => {
           marginBottom: 10,
         }}>
         <Image
-          source={require('../assets/images/insta.png')}
+          source={instaLogo}
           style={{
             width: 150,
             height: 150,
@@ -114,10 +133,10 @@ const SignUpScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
             style={{padding: 10, width: '100%'}}
@@ -137,10 +156,10 @@ const SignUpScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
             marginTop: 10,
           }}>
           <TextInput
@@ -164,10 +183,10 @@ const SignUpScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
             marginTop: 30,
           }}>
           <TextInput
@@ -191,10 +210,10 @@ const SignUpScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
             marginTop: 30,
           }}>
           <TextInput
@@ -208,10 +227,10 @@ const SignUpScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
             marginTop: 30,
           }}>
           <TextInput
@@ -249,7 +268,7 @@ const SignUpScreen = ({navigation}: any) => {
                 onPress={() => setIsMale(true)}
                 color="#3797EF"
               />
-              <Text>Male</Text>
+              <Text style={{color: theme.colors.text}}>Male</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <RadioButton
@@ -270,7 +289,7 @@ const SignUpScreen = ({navigation}: any) => {
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#3797EF',
+              backgroundColor: theme.colors.primary,
               opacity: 0.6,
               borderRadius: 5,
               marginTop: 25,
@@ -284,7 +303,7 @@ const SignUpScreen = ({navigation}: any) => {
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#3797EF',
+              backgroundColor: theme.colors.primary,
               borderRadius: 5,
               marginTop: 25,
             }}

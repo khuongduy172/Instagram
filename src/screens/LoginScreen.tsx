@@ -7,17 +7,27 @@ import {
   TextInput,
   Alert,
   ToastAndroid,
+  useColorScheme,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postLogin} from '../apis/userApi';
+import {postLogin} from '../apis/authApi';
 import {setLoggedIn} from '../redux/authSlice';
 import {useDispatch} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import useCustomTheme from '../theme/CustomTheme';
 
 const LoginScreen = ({navigation}: any) => {
-  const navigationRef = useRef();
+  const navigationRef: any = useRef();
+
+  const theme = useCustomTheme();
+  const scheme = useColorScheme();
+
+  const instaLogo =
+    scheme === 'dark'
+      ? require('../assets/images/insta-dark.png')
+      : require('../assets/images/insta.png');
 
   const dispatch = useDispatch();
 
@@ -89,11 +99,20 @@ const LoginScreen = ({navigation}: any) => {
     }
   };
   return (
-    <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
+    <View
+      style={{
+        backgroundColor: theme.colors.background,
+        width: '100%',
+        height: '100%',
+      }}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{padding: 15}}>
-        <MaterialIcons name="arrow-back-ios" size={30} color="black" />
+        <MaterialIcons
+          name="arrow-back-ios"
+          size={30}
+          color={theme.backButton}
+        />
       </TouchableOpacity>
       <View
         style={{
@@ -103,7 +122,7 @@ const LoginScreen = ({navigation}: any) => {
           paddingVertical: 50,
         }}>
         <Image
-          source={require('../assets/images/insta.png')}
+          source={instaLogo}
           style={{
             width: 150,
             height: 150,
@@ -115,15 +134,17 @@ const LoginScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{padding: 10, width: '100%', color: theme.colors.text}}
             placeholder="Phone number, username or email"
+            placeholderTextColor={theme.placeholderTextColor}
             value={email}
+            keyboardType="email-address"
             onChangeText={text => handleCheckEmail(text)}
           />
         </View>
@@ -138,14 +159,15 @@ const LoginScreen = ({navigation}: any) => {
           style={{
             borderWidth: 0.5,
             borderRadius: 5,
-            borderColor: '#e1e1e1',
+            borderColor: theme.borderColor,
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{padding: 10, width: '100%', color: theme.colors.text}}
             placeholder="Password"
+            placeholderTextColor={theme.placeholderTextColor}
             value={password}
             secureTextEntry={seePassword}
             onChangeText={text => setPassword(text)}
@@ -175,7 +197,7 @@ const LoginScreen = ({navigation}: any) => {
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#3797EF',
+              backgroundColor: theme.colors.primary,
               opacity: 0.6,
               borderRadius: 5,
               marginTop: 25,
@@ -189,7 +211,7 @@ const LoginScreen = ({navigation}: any) => {
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#3797EF',
+              backgroundColor: theme.colors.primary,
               borderRadius: 5,
               marginTop: 25,
             }}
