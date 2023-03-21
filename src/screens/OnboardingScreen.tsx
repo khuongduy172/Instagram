@@ -1,13 +1,26 @@
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 
 const OnboardingScreen = () => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
+  const theme = useTheme();
+  const scheme = useColorScheme();
+  const instaLogo =
+    scheme === 'dark'
+      ? require('../assets/images/insta-dark.png')
+      : require('../assets/images/insta.png');
   return (
     <View
       style={{
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.background,
         width: '100%',
         height: '100%',
       }}>
@@ -20,7 +33,7 @@ const OnboardingScreen = () => {
           alignContent: 'center',
         }}>
         <Image
-          source={require('../assets/images/insta.png')}
+          source={instaLogo}
           style={{
             width: 150,
             height: 150,
@@ -33,7 +46,7 @@ const OnboardingScreen = () => {
             padding: 10,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#3797EF',
+            backgroundColor: theme.colors.primary,
             borderRadius: 5,
             marginTop: 25,
           }}
@@ -79,6 +92,7 @@ const styles = StyleSheet.create({
   textBottom: {
     fontSize: 14,
     fontWeight: 'bold',
+    color: '#8e8e8e',
   },
   signUp: {
     color: '#3797EF',
