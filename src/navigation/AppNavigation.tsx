@@ -38,6 +38,9 @@ const AppNavigation = () => {
         {isLoggedIn ? (
           <>
             <Stack.Screen name="TabNavigation" component={TabNavigation} />
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
           </>
         ) : (
           <>

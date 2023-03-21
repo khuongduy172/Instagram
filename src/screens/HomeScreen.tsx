@@ -10,6 +10,7 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 
 import {
@@ -27,7 +28,8 @@ import {setLoggedIn} from '../redux/authSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import {useQuery} from 'react-query';
-import {postLogin} from '../apis/userApi';
+import {postLogin} from '../apis/authApi';
+import {useNavigation} from '@react-navigation/native';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -85,21 +87,20 @@ const GetPosts = () => {
 
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const navigation: any = useNavigation();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
   };
 
   const dispatch = useDispatch();
-  const navigationRef: any = useRef();
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('AccessToken');
     dispatch(setLoggedIn(false));
-    if (navigationRef.current) {
-      navigationRef.current.navigate('Onboarding');
-    }
+    navigation.navigate('Onboarding');
+    ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
   };
 
   return (

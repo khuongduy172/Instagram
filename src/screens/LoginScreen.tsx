@@ -89,10 +89,8 @@ const LoginScreen = ({navigation}: any) => {
         AsyncStorage.setItem('accessToken', res.token);
         console.log(res.token);
         dispatch(setLoggedIn(true));
-        if (navigationRef.current) {
-          ToastAndroid.show('Login successfully!', ToastAndroid.SHORT);
-          navigationRef.current.navigate('Home');
-        }
+        navigation.navigate('TabNavigation');
+        ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
       }
     } else {
       Alert.alert(checkPassword);
