@@ -25,6 +25,9 @@ import jwtDecode from 'jwt-decode';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLoggedIn} from '../redux/authSlice';
 import Feather from 'react-native-vector-icons/Feather';
+import PostLoader from '../components/loader/posts';
+import {useQuery} from 'react-query';
+import {postLogin} from '../apis/userApi';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -56,16 +59,40 @@ function Section({children, title}: SectionProps): JSX.Element {
   );
 }
 
+const GetPosts = () => {
+  const {isFetching, isError, isSuccess, data} = useQuery('posts', async () => {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+    if (res) {
+      return res.json();
+    }
+    throw new Error('Posts error');
+  });
+
+  if (isFetching) {
+    return <PostLoader />;
+  } else if (isError) {
+    console.log('error');
+  }
+  return (
+    <>
+      {isSuccess &&
+        data?.map((post: any, index: number) => (
+          <Text key={index}>{post.title}</Text>
+        ))}
+    </>
+  );
+};
+
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
   };
 
   const dispatch = useDispatch();
-  const navigationRef = useRef();
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const navigationRef: any = useRef();
+  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('AccessToken');
@@ -74,6 +101,7 @@ function HomeScreen(): JSX.Element {
       navigationRef.current.navigate('Onboarding');
     }
   };
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -83,30 +111,13 @@ function HomeScreen(): JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            {isLoggedIn && (
-              <TouchableOpacity onPress={handleSignOut}>
-                <Feather name="menu" style={{fontSize: 25}} />
-              </TouchableOpacity>
-            )}
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
+        {isLoggedIn && (
+          <TouchableOpacity onPress={handleSignOut}>
+            <Feather name="menu" style={{fontSize: 25}} />
+          </TouchableOpacity>
+        )}
       </ScrollView>
+      <GetPosts />
     </SafeAreaView>
   );
 }
