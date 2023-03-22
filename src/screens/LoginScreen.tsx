@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert,
   ToastAndroid,
   useColorScheme,
   ActivityIndicator,
@@ -61,16 +60,11 @@ const LoginScreen = ({ navigation }: any) => {
   });
 
   const handleLogin = async () => {
-    const checkPassword = null;
-    if (!checkPassword) {
-      const body = {
-        email: email,
-        password: password,
-      };
-      mutate(body);
-    } else {
-      Alert.alert(checkPassword);
-    }
+    const body = {
+      email: email,
+      password: password,
+    };
+    mutate(body);
   };
   return (
     <View
