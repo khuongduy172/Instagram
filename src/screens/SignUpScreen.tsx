@@ -142,6 +142,7 @@ const SignUpScreen = ({navigation}: any) => {
             style={{padding: 10, width: '100%'}}
             placeholder="Email"
             value={email}
+            keyboardType="email-address"
             onChangeText={text => handleCheckEmail(text)}
           />
         </View>
@@ -175,7 +176,7 @@ const SignUpScreen = ({navigation}: any) => {
             <Entypo
               name={seePassword ? 'eye' : 'eye-with-line'}
               size={15}
-              color="black"
+              color={theme.colors.text}
             />
           </TouchableOpacity>
         </View>
@@ -202,7 +203,7 @@ const SignUpScreen = ({navigation}: any) => {
             <Entypo
               name={seePassword ? 'eye' : 'eye-with-line'}
               size={15}
-              color="black"
+              color={theme.colors.text}
             />
           </TouchableOpacity>
         </View>

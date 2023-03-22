@@ -9,18 +9,16 @@ import {
   ToastAndroid,
   useColorScheme,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, { useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postLogin} from '../apis/authApi';
-import {setLoggedIn} from '../redux/authSlice';
-import {useDispatch} from 'react-redux';
+import { postLogin } from '../apis/authApi';
+import { setLoggedIn } from '../redux/authSlice';
+import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
 
-const LoginScreen = ({navigation}: any) => {
-  const navigationRef: any = useRef();
-
+const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
   const scheme = useColorScheme();
 
@@ -78,7 +76,7 @@ const LoginScreen = ({navigation}: any) => {
   };
 
   const handleLogin = async () => {
-    const checkPassword = checkPasswordValidity(password);
+    const checkPassword = null;
     if (!checkPassword) {
       const body = {
         email: email,
@@ -86,7 +84,7 @@ const LoginScreen = ({navigation}: any) => {
       };
       const res = await postLogin(body);
       if (res && res.token) {
-        AsyncStorage.setItem('accessToken', res.token);
+        await AsyncStorage.setItem('accessToken', res.token);
         console.log(res.token);
         dispatch(setLoggedIn(true));
         navigation.navigate('TabNavigation');
@@ -105,7 +103,7 @@ const LoginScreen = ({navigation}: any) => {
       }}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{padding: 15}}>
+        style={{ padding: 15 }}>
         <MaterialIcons
           name="arrow-back-ios"
           size={30}
@@ -138,7 +136,7 @@ const LoginScreen = ({navigation}: any) => {
             backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%', color: theme.colors.text}}
+            style={{ padding: 10, width: '100%', color: theme.colors.text }}
             placeholder="Phone number, username or email"
             placeholderTextColor={theme.placeholderTextColor}
             value={email}
@@ -147,11 +145,11 @@ const LoginScreen = ({navigation}: any) => {
           />
         </View>
         {checkEmailValid ? (
-          <Text style={{alignSelf: 'flex-end', color: 'red'}}>
+          <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
             Wrong format email
           </Text>
         ) : (
-          <Text style={{alignSelf: 'flex-end', color: 'red'}}></Text>
+          <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
         )}
         <View
           style={{
@@ -163,7 +161,7 @@ const LoginScreen = ({navigation}: any) => {
             backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%', color: theme.colors.text}}
+            style={{ padding: 10, width: '100%', color: theme.colors.text }}
             placeholder="Password"
             placeholderTextColor={theme.placeholderTextColor}
             value={password}
@@ -171,19 +169,23 @@ const LoginScreen = ({navigation}: any) => {
             onChangeText={text => setPassword(text)}
           />
           <TouchableOpacity
-            style={{position: 'absolute', right: 0, padding: 10}}
+            style={{ position: 'absolute', right: 0, padding: 10 }}
             onPress={() => setSeePassword(!seePassword)}>
             <Entypo
               name={seePassword ? 'eye' : 'eye-with-line'}
               size={15}
-              color="black"
+              color={theme.colors.text}
             />
           </TouchableOpacity>
         </View>
 
-        <View style={{justifyContent: 'flex-end'}}>
+        <View style={{ justifyContent: 'flex-end' }}>
           <Text
-            style={{textAlign: 'right', color: '#3797EF', paddingVertical: 15}}>
+            style={{
+              textAlign: 'right',
+              color: '#3797EF',
+              paddingVertical: 15,
+            }}>
             Forgot password?
           </Text>
         </View>
@@ -201,7 +203,7 @@ const LoginScreen = ({navigation}: any) => {
               marginTop: 25,
             }}
             onPress={handleLogin}>
-            <Text style={{color: 'white', fontWeight: '700'}}>Log In</Text>
+            <Text style={{ color: 'white', fontWeight: '700' }}>Log In</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -214,7 +216,7 @@ const LoginScreen = ({navigation}: any) => {
               marginTop: 25,
             }}
             onPress={handleLogin}>
-            <Text style={{color: 'white', fontWeight: '700'}}>Log In</Text>
+            <Text style={{ color: 'white', fontWeight: '700' }}>Log In</Text>
           </TouchableOpacity>
         )}
         <View style={styles.hr}>

@@ -1,17 +1,17 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {StatusBar, useColorScheme} from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import TabNavigation from './TabNavigation';
-import {Provider, useSelector} from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from '../redux/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setLoggedIn} from '../redux/authSlice';
-import {LoginScreen, SignUpScreen, OnboardingScreen} from '../screens';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { setLoggedIn } from '../redux/authSlice';
+import { LoginScreen, SignUpScreen, OnboardingScreen } from '../screens';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -34,13 +34,10 @@ const AppNavigation = () => {
         barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor={scheme === 'dark' ? '#000' : '#fff'}
       />
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
           <>
             <Stack.Screen name="TabNavigation" component={TabNavigation} />
-            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
           </>
         ) : (
           <>
