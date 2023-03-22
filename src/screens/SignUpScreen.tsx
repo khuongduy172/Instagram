@@ -5,22 +5,19 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert,
   ToastAndroid,
   useColorScheme,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, { useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postLogin, postRegister} from '../apis/authApi';
-import {setLoggedIn} from '../redux/authSlice';
-import {useDispatch} from 'react-redux';
-import {RadioButton} from 'react-native-paper';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { postRegister } from '../apis/authApi';
+import { RadioButton } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
+import { useMutation } from 'react-query';
 
-const SignUpScreen = ({navigation}: any) => {
+const SignUpScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -72,6 +69,13 @@ const SignUpScreen = ({navigation}: any) => {
     return null;
   };
 
+  const { mutate, isLoading } = useMutation(postRegister, {
+    onSuccess: data => {
+      ToastAndroid.show('Registered successfully!', ToastAndroid.SHORT);
+      navigation.goBack();
+    },
+  });
+
   const handleSignUp = async () => {
     const checkPassword = checkPasswordValidity(password);
     if (!checkPassword) {
@@ -83,9 +87,7 @@ const SignUpScreen = ({navigation}: any) => {
         name: name,
         isMale: isMale,
       };
-      const res = await postRegister(body);
-      ToastAndroid.show('Registered successfully!', ToastAndroid.SHORT);
-      navigation.goBack();
+      mutate(body);
     }
   };
 
@@ -105,7 +107,7 @@ const SignUpScreen = ({navigation}: any) => {
       }}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{padding: 15}}>
+        style={{ padding: 15 }}>
         <MaterialIcons
           name="arrow-back-ios"
           size={30}
@@ -139,7 +141,7 @@ const SignUpScreen = ({navigation}: any) => {
             backgroundColor: theme.backgroundColor,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{ padding: 10, width: '100%' }}
             placeholder="Email"
             value={email}
             keyboardType="email-address"
@@ -147,11 +149,11 @@ const SignUpScreen = ({navigation}: any) => {
           />
         </View>
         {checkEmailValid ? (
-          <Text style={{alignSelf: 'flex-end', color: 'red'}}>
+          <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
             Wrong format email
           </Text>
         ) : (
-          <Text style={{alignSelf: 'flex-end', color: 'red'}}></Text>
+          <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
         )}
         <View
           style={{
@@ -164,14 +166,14 @@ const SignUpScreen = ({navigation}: any) => {
             marginTop: 10,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{ padding: 10, width: '100%' }}
             placeholder="Password"
             value={password}
             secureTextEntry={seePassword}
             onChangeText={text => setPassword(text)}
           />
           <TouchableOpacity
-            style={{position: 'absolute', right: 0, padding: 10}}
+            style={{ position: 'absolute', right: 0, padding: 10 }}
             onPress={() => setSeePassword(!seePassword)}>
             <Entypo
               name={seePassword ? 'eye' : 'eye-with-line'}
@@ -191,14 +193,14 @@ const SignUpScreen = ({navigation}: any) => {
             marginTop: 30,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{ padding: 10, width: '100%' }}
             placeholder="Confirm Password"
             value={passwordConfirm}
             secureTextEntry={seePassword}
             onChangeText={text => setPasswordConfirm(text)}
           />
           <TouchableOpacity
-            style={{position: 'absolute', right: 0, padding: 10}}
+            style={{ position: 'absolute', right: 0, padding: 10 }}
             onPress={() => setSeePassword(!seePassword)}>
             <Entypo
               name={seePassword ? 'eye' : 'eye-with-line'}
@@ -218,7 +220,7 @@ const SignUpScreen = ({navigation}: any) => {
             marginTop: 30,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{ padding: 10, width: '100%' }}
             placeholder="Your name"
             value={name}
             onChangeText={text => setName(text)}
@@ -235,7 +237,7 @@ const SignUpScreen = ({navigation}: any) => {
             marginTop: 30,
           }}>
           <TextInput
-            style={{padding: 10, width: '100%'}}
+            style={{ padding: 10, width: '100%' }}
             placeholder="Username"
             value={username}
             onChangeText={text => setUsername(text)}
@@ -248,7 +250,7 @@ const SignUpScreen = ({navigation}: any) => {
             alignItems: 'center',
             marginTop: 30,
           }}>
-          <Text style={{fontWeight: 'bold', fontSize: 14, paddingRight: 30}}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14, paddingRight: 30 }}>
             Gender
           </Text>
           <View
@@ -269,9 +271,9 @@ const SignUpScreen = ({navigation}: any) => {
                 onPress={() => setIsMale(true)}
                 color="#3797EF"
               />
-              <Text style={{color: theme.colors.text}}>Male</Text>
+              <Text style={{ color: theme.colors.text }}>Male</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <RadioButton
                 value="Female"
                 status={isMale === false ? 'checked' : 'unchecked'}
@@ -296,10 +298,11 @@ const SignUpScreen = ({navigation}: any) => {
               marginTop: 25,
             }}
             onPress={handleSignUp}>
-            <Text style={{color: 'white', fontWeight: '700'}}>Sign Up</Text>
+            <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
+            disabled={isLoading}
             style={{
               padding: 10,
               alignItems: 'center',
@@ -309,7 +312,11 @@ const SignUpScreen = ({navigation}: any) => {
               marginTop: 25,
             }}
             onPress={handleSignUp}>
-            <Text style={{color: 'white', fontWeight: '700'}}>Sign Up</Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
+            )}
           </TouchableOpacity>
         )}
       </View>
