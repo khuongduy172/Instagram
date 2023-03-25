@@ -8,6 +8,7 @@ import {
   ToastAndroid,
   useColorScheme,
   ActivityIndicator,
+  Button,
 } from 'react-native';
 import React, { useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -18,7 +19,11 @@ import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
 import { useMutation } from 'react-query';
-import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
+import {
+  LoginButton,
+  AccessToken,
+  LoginManager,
+} from 'react-native-fbsdk-next';
 
 const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
@@ -59,6 +64,32 @@ const LoginScreen = ({ navigation }: any) => {
       }
     },
   });
+
+  const handleFacebookLogin = async () => {
+    await LoginManager.logInWithPermissions([
+      'email',
+      'public_profile',
+      'user_friends',
+    ]).then(
+      function (result: any) {
+        if (result.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+          AccessToken.getCurrentAccessToken().then((data: any) => {
+            console.log(data.accessToken.toString());
+          });
+          dispatch(setLoggedIn(true));
+          console.log(
+            'Login success with permissions: ' +
+              result.grantedPermissions.toString(),
+          );
+        }
+      },
+      function (error) {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  };
 
   const handleLogin = async () => {
     const body = {
@@ -205,22 +236,12 @@ const LoginScreen = ({ navigation }: any) => {
 
         <View style={styles.facebookContainer}>
           <View style={styles.facebook}>
-            {/* <Entypo name="facebook" size={20} color="#3797EF" />
-            <Text style={styles.facebookText}>Log In with Facebook</Text> */}
-            <LoginButton
-              onLoginFinished={(error, result: any) => {
-                if (error) {
-                  console.log('login has error: ' + error);
-                } else if (result.isCancelled) {
-                  console.log('login is cancelled.');
-                } else {
-                  AccessToken.getCurrentAccessToken().then((data: any) => {
-                    console.log(data.accessToken.toString());
-                  });
-                }
-              }}
-              onLogoutFinished={() => console.log('logout.')}
-            />
+            <TouchableOpacity
+              onPress={handleFacebookLogin}
+              style={{ flexDirection: 'row' }}>
+              <Entypo name="facebook" size={20} color="#3797EF" />
+              <Text style={styles.facebookText}>Log In with Facebook</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
