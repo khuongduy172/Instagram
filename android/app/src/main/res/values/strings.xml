@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Instagram</string>
+    <string name="facebook_app_id">240696308444720</string>
+    <string name="facebook_client_token">9f7bcee7fe11516e8b5bcab3a6afc066</string>
 </resources>

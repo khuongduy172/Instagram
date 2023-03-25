@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
 import { useMutation } from 'react-query';
+import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
 
 const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
@@ -204,8 +205,22 @@ const LoginScreen = ({ navigation }: any) => {
 
         <View style={styles.facebookContainer}>
           <View style={styles.facebook}>
-            <Entypo name="facebook" size={20} color="#3797EF" />
-            <Text style={styles.facebookText}>Log In with Facebook</Text>
+            {/* <Entypo name="facebook" size={20} color="#3797EF" />
+            <Text style={styles.facebookText}>Log In with Facebook</Text> */}
+            <LoginButton
+              onLoginFinished={(error, result: any) => {
+                if (error) {
+                  console.log('login has error: ' + error);
+                } else if (result.isCancelled) {
+                  console.log('login is cancelled.');
+                } else {
+                  AccessToken.getCurrentAccessToken().then((data: any) => {
+                    console.log(data.accessToken.toString());
+                  });
+                }
+              }}
+              onLogoutFinished={() => console.log('logout.')}
+            />
           </View>
         </View>
       </View>
