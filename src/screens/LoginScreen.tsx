@@ -59,7 +59,6 @@ const LoginScreen = ({ navigation }: any) => {
         await AsyncStorage.setItem('accessToken', data.token);
         console.log(data.token);
         dispatch(setLoggedIn(true));
-        navigation.navigate('TabNavigation');
         ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
       }
     },
