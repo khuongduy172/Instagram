@@ -8,36 +8,52 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import Feather from 'react-native-vector-icons/Feather';
 
 const StoryScreen = ({ route, navigation }: any) => {
-  const [imageWidth, setImageWidth] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
-
   const { name, image } = route.params;
-  const theme = useCustomTheme();
+  const width = Dimensions.get('screen').width;
+  const height = Dimensions.get('screen').height;
+  const [current, setCurrent] = useState({ data: image[0], index: 0 });
 
-  const [progress, setProgress] = useState(new Animated.Value(0));
+  const theme = useCustomTheme();
 
   useEffect(() => {
     let timer = setTimeout(() => {
-      navigation.goBack();
-    }, 5000);
+      if (current.index === image.length - 1) {
+        navigation.goBack();
+      }
+      setCurrent({
+        ...current,
+        index: current.index + 1,
+        data: image[current.index + 1],
+      });
+    }, 3000);
 
-    Animated.timing(progress, {
-      toValue: 5,
-      duration: 5000,
-      useNativeDriver: false,
-    }).start();
     return () => clearTimeout(timer);
-  }, []);
+  }, [current]);
 
-  const progressAnimation = progress.interpolate({
-    inputRange: [0, 5],
-    outputRange: ['0%', '100%'],
-  });
+  const ProgressView = () => {
+    const progressAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+      Animated.timing(progressAnim, {
+        toValue: (width - 30) / image.length,
+        duration: 3000,
+        useNativeDriver: false,
+      }).start();
+    }, [progressAnim]);
+
+    return (
+      <Animated.Text
+        style={{
+          backgroundColor: '#fff',
+          width: progressAnim,
+        }}></Animated.Text>
+    );
+  };
   return (
     <View
       style={{
@@ -47,22 +63,22 @@ const StoryScreen = ({ route, navigation }: any) => {
         position: 'relative',
       }}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
-      <View
-        style={{
-          height: 1.5,
-          width: '95%',
-          backgroundColor: 'gray',
-          position: 'absolute',
-          top: 10,
-          left: 8,
-        }}>
-        <Animated.View
-          style={{
-            height: '100%',
-            backgroundColor: 'white',
-            width: progressAnimation,
-          }}></Animated.View>
+      <View style={{ flexDirection: 'row', width: '100%' }}>
+        {image.map((item: any, index: number) => (
+          <View
+            key={index}
+            style={{
+              height: 1.5,
+              backgroundColor: '#bbbbbb',
+              flex: 1,
+              top: 10,
+              marginHorizontal: 4,
+            }}>
+            {current.index === index ? <ProgressView /> : null}
+          </View>
+        ))}
       </View>
+
       <View
         style={{
           padding: 15,
@@ -112,7 +128,7 @@ const StoryScreen = ({ route, navigation }: any) => {
       </View>
 
       <Image
-        source={image}
+        source={current.data}
         style={{
           position: 'absolute',
           width: '100%',
@@ -120,6 +136,41 @@ const StoryScreen = ({ route, navigation }: any) => {
           zIndex: -1,
         }}
       />
+      <TouchableOpacity
+        onPress={() => {
+          if (current.index === 0) {
+            return;
+          }
+          setCurrent({
+            ...current,
+            index: current.index - 1,
+            data: image[current.index - 1],
+          });
+        }}
+        style={{
+          position: 'absolute',
+          width: width / 2,
+          height: height * 0.9,
+          bottom: 0,
+        }}></TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (current.index === image.length - 1) {
+            navigation.goBack();
+          }
+          setCurrent({
+            ...current,
+            index: current.index + 1,
+            data: image[current.index + 1],
+          });
+        }}
+        style={{
+          position: 'absolute',
+          width: width / 2,
+          height: height * 0.9,
+          bottom: 0,
+          right: 0,
+        }}></TouchableOpacity>
       <View
         style={{
           position: 'absolute',

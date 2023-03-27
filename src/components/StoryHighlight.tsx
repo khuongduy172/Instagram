@@ -12,37 +12,73 @@ const StoryHighlight = () => {
       id: 1,
       name: 'anthony.haidang',
       title: 'sand..',
-      image: require('../assets/images/h1.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h1.jpg'),
+        require('../assets/images/h2.jpg'),
+        require('../assets/images/h3.jpg'),
+        require('../assets/images/h4.jpg'),
+      ],
     },
     {
       id: 0,
       name: 'anthony.haidang',
       title: 'Winter is comming <3',
-      image: require('../assets/images/h2.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h5.jpg'),
+        require('../assets/images/h6.jpg'),
+        require('../assets/images/h1.jpg'),
+        require('../assets/images/h2.jpg'),
+      ],
     },
     {
       id: 0,
       name: 'anthony.haidang',
       title: 'Festival ^^',
-      image: require('../assets/images/h3.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h3.jpg'),
+        require('../assets/images/h4.jpg'),
+        require('../assets/images/h5.jpg'),
+        require('../assets/images/h6.jpg'),
+      ],
     },
     {
       id: 0,
       name: 'anthony.haidang',
       title: 'Raining...',
-      image: require('../assets/images/h4.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h1.jpg'),
+        require('../assets/images/h2.jpg'),
+        require('../assets/images/h3.jpg'),
+        require('../assets/images/h4.jpg'),
+      ],
     },
     {
       id: 0,
       name: 'anthony.haidang',
       title: 'High from sky ^^',
-      image: require('../assets/images/h5.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h1.jpg'),
+        require('../assets/images/h2.jpg'),
+        require('../assets/images/h3.jpg'),
+        require('../assets/images/h4.jpg'),
+      ],
     },
     {
       id: 0,
       name: 'anthony.haidang',
       title: 'Buy myself flowers',
-      image: require('../assets/images/h6.jpg'),
+      imageData: [
+        //require image as array
+        require('../assets/images/h1.jpg'),
+        require('../assets/images/h2.jpg'),
+        require('../assets/images/h3.jpg'),
+        require('../assets/images/h4.jpg'),
+      ],
     },
   ];
   return (
@@ -54,7 +90,7 @@ const StoryHighlight = () => {
             onPress={() =>
               navigation.push('StoryScreen', {
                 name: data.name,
-                image: data.image,
+                image: data.imageData,
               })
             }>
             <View
@@ -87,7 +123,7 @@ const StoryHighlight = () => {
                     alignItems: 'center',
                   }}>
                   <Image
-                    source={data.image}
+                    source={data.imageData[0]}
                     style={{
                       resizeMode: 'cover',
                       width: '100%',
