@@ -12,12 +12,13 @@ import {
 import React, { useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { postLogin } from '../apis/authApi';
+import { postLogin, postExternalLogin } from '../apis/authApi';
 import { setLoggedIn } from '../redux/authSlice';
 import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
 import { useMutation } from 'react-query';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 
 const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
@@ -58,6 +59,48 @@ const LoginScreen = ({ navigation }: any) => {
       }
     },
   });
+
+  const { mutate: facebookLogin, isLoading: facebookIsLoading } = useMutation(
+    postExternalLogin,
+    {
+      onSuccess: async data => {
+        if (data && data.token) {
+          await AsyncStorage.setItem('accessToken', data.token);
+          dispatch(setLoggedIn(true));
+          ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
+        }
+      },
+    },
+  );
+
+  const handleFacebookLogin = async () => {
+    await LoginManager.logInWithPermissions([
+      'email',
+      'public_profile',
+      'user_friends',
+    ]).then(
+      function (result: any) {
+        if (result.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+          AccessToken.getCurrentAccessToken().then((data: any) => {
+            console.log(data.accessToken.toString());
+            facebookLogin({
+              idToken: data.accessToken.toString(),
+              provider: 'Facebook',
+            });
+          });
+          console.log(
+            'Login success with permissions: ' +
+              result.grantedPermissions.toString(),
+          );
+        }
+      },
+      function (error) {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  };
 
   const handleLogin = async () => {
     const body = {
@@ -175,7 +218,11 @@ const LoginScreen = ({ navigation }: any) => {
               marginTop: 25,
             }}
             onPress={handleLogin}>
-            <Text style={{ color: 'white', fontWeight: '700' }}>Log In</Text>
+            {facebookIsLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={{ color: 'white', fontWeight: '700' }}>Log In</Text>
+            )}
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -204,8 +251,12 @@ const LoginScreen = ({ navigation }: any) => {
 
         <View style={styles.facebookContainer}>
           <View style={styles.facebook}>
-            <Entypo name="facebook" size={20} color="#3797EF" />
-            <Text style={styles.facebookText}>Log In with Facebook</Text>
+            <TouchableOpacity
+              onPress={handleFacebookLogin}
+              style={{ flexDirection: 'row' }}>
+              <Entypo name="facebook" size={20} color="#3797EF" />
+              <Text style={styles.facebookText}>Log In with Facebook</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
