@@ -18,8 +18,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import { useQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
-import { LoginManager, Profile } from 'react-native-fbsdk-next';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 const GetPosts = () => {
   const { isFetching, isError, isSuccess, data } = useQuery(
@@ -66,27 +64,6 @@ function HomeScreen(): JSX.Element {
     ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
   };
 
-  const handleFBSignOut = async () => {
-    await LoginManager.logOut();
-    dispatch(setLoggedIn(false));
-    ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
-    navigation.navigate('Onboarding');
-  };
-
-  const currentProfile = Profile.getCurrentProfile().then(function (
-    currentProfile,
-  ) {
-    if (currentProfile) {
-      console.log(
-        'The current logged user is: ' +
-          currentProfile.name +
-          '. His profile id is: ' +
-          currentProfile.userID,
-      );
-    }
-    return currentProfile;
-  });
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <ScrollView
@@ -97,27 +74,10 @@ function HomeScreen(): JSX.Element {
             <Feather name="menu" style={{ fontSize: 25 }} />
           </TouchableOpacity>
         )}
-        {isLoggedIn && (
-          <TouchableOpacity
-            onPress={handleFBSignOut}
-            style={{ flexDirection: 'row' }}>
-            <Entypo name="facebook" size={20} color="#3797EF" />
-            <Text style={styles.facebookText}>Sign Out</Text>
-          </TouchableOpacity>
-        )}
       </ScrollView>
       <GetPosts />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  facebookText: {
-    color: '#3797EF',
-    paddingHorizontal: 10,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-});
 
 export default HomeScreen;
