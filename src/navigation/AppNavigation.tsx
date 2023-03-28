@@ -15,6 +15,7 @@ import {
   SignUpScreen,
   OnboardingScreen,
   StoryScreen,
+  EditProfileScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -44,6 +45,7 @@ const AppNavigation = () => {
           <>
             <Stack.Screen name="TabNavigation" component={TabNavigation} />
             <Stack.Screen name="StoryScreen" component={StoryScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           </>
         ) : (
           <>

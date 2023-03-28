@@ -22,7 +22,7 @@ const ProfileIntro = ({
         }}>
         <View style={{ alignItems: 'flex-start' }}>
           <Image
-            source={profileImage}
+            source={{ uri: profileImage }}
             style={{
               resizeMode: 'cover',
               width: 80,

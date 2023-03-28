@@ -4,14 +4,20 @@ import useCustomTheme from '../theme/CustomTheme';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ProfileButton = ({ id, name, accountName, profileImage }: any) => {
+const ProfileButton = ({
+  owner,
+  name,
+  accountName,
+  profileImage,
+  status,
+}: any) => {
   const theme = useCustomTheme();
   const scheme = useColorScheme();
   const navigation: any = useNavigation();
   const [isFollow, setIsFollow] = useState(false);
   return (
     <View style={{ paddingVertical: 10 }}>
-      {id === 0 ? (
+      {owner === 0 ? (
         <View
           style={{
             width: '100%',
@@ -27,6 +33,7 @@ const ProfileButton = ({ id, name, accountName, profileImage }: any) => {
                 name: name,
                 accountName: accountName,
                 profileImage: profileImage,
+                status: status,
               })
             }>
             <View
@@ -56,6 +63,7 @@ const ProfileButton = ({ id, name, accountName, profileImage }: any) => {
                 name: name,
                 accountName: accountName,
                 profileImage: profileImage,
+                status: status,
               })
             }>
             <View
@@ -141,6 +149,7 @@ const ProfileButton = ({ id, name, accountName, profileImage }: any) => {
                 name: name,
                 accountName: accountName,
                 profileImage: profileImage,
+                status: status,
               })
             }>
             <View

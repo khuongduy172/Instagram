@@ -13,6 +13,7 @@ const darkColor = {
   mainButtonColor: '#3493d9',
   disabledIcon: 'gray',
   storyBackground: '#000000',
+  textSecond: '#ffffff',
 };
 
 const lightColor = {
@@ -27,6 +28,7 @@ const lightColor = {
   mainButtonColor: '#3493d9',
   disabledIcon: 'gray',
   storyBackground: '#000000',
+  textSecond: '#a0a0a0',
 };
 
 const useCustomTheme = () => {

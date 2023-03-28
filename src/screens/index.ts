@@ -8,3 +8,4 @@ export { default as SignUpScreen } from './SignUpScreen';
 export { default as ForgotPasswordScreen } from './ForgotPasswordScreen';
 export { default as OnboardingScreen } from './OnboardingScreen';
 export { default as StoryScreen } from './StoryScreen';
+export { default as EditProfileScreen } from './EditProfileScreen';
