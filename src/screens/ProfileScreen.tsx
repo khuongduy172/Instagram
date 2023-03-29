@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileIntro from '../components/ProfileIntro';
@@ -8,17 +8,26 @@ import StoryHighlight from '../components/StoryHighlight';
 import ProfileBottomTabView from '../components/ProfileBottomTabView';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface ErrorMessage {
   message: string;
 }
 
+export const useRefetchOnFocus = (refetch: () => void) => {
+  useFocusEffect(() => {
+    refetch();
+  });
+};
+
 const ProfileScreen = () => {
   const theme = useCustomTheme();
-  const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
-    'userOwner',
-    getUserOwner,
-  );
+
+  const { data, isLoading, error, refetch } = useQuery<
+    UserResponse,
+    ErrorMessage
+  >('userOwner', getUserOwner);
+  useRefetchOnFocus(refetch);
   if (isLoading) {
     return <Text>Loading...</Text>;
   }

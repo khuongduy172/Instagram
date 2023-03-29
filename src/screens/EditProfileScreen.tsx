@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -12,15 +13,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionics from 'react-native-vector-icons/Ionicons';
-import { editUserOwner } from '../apis/userApi';
+import { editUserOwner, updateUserImage } from '../apis/userApi';
 import { useMutation } from 'react-query';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const EditProfileScreen = ({ route, navigation }: any) => {
   const { name, accountName, profileImage, status } = route.params;
   const [newName, setNewName] = useState(name);
   const [newAccountName, setNewAccountName] = useState(accountName);
   const [newStatus, setNewStatus] = useState(status);
-  const [newProfileImage, setNewProfileImage] = useState(profileImage);
+  const [newProfileImage, setNewProfileImage] = useState<any>({});
 
   const theme = useCustomTheme();
   const ToastMessage = () => {
@@ -39,10 +41,55 @@ const EditProfileScreen = ({ route, navigation }: any) => {
       name: newName,
       accountName: newAccountName,
       status: newStatus,
-      profileImage: newProfileImage,
     };
     mutate(data);
   };
+
+  const chooseFile = (type: any) => {
+    const options: any = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response: any) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        Alert.alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        Alert.alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        Alert.alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        Alert.alert(response.errorMessage);
+        return;
+      }
+      setNewProfileImage(response);
+    });
+  };
+
+  const handleChangeAvatar = async () => {
+    let formData = new FormData();
+
+    formData.append('File', {
+      name: newProfileImage.assets[0].fileName,
+      type: newProfileImage.assets[0].type,
+      uri: newProfileImage.assets[0].uri,
+      fileSize: newProfileImage.assets[0].fileSize,
+      height: newProfileImage.assets[0].height,
+      width: newProfileImage.assets[0].width,
+    });
+
+    console.log(formData);
+
+    navigation.goBack();
+    await updateUserImage(formData);
+  };
+
   return (
     <View
       style={{
@@ -67,7 +114,7 @@ const EditProfileScreen = ({ route, navigation }: any) => {
         <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.text }}>
           Edit Profile
         </Text>
-        <TouchableOpacity disabled={isLoading} onPress={handleEditUser}>
+        <TouchableOpacity disabled={isLoading} onPress={handleChangeAvatar}>
           <Feather
             name="check"
             style={{ fontSize: 30, color: theme.mainButtonColor }}
@@ -77,7 +124,13 @@ const EditProfileScreen = ({ route, navigation }: any) => {
       <View style={{ padding: 20, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
-            source={{ uri: profileImage }}
+            source={
+              newProfileImage &&
+              newProfileImage.assets &&
+              newProfileImage.assets[0]
+                ? { uri: newProfileImage.assets[0].uri }
+                : { uri: profileImage }
+            }
             style={{
               width: 70,
               height: 70,
@@ -102,14 +155,16 @@ const EditProfileScreen = ({ route, navigation }: any) => {
             />
           </View>
         </View>
-        <Text
-          style={{
-            color: theme.mainButtonColor,
-            fontWeight: 'bold',
-            paddingTop: 20,
-          }}>
-          Change profile photo or avatar
-        </Text>
+        <TouchableOpacity onPress={() => chooseFile('photo')}>
+          <Text
+            style={{
+              color: theme.mainButtonColor,
+              fontWeight: 'bold',
+              paddingTop: 20,
+            }}>
+            Change profile photo or avatar
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={{ paddingHorizontal: 15 }}>
         <View style={{ paddingTop: 10, paddingBottom: 5 }}>

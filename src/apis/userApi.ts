@@ -33,5 +33,13 @@ const editUserOwner = async (data: any) => {
   return await axiosInstance.post<UserEdit, any>('/User', data);
 };
 
-export { getUserOwner, editUserOwner };
+const updateUserImage = async (data: any) => {
+  return await axiosInstance.post('/User/avatar', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export { getUserOwner, editUserOwner, updateUserImage };
 export type { UserResponse };
