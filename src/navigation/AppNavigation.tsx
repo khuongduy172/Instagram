@@ -24,7 +24,7 @@ const AppNavigation = () => {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const checkLoginStatus = async () => {
-    const token = await AsyncStorage.getItem('AccessToken');
+    const token = await AsyncStorage.getItem('accessToken');
     if (token) {
       store.dispatch(setLoggedIn(true));
     }

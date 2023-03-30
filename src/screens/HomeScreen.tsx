@@ -58,7 +58,7 @@ function HomeScreen(): JSX.Element {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const handleSignOut = async () => {
-    await AsyncStorage.removeItem('AccessToken');
+    await AsyncStorage.removeItem('accessToken');
     dispatch(setLoggedIn(false));
     navigation.navigate('Onboarding');
     ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);

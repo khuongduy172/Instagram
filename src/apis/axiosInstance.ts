@@ -24,7 +24,35 @@ axiosInstance.interceptors.response.use(
   function (response) {
     return response.data;
   },
-  function (error) {
+  async function (error) {
+    console.log(error);
+    const config = error?.config;
+
+    if (error?.response?.status === 401 && !config?.sent) {
+      config.sent = true;
+
+      const body = {
+        token: await AsyncStorage.getItem('accessToken'),
+        refreshToken: await AsyncStorage.getItem('refreshToken'),
+      };
+      const result = await axiosInstance.post<any, AuthResponse>(
+        '/Auth/refresh',
+        body,
+      );
+      if (result?.token) {
+        await AsyncStorage.setItem('accessToken', result.token);
+        await AsyncStorage.setItem('refreshToken', result.refreshToken);
+        config.headers = {
+          ...config.headers,
+          authorization: `Bearer ${result?.token}`,
+        };
+        console.log('refetch');
+        return axios(config);
+      } else {
+        await AsyncStorage.removeItem('accessToken');
+        await AsyncStorage.removeItem('refreshToken');
+      }
+    }
     return Promise.reject(error);
   },
 );
