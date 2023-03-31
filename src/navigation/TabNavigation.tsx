@@ -91,7 +91,6 @@ function TabNavigation() {
               let iconName: any;
               if (route.name === 'Home') {
                 iconName = focused ? 'home' : 'home';
-                size = focused ? size + 8 : size + 2;
               } else if (route.name === 'Search') {
                 iconName = focused ? 'search' : 'ios-search-outline';
               } else if (route.name === 'Camera') {
