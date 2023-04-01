@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthResponse } from './authApi';
 
 const axiosInstance = axios.create({
   // baseURL: 'https://dfd6-113-161-77-200.ap.ngrok.io/api',
