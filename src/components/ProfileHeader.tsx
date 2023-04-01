@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import useCustomTheme from '../theme/CustomTheme';
 
-const ProfileHeader = ({ accountName }: any) => {
+const ProfileHeader = ({ accountName, toggleModal }: any) => {
   const theme = useCustomTheme();
   return (
     <View
@@ -29,12 +29,14 @@ const ProfileHeader = ({ accountName }: any) => {
           justifyContent: 'center',
         }}>
         <FontAwesome name="plus-square-o" size={25} color={theme.text} />
-        <SimpleLineIcons
-          name="menu"
-          size={25}
-          color={theme.text}
-          style={{ paddingLeft: 25 }}
-        />
+        <TouchableOpacity onPress={toggleModal}>
+          <SimpleLineIcons
+            name="menu"
+            size={25}
+            color={theme.text}
+            style={{ paddingLeft: 25 }}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

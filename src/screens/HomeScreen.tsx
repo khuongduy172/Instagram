@@ -11,9 +11,6 @@ import {
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoggedIn } from '../redux/authSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import { useQuery } from 'react-query';
@@ -54,27 +51,11 @@ function HomeScreen(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
   };
 
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-
-  const handleSignOut = async () => {
-    await AsyncStorage.removeItem('accessToken');
-    dispatch(setLoggedIn(false));
-    navigation.navigate('Onboarding');
-    ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
-  };
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        {isLoggedIn && (
-          <TouchableOpacity onPress={handleSignOut}>
-            <Feather name="menu" style={{ fontSize: 25 }} />
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+        style={backgroundStyle}></ScrollView>
       <GetPosts />
     </SafeAreaView>
   );

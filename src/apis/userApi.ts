@@ -30,7 +30,7 @@ const getUserOwner = async () => {
 };
 
 const editUserOwner = async (data: any) => {
-  return await axiosInstance.post<UserEdit, any>('/User', data);
+  return await axiosInstance.put<UserEdit, any>('/User', data);
 };
 
 const updateUserImage = async (data: any) => {

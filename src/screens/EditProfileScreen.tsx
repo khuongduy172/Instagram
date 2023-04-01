@@ -36,11 +36,11 @@ const EditProfileScreen = ({ route, navigation }: any) => {
     },
   });
 
-  const handleEditUser = async () => {
+  const handleEditUser = () => {
     const data = {
       name: newName,
-      accountName: newAccountName,
-      status: newStatus,
+      username: newAccountName,
+      bio: newStatus,
     };
     mutate(data);
   };
@@ -114,7 +114,18 @@ const EditProfileScreen = ({ route, navigation }: any) => {
         <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.text }}>
           Edit Profile
         </Text>
-        <TouchableOpacity disabled={isLoading} onPress={handleChangeAvatar}>
+        <TouchableOpacity
+          disabled={isLoading}
+          onPress={() => {
+            if (
+              newProfileImage &&
+              newProfileImage.assets &&
+              newProfileImage.assets[0]
+            ) {
+              handleChangeAvatar();
+            }
+            handleEditUser();
+          }}>
           <Feather
             name="check"
             style={{ fontSize: 30, color: theme.mainButtonColor }}
