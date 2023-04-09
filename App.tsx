@@ -1,8 +1,8 @@
 import React from 'react';
 
 import AppNavigation from './src/navigation/AppNavigation';
-import {QueryClientProvider, QueryClient} from 'react-query';
-import {Provider} from 'react-redux';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { Provider } from 'react-redux';
 import store from './src/redux/store';
 
 const queryClient = new QueryClient();

@@ -10,7 +10,14 @@ import { Provider, useSelector } from 'react-redux';
 import store from '../redux/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setLoggedIn } from '../redux/authSlice';
-import { LoginScreen, SignUpScreen, OnboardingScreen } from '../screens';
+import {
+  LoginScreen,
+  SignUpScreen,
+  OnboardingScreen,
+  StoryScreen,
+  EditProfileScreen,
+  SettingScreen,
+} from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const AppNavigation = () => {
@@ -18,7 +25,7 @@ const AppNavigation = () => {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const checkLoginStatus = async () => {
-    const token = await AsyncStorage.getItem('AccessToken');
+    const token = await AsyncStorage.getItem('accessToken');
     if (token) {
       store.dispatch(setLoggedIn(true));
     }
@@ -38,6 +45,9 @@ const AppNavigation = () => {
         {isLoggedIn ? (
           <>
             <Stack.Screen name="TabNavigation" component={TabNavigation} />
+            <Stack.Screen name="StoryScreen" component={StoryScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="Setting" component={SettingScreen} />
           </>
         ) : (
           <>

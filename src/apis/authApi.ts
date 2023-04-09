@@ -9,13 +9,11 @@ interface AuthResponse {
 
 const postLogin = async (data: any) => {
   return await axiosInstance
-    .post('/Auth/login', data)
-    .then((response: any) => {
+    .post<any, AuthResponse>('/Auth/login', data)
+    .then(response => {
       return response;
     })
-    .catch(error => {
-      return { success: false, error: error };
-    });
+    .catch(error => {});
 };
 
 interface ExternalLoginBody {

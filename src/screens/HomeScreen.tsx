@@ -11,13 +11,14 @@ import {
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoggedIn } from '../redux/authSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import { useQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoggedIn } from '../redux/authSlice';
+import useCustomTheme from '../theme/CustomTheme';
 
 const GetPosts = () => {
   const { isFetching, isError, isSuccess, data } = useQuery(
@@ -36,6 +37,7 @@ const GetPosts = () => {
   } else if (isError) {
     console.log('error');
   }
+
   return (
     <>
       {isSuccess &&
@@ -50,15 +52,16 @@ function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation: any = useNavigation();
 
+  const theme = useCustomTheme();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
   };
 
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
 
   const handleSignOut = async () => {
-    await AsyncStorage.removeItem('AccessToken');
+    await AsyncStorage.removeItem('accessToken');
     dispatch(setLoggedIn(false));
     navigation.navigate('Onboarding');
     ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
@@ -71,10 +74,11 @@ function HomeScreen(): JSX.Element {
         style={backgroundStyle}>
         {isLoggedIn && (
           <TouchableOpacity onPress={handleSignOut}>
-            <Feather name="menu" style={{ fontSize: 25 }} />
+            <Text style={{ color: theme.mainButtonColor }}>Log out</Text>
           </TouchableOpacity>
         )}
       </ScrollView>
+
       <GetPosts />
     </SafeAreaView>
   );
