@@ -91,13 +91,11 @@ function TabNavigation() {
             if (route.name === 'Home') {
               iconName = 'home';
             } else if (route.name === 'Search') {
-              iconName = focused ? 'search' : 'ios-search-outline';
+              iconName = 'ios-search-outline';
             } else if (route.name === 'Camera') {
               iconName = 'plus-square-o';
             } else if (route.name === 'Reels') {
-              iconName = focused
-                ? 'caret-forward-circle'
-                : 'caret-forward-circle-outline';
+              iconName = 'caret-forward-circle-outline';
             } else if (route.name === 'Profile') {
               iconName =
                 data && data.avatar ? data.avatar : 'person-circle-outline';
@@ -109,6 +107,14 @@ function TabNavigation() {
 
             if (iconName === 'home') {
               return <Foundation name={iconName} size={size} color={color} />;
+            }
+
+            if (iconName === 'ios-search-outline') {
+              return <Ionic name={iconName} size={size} color={color} />;
+            }
+
+            if (iconName === 'caret-forward-circle-outline') {
+              return <Ionic name={iconName} size={size} color={color} />;
             }
 
             if (data && data.avatar) {

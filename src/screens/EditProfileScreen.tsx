@@ -85,8 +85,6 @@ const EditProfileScreen = ({ route, navigation }: any) => {
     });
 
     console.log(formData);
-
-    navigation.goBack();
     await updateUserImage(formData);
   };
 
@@ -123,6 +121,7 @@ const EditProfileScreen = ({ route, navigation }: any) => {
               newProfileImage.assets[0]
             ) {
               handleChangeAvatar();
+              handleEditUser();
             }
             handleEditUser();
           }}>
