@@ -140,7 +140,11 @@ const EditProfileScreen = ({ route, navigation }: any) => {
               newProfileImage.assets &&
               newProfileImage.assets[0]
                 ? { uri: newProfileImage.assets[0].uri }
-                : { uri: profileImage }
+                : {
+                    uri: profileImage
+                      ? profileImage
+                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
+                  }
             }
             style={{
               width: 70,
