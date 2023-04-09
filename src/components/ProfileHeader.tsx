@@ -20,7 +20,9 @@ const ProfileHeader = ({ accountName, toggleModal }: any) => {
         <Text style={{ fontSize: 20, color: theme.text, fontWeight: 'bold' }}>
           {accountName}
         </Text>
-        <EvilIcons name="chevron-down" size={25} color={theme.text} />
+        {accountName && (
+          <EvilIcons name="chevron-down" size={25} color={theme.text} />
+        )}
       </View>
       <View
         style={{

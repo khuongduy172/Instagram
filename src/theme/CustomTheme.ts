@@ -14,6 +14,7 @@ const darkColor = {
   disabledIcon: 'gray',
   storyBackground: '#000000',
   textSecond: '#ffffff',
+  isDark: true,
 };
 
 const lightColor = {
@@ -29,6 +30,7 @@ const lightColor = {
   disabledIcon: 'gray',
   storyBackground: '#000000',
   textSecond: '#a0a0a0',
+  isDark: false,
 };
 
 const useCustomTheme = () => {

@@ -63,6 +63,7 @@ const ProfileBottomTabView = () => {
               <Image source={item.image} style={{ width: 119, height: 135 }} />
             )}
             style={{ flex: 1 }}
+            listKey={undefined}
           />
         </View>
       </ScrollView>
@@ -91,6 +92,7 @@ const ProfileBottomTabView = () => {
               <Image source={item.image} style={{ width: 119, height: 135 }} />
             )}
             style={{ flex: 1 }}
+            listKey={undefined}
           />
         </View>
       </ScrollView>
@@ -119,6 +121,7 @@ const ProfileBottomTabView = () => {
               <Image source={item.image} style={{ width: 119, height: 135 }} />
             )}
             style={{ flex: 1 }}
+            listKey={undefined}
           />
         </View>
       </ScrollView>

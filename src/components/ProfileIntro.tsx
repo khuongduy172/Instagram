@@ -22,7 +22,11 @@ const ProfileIntro = ({
         }}>
         <View style={{ alignItems: 'flex-start' }}>
           <Image
-            source={{ uri: profileImage }}
+            source={{
+              uri: profileImage
+                ? profileImage
+                : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
+            }}
             style={{
               resizeMode: 'cover',
               width: 80,

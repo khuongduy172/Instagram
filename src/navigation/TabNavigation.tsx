@@ -7,7 +7,7 @@ import {
   NotificationScreen,
   ProfileScreen,
 } from '../screens';
-import { useColorScheme, Image, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -22,8 +22,6 @@ interface ErrorMessage {
 }
 
 function TabNavigation() {
-  const scheme = useColorScheme();
-  const tabBarStyle = scheme === 'dark' ? darkTabBarStyle : lightTabBarStyle;
   const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
     'userOwner',
     getUserOwner,
@@ -42,12 +40,11 @@ function TabNavigation() {
           tabBarIcon: ({ focused, size, color }) => {
             let iconName: any;
             if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home';
-              size = focused ? size + 8 : size + 2;
+              iconName = 'home';
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'ios-search-outline';
             } else if (route.name === 'Camera') {
-              iconName = focused ? 'plus-square-o' : 'plus-square-o';
+              iconName = 'plus-square-o';
             } else if (route.name === 'Reels') {
               iconName = focused
                 ? 'caret-forward-circle'
@@ -55,13 +52,16 @@ function TabNavigation() {
             } else if (route.name === 'Profile') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
-            return iconName === 'plus-square-o' ? (
-              <FontAwesome name={iconName} size={size} color={color} />
-            ) : iconName === 'home' ? (
-              <Foundation name={iconName} size={size} color={color} />
-            ) : (
-              <Ionic name={iconName} size={size} color={color} />
-            );
+
+            if (iconName === 'plus-square-o') {
+              return <FontAwesome name={iconName} size={size} color={color} />;
+            }
+
+            if (iconName === 'home') {
+              return <Foundation name={iconName} size={size} color={color} />;
+            }
+
+            return <Ionic name={iconName} size={size} color={color} />;
           },
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -89,58 +89,52 @@ function TabNavigation() {
           tabBarIcon: ({ focused, size, color }) => {
             let iconName: any;
             if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home';
+              iconName = 'home';
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'ios-search-outline';
             } else if (route.name === 'Camera') {
-              iconName = focused ? 'plus-square-o' : 'plus-square-o';
+              iconName = 'plus-square-o';
             } else if (route.name === 'Reels') {
               iconName = focused
                 ? 'caret-forward-circle'
                 : 'caret-forward-circle-outline';
             } else if (route.name === 'Profile') {
-              iconName = data ? data.avatar : 'person-circle-outline';
+              iconName =
+                data && data.avatar ? data.avatar : 'person-circle-outline';
             }
-            return iconName === 'plus-square-o' ? (
-              <FontAwesome name={iconName} size={size} color={color} />
-            ) : iconName === 'home' ? (
-              <Foundation name={iconName} size={size} color={color} />
-            ) : (
-                data
-                  ? iconName === data.avatar
-                  : iconName ===
-                    'https://i.pinimg.com/564x/e6/4b/ec/e64beca1b9921925b59671bbf74b9837.jpg'
-              ) ? (
-              <>
-                {focused ? (
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      width: 28,
-                      height: 28,
-                      borderRadius: 100,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={{ uri: iconName }}
-                      style={{
-                        width: 25,
-                        height: 25,
-                        borderRadius: 100,
-                      }}
-                    />
-                  </View>
-                ) : (
+
+            if (iconName === 'plus-square-o') {
+              return <FontAwesome name={iconName} size={size} color={color} />;
+            }
+
+            if (iconName === 'home') {
+              return <Foundation name={iconName} size={size} color={color} />;
+            }
+
+            if (data && data.avatar) {
+              return (
+                <View
+                  style={{
+                    borderWidth: 2,
+                    width: 28,
+                    height: 28,
+                    borderRadius: 100,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   <Image
                     source={{ uri: iconName }}
-                    style={{ width: 25, height: 25, borderRadius: 100 }}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      borderRadius: 100,
+                    }}
                   />
-                )}
-              </>
-            ) : (
-              <Ionic name={iconName} size={size} color={color} />
-            );
+                </View>
+              );
+            }
+
+            return <Ionic name={iconName} size={size} color={color} />;
           },
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -152,13 +146,5 @@ function TabNavigation() {
     </>
   );
 }
-
-const darkTabBarStyle = {
-  activeTintColor: '#F9F9F9',
-};
-
-const lightTabBarStyle = {
-  activeTintColor: '#262626',
-};
 
 export default TabNavigation;
