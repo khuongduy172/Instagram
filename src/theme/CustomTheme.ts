@@ -14,6 +14,7 @@ const darkColor = {
   disabledIcon: 'gray',
   storyBackground: '#000000',
   textSecond: '#ffffff',
+  backgroundButton: '#404040',
   isDark: true,
 };
 
@@ -30,6 +31,7 @@ const lightColor = {
   disabledIcon: 'gray',
   storyBackground: '#000000',
   textSecond: '#a0a0a0',
+  backgroundButton: '#808080',
   isDark: false,
 };
 
