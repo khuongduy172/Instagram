@@ -10,3 +10,4 @@ export { default as OnboardingScreen } from './OnboardingScreen';
 export { default as StoryScreen } from './StoryScreen';
 export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as SettingScreen } from './SettingScreen';
+export { default as EditImageScreen } from './EditImageScreen';
