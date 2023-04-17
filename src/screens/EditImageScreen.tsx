@@ -98,7 +98,12 @@ const EditImageScreen = ({ route, navigation }: any) => {
           style={{ fontSize: 25 }}
           color={theme.text}
         />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.push('NewPost', {
+              editedImage: editedImage,
+            })
+          }>
           <AntDesign
             name="arrowright"
             style={{ fontSize: 30, color: theme.mainButtonColor }}

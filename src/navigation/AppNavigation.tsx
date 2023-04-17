@@ -18,6 +18,7 @@ import {
   EditProfileScreen,
   SettingScreen,
   EditImageScreen,
+  NewPost,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -50,6 +51,7 @@ const AppNavigation = () => {
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
             <Stack.Screen name="Setting" component={SettingScreen} />
             <Stack.Screen name="EditImage" component={EditImageScreen} />
+            <Stack.Screen name="NewPost" component={NewPost} />
           </>
         ) : (
           <>
