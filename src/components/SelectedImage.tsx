@@ -47,7 +47,9 @@ const SelectedImage = () => {
 
   return (
     <>
-      {(state.selectedImagesFromAlbum || state.selectedImage) && (
+      {((state.selectedImagesFromAlbum &&
+        state.selectedImagesFromAlbum.length > 0) ||
+        (state.selectedImage && state.selectedImage.length > 0)) && (
         <View
           style={{
             marginTop: '5%',
@@ -58,9 +60,14 @@ const SelectedImage = () => {
           <Image
             source={{
               uri:
-                state.selectedImagesFromAlbum[
-                  state.selectedImagesFromAlbum.length - 1
-                ] || state.selectedImage[state.selectedImage.length - 1],
+                state.selectedImagesFromAlbum &&
+                state.selectedImagesFromAlbum.length > 0
+                  ? state.selectedImagesFromAlbum[
+                      state.selectedImagesFromAlbum.length - 1
+                    ]
+                  : state.selectedImage && state.selectedImage.length > 0
+                  ? state.selectedImage[state.selectedImage.length - 1]
+                  : null,
             }}
             style={{
               width: '100%',
