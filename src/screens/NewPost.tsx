@@ -5,9 +5,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 
 const NewPost = ({ route, navigation }) => {
-  const { editedImage } = route.params;
+  const { newImageArray } = route.params;
   const theme = useCustomTheme();
-  console.log(editedImage);
+  console.log(newImageArray);
   return (
     <View
       style={{
@@ -50,7 +50,10 @@ const NewPost = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={{ padding: 15, marginTop: 10, flexDirection: 'row' }}>
-        <Image source={editedImage} style={{ width: 70, height: 70 }} />
+        <Image
+          source={newImageArray[newImageArray.length - 1]}
+          style={{ width: 70, height: 70 }}
+        />
         <TextInput
           placeholder="Write caption..."
           style={{ paddingLeft: 15, color: theme.text }}

@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -12,9 +19,13 @@ const EditImageScreen = ({ route, navigation }: any) => {
   const theme = useCustomTheme();
   let { editedImage }: any = route.params;
 
+  console.log('editimage', editedImage);
+
   const [selectedFilter, setSelectedFilter] = useState(0);
+  const newImageArray: any = [];
   const onExtractImage = ({ nativeEvent }: any) => {
-    editedImage = nativeEvent;
+    newImageArray.push(nativeEvent);
+    console.log('ua', newImageArray);
   };
 
   const onSelectFilter = (selectedIndex: any) => {
@@ -30,7 +41,7 @@ const EditImageScreen = ({ route, navigation }: any) => {
           height: 100,
           margin: 5,
         }}
-        source={{ uri: editedImage }}
+        source={{ uri: editedImage[editedImage.length - 1] }}
         resizeMode="cover"
       />
     );
@@ -101,7 +112,7 @@ const EditImageScreen = ({ route, navigation }: any) => {
         <TouchableOpacity
           onPress={() =>
             navigation.push('NewPost', {
-              editedImage: editedImage,
+              newImageArray: newImageArray,
             })
           }>
           <AntDesign
@@ -113,37 +124,56 @@ const EditImageScreen = ({ route, navigation }: any) => {
       <View
         style={{
           width: '100%',
+          height: '50%',
         }}>
         {selectedFilter === 0 ? (
-          <Image
-            style={{
-              width: 400,
-              height: 350,
-              marginVertical: 10,
-              alignSelf: 'center',
-            }}
-            source={{ uri: editedImage }}
-            resizeMode={'cover'}
-          />
+          <ScrollView
+            horizontal={true}
+            showsVerticalScrollIndicator={false}
+            style={{ padding: 10 }}>
+            {editedImage.map((item, index) => {
+              return (
+                <Image
+                  key={index}
+                  style={{
+                    width: 350,
+                    height: 320,
+                    marginVertical: 10,
+                    alignSelf: 'center',
+                    marginHorizontal: 10,
+                  }}
+                  source={{ uri: item }}
+                  resizeMode={'cover'}
+                />
+              );
+            })}
+          </ScrollView>
         ) : (
-          <SelectedFilterComponent
-            onExtractImage={onExtractImage}
-            extractImageEnabled={true}
-            image={
-              <Image
-                source={{
-                  uri: editedImage,
-                }}
-                style={{
-                  width: 400,
-                  height: 350,
-                  marginVertical: 10,
-                  alignSelf: 'center',
-                }}
-                resizeMode={'cover'}
-              />
-            }
-          />
+          <ScrollView horizontal={true} showsVerticalScrollIndicator={false}>
+            {editedImage.map((item, index) => {
+              return (
+                <SelectedFilterComponent
+                  key={index}
+                  onExtractImage={onExtractImage}
+                  extractImageEnabled={true}
+                  image={
+                    <Image
+                      key={index}
+                      style={{
+                        width: 350,
+                        height: 320,
+                        marginVertical: 10,
+                        alignSelf: 'center',
+                        marginHorizontal: 10,
+                      }}
+                      source={{ uri: item }}
+                      resizeMode={'cover'}
+                    />
+                  }
+                />
+              );
+            })}
+          </ScrollView>
         )}
       </View>
       <Tab.Navigator

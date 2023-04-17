@@ -45,9 +45,7 @@ const PostHeader = () => {
           onPress={() =>
             navigation.push('EditImage', {
               editedImage:
-                state.selectedImagesFromAlbum[
-                  state.selectedImagesFromAlbum.length - 1
-                ] || state.selectedImage[state.selectedImage.length - 1],
+                state.selectedImagesFromAlbum || state.selectedImage,
             })
           }>
           <AntDesign
