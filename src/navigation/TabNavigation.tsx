@@ -4,7 +4,7 @@ import {
   HomeScreen,
   SearchScreen,
   CreateScreen,
-  NotificationScreen,
+  Reels,
   ProfileScreen,
 } from '../screens';
 import { Image, Text, View } from 'react-native';
@@ -67,7 +67,7 @@ function TabNavigation() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Camera" component={CreateScreen} />
-        <Tab.Screen name="Reels" component={NotificationScreen} />
+        <Tab.Screen name="Reels" component={Reels} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     );
@@ -146,7 +146,7 @@ function TabNavigation() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Camera" component={CreateScreen} />
-        <Tab.Screen name="Reels" component={NotificationScreen} />
+        <Tab.Screen name="Reels" component={Reels} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </>
