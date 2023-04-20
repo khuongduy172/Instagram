@@ -4,7 +4,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  View,
   useColorScheme,
+  Image,
   TouchableOpacity,
   ToastAndroid,
 } from 'react-native';
@@ -19,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedIn } from '../redux/authSlice';
 import useCustomTheme from '../theme/CustomTheme';
+import Ionic from 'react-native-vector-icons/Ionicons';
 
 const GetPosts = () => {
   const { isFetching, isError, isSuccess, data } = useQuery(
@@ -55,6 +58,8 @@ function HomeScreen(): JSX.Element {
   const theme = useCustomTheme();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
+    width: '100%',
+    height: '100%',
   };
 
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
@@ -66,9 +71,48 @@ function HomeScreen(): JSX.Element {
     navigation.navigate('Onboarding');
     ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
   };
+  const scheme = useColorScheme();
+  const instaLogo =
+    scheme === 'dark'
+      ? require('../assets/images/insta-dark.png')
+      : require('../assets/images/insta.png');
 
   return (
     <SafeAreaView style={backgroundStyle}>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          paddingHorizontal: 15,
+          alignItems: 'center',
+          backgroundColor: theme.background,
+        }}>
+        <Image
+          source={instaLogo}
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+          }}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity>
+            <Ionic
+              name="ios-heart-outline"
+              style={{ fontSize: 24, paddingRight: 20 }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Direct')}>
+            <Feather name="send" style={{ fontSize: 24 }} />
+          </TouchableOpacity>
+        </View>
+      </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -78,8 +122,6 @@ function HomeScreen(): JSX.Element {
           </TouchableOpacity>
         )}
       </ScrollView>
-
-      <GetPosts />
     </SafeAreaView>
   );
 }
