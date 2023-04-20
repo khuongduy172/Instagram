@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthResponse } from './authApi';
 
 const axiosInstance = axios.create({
-  // baseURL: 'https://dfd6-113-161-77-200.ap.ngrok.io/api',
-  baseURL: 'http://10.0.2.2:80/api',
+  // baseURL: 'https://83ba-123-21-33-87.ngrok-free.app/api',
+  baseURL: 'http://192.168.218.32/api',
 });
 
 axiosInstance.interceptors.request.use(
@@ -30,26 +30,33 @@ axiosInstance.interceptors.response.use(
     const config = error?.config;
 
     if (error?.response?.status === 401 && !config?.sent) {
-      config.sent = true;
+      try {
+        config.sent = true;
 
-      const body = {
-        token: await AsyncStorage.getItem('accessToken'),
-        refreshToken: await AsyncStorage.getItem('refreshToken'),
-      };
-      const result = await axiosInstance.post<any, AuthResponse>(
-        '/Auth/refresh',
-        body,
-      );
-      if (result?.token) {
-        await AsyncStorage.setItem('accessToken', result.token);
-        await AsyncStorage.setItem('refreshToken', result.refreshToken);
-        config.headers = {
-          ...config.headers,
-          authorization: `Bearer ${result?.token}`,
+        const body = {
+          token: await AsyncStorage.getItem('accessToken'),
+          refreshToken: await AsyncStorage.getItem('refreshToken'),
         };
-        console.log('refetch');
-        return axios(config);
-      } else {
+        const result = await axiosInstance.post<any, AuthResponse>(
+          '/Auth/refresh',
+          body,
+        );
+        if (result?.token) {
+          await AsyncStorage.setItem('accessToken', result.token);
+          await AsyncStorage.setItem('refreshToken', result.refreshToken);
+          config.headers = {
+            ...config.headers,
+            authorization: `Bearer ${result?.token}`,
+          };
+          console.log('refetch');
+          return axios(config);
+        } else {
+          console.log("Can't refresh token");
+          await AsyncStorage.removeItem('accessToken');
+          await AsyncStorage.removeItem('refreshToken');
+        }
+      } catch (error) {
+        console.log(error);
         await AsyncStorage.removeItem('accessToken');
         await AsyncStorage.removeItem('refreshToken');
       }

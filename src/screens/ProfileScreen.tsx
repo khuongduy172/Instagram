@@ -97,7 +97,11 @@ const ProfileScreen = () => {
         swipeDirection="down"
         onSwipeComplete={toggleModal}
         useNativeDriver={true}
-        style={{ justifyContent: 'flex-end', margin: 0 }}>
+        style={{
+          justifyContent: 'flex-end',
+          margin: 0,
+          backgroundColor: theme.backgroundColor,
+        }}>
         <TouchableOpacity
           onPressOut={toggleModal}
           activeOpacity={1}
