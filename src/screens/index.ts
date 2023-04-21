@@ -12,3 +12,5 @@ export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as SettingScreen } from './SettingScreen';
 export { default as EditImageScreen } from './EditImageScreen';
 export { default as NewPost } from './NewPost';
+export { default as DirectScreen } from './DirectScreen';
+export { default as MessageScreen } from './MessageScreen';
