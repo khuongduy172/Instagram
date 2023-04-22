@@ -1,6 +1,7 @@
 export const videoData = [
   {
-    video: require('./storage/videos/v1.mp4'),
+    video:
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     postProfile: require('./storage/images/kv.png'),
     title: 'khanhvyccf',
     description: 'Driving on the road...',
@@ -8,7 +9,8 @@ export const videoData = [
     isLike: false,
   },
   {
-    video: require('./storage/videos/v2.mp4'),
+    video:
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     postProfile: require('./storage/images/post3.png'),
     title: 'anthony.haidang',
     description: 'Feel the beauty of nature',
@@ -16,7 +18,8 @@ export const videoData = [
     isLike: false,
   },
   {
-    video: require('./storage/videos/v3.mp4'),
+    video:
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     postProfile: require('./storage/images/st.png'),
     title: 'sontungmtp',
     description: 'Wanna drink some coffee?',
@@ -24,7 +27,8 @@ export const videoData = [
     isLike: false,
   },
   {
-    video: require('./storage/videos/v4.mp4'),
+    video:
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     postProfile: require('./storage/images/tt.png'),
     title: 'mia.soya',
     description: 'Looking the city from the apartment',
@@ -32,7 +36,8 @@ export const videoData = [
     isLike: false,
   },
   {
-    video: require('./storage/videos/v5.mp4'),
+    video:
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
     postProfile: require('./storage/images/mn.png'),
     title: 'mono.hng',
     description: 'The sunset...',

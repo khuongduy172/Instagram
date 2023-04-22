@@ -12,7 +12,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
   const videoRef = useRef(null);
 
   const onBuffer = buffer => {
-    console.log(buffer);
+    // console.log(buffer);
   };
 
   const onError = error => {
@@ -45,7 +45,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           resizeMode="cover"
           paused={currentIndex === index ? false : true}
           shouldPlay={true}
-          source={item.video}
+          source={{ uri: item.video }}
           muted={mute}
           style={{
             width: '100%',
