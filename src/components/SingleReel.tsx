@@ -1,11 +1,21 @@
-import { View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  StatusBar,
+  useColorScheme,
+} from 'react-native';
 import React, { useRef, useState } from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Video from 'react-native-video';
+import { useFocusEffect } from '@react-navigation/native';
 
 const SingleReel = ({ item, index, currentIndex }) => {
+  const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
 
@@ -22,6 +32,20 @@ const SingleReel = ({ item, index, currentIndex }) => {
   const [mute, setMute] = useState(false);
 
   const [like, setLike] = useState(item.isLike);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor('#000000');
+      return () => {
+        StatusBar.setBarStyle(
+          scheme === 'dark' ? 'light-content' : 'dark-content',
+        );
+        StatusBar.setBackgroundColor(scheme === 'dark' ? '#000' : '#fff');
+      };
+    }, []),
+  );
+
   return (
     <View
       style={{
@@ -72,7 +96,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           position: 'absolute',
           width: windowWidth,
           zIndex: 1,
-          bottom: 50,
+          bottom: windowHeight * 0.05,
           padding: 10,
         }}>
         <View>
@@ -136,7 +160,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: 70,
+          bottom: windowHeight * 0.075,
           right: 0,
         }}>
         <TouchableOpacity

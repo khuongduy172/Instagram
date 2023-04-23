@@ -7,7 +7,7 @@ import {
   Reels,
   ProfileScreen,
 } from '../screens';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, View, useColorScheme } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -22,6 +22,7 @@ interface ErrorMessage {
 }
 
 function TabNavigation() {
+  const scheme = useColorScheme();
   const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
     'userOwner',
     getUserOwner,
@@ -33,7 +34,7 @@ function TabNavigation() {
           headerShown: false,
           tabBarHideOnKeyboard: true,
           tabBarShowLabel: false,
-          tabBarActiveTintColor: 'black',
+          tabBarActiveTintColor: scheme === 'dark' ? 'white' : 'black',
           tabBarStyle: {
             height: 50,
           },
@@ -82,7 +83,7 @@ function TabNavigation() {
           headerShown: false,
           tabBarHideOnKeyboard: true,
           tabBarShowLabel: false,
-          tabBarActiveTintColor: 'black',
+          tabBarActiveTintColor: scheme === 'dark' ? 'white' : 'black',
           tabBarStyle: {
             height: 50,
           },
