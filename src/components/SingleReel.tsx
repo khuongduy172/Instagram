@@ -96,7 +96,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           position: 'absolute',
           width: windowWidth,
           zIndex: 1,
-          bottom: windowHeight * 0.05,
+          bottom: windowHeight * 0.1,
           padding: 10,
         }}>
         <View>
@@ -160,24 +160,33 @@ const SingleReel = ({ item, index, currentIndex }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: windowHeight * 0.075,
+          bottom: windowHeight * 0.125,
           right: 0,
+          alignItems: 'center',
         }}>
         <TouchableOpacity
-          style={{ padding: 10 }}
+          style={{ padding: 10, alignItems: 'center' }}
           onPress={() => setLike(!like)}>
           <AntDesign
             name={like ? 'heart' : 'hearto'}
             size={25}
             color={like ? 'red' : 'white'}
           />
-          <Text style={{ color: 'white' }}>{item.likes}</Text>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+            {item.likes}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 10 }}>
+        <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
           <Ionic name="ios-chatbubble-outline" size={25} color="white" />
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+            {item.comments}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 10 }}>
+        <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
           <Ionic name="paper-plane-outline" size={25} color="white" />
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+            {item.shares}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
           <Feather name="more-vertical" size={25} color="white" />
