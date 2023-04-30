@@ -4,7 +4,7 @@ import { AuthResponse } from './authApi';
 
 const axiosInstance = axios.create({
   // baseURL: 'https://83ba-123-21-33-87.ngrok-free.app/api',
-  baseURL: 'https://874e-113-161-77-200.ngrok-free.app/api',
+  baseURL: 'http://192.168.218.32/api',
 });
 
 axiosInstance.interceptors.request.use(
