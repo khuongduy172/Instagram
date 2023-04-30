@@ -14,6 +14,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Foundation from 'react-native-vector-icons/Foundation';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
+import ReelsIcon from '../assets/images/instagram-reels-icon.svg';
 
 const Tab = createBottomTabNavigator();
 
@@ -115,7 +116,7 @@ function TabNavigation() {
             }
 
             if (iconName === 'caret-forward-circle-outline') {
-              return <Ionic name={iconName} size={size} color={color} />;
+              return <ReelsIcon width={23} height={23} color={color} />;
             }
 
             if (data && data.avatar) {

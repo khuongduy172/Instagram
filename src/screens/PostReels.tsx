@@ -31,19 +31,15 @@ const PostReels = ({ navigation, route }: any) => {
     try {
       let formData = new FormData();
 
-      formData.append('File', {
+      formData.append('Caption', caption);
+      formData.append('Video', {
         name: 'reels.mp4',
         uri: photoImage[photoImage.length - 1],
         type: 'video/mp4',
       });
 
-      const newReels = {
-        caption,
-        formData,
-      };
-
       console.log(formData);
-      await postReels(newReels);
+      await postReels(formData);
     } catch (error) {
       console.log(error);
     }
