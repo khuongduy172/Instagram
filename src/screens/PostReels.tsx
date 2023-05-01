@@ -91,9 +91,8 @@ const PostReels = ({ navigation, route }: any) => {
             alignSelf: 'center',
             marginTop: 20,
           }}
-          paused={false}
-          repeat={true}
-          muted={false}
+          paused={true}
+          muted={true}
         />
         <TextInput
           placeholder="Write caption..."
