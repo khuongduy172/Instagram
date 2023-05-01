@@ -6,6 +6,7 @@ import {
   TextInput,
   Switch,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -39,7 +40,13 @@ const PostReels = ({ navigation, route }: any) => {
       });
 
       console.log(formData);
-      await postReels(formData);
+      const res = await postReels(formData);
+      if (res) {
+        ToastAndroid.show('Post successfully', ToastAndroid.SHORT);
+        navigation.navigate('Reels');
+      } else {
+        console.log('error');
+      }
     } catch (error) {
       console.log(error);
     }
