@@ -7,6 +7,7 @@ import {
   Switch,
   ScrollView,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -16,6 +17,7 @@ import ReelsIcon from '../assets/images/instagram-reels-icon.svg';
 import TagIcon from '../assets/images/instagram-tag-icon.svg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { postReels } from '../apis/reelApi';
+import { useMutation } from 'react-query';
 
 const PostReels = ({ navigation, route }: any) => {
   const { photoImage } = route.params;
@@ -28,28 +30,28 @@ const PostReels = ({ navigation, route }: any) => {
 
   console.log(photoImage[photoImage.length - 1]);
 
-  const handlePostReels = async () => {
-    try {
-      let formData = new FormData();
-
-      formData.append('Caption', caption);
-      formData.append('Video', {
-        name: 'reels.mp4',
-        uri: photoImage[photoImage.length - 1],
-        type: 'video/mp4',
-      });
-
-      console.log(formData);
-      const res = await postReels(formData);
-      if (res) {
-        ToastAndroid.show('Post successfully', ToastAndroid.SHORT);
+  const { mutate, isLoading: postNewReels } = useMutation(postReels, {
+    onSuccess: data => {
+      if (data) {
+        ToastAndroid.show('Posted successfully', ToastAndroid.SHORT);
         navigation.navigate('Reels');
       } else {
-        console.log('error');
+        ToastAndroid.show('Posted failed', ToastAndroid.SHORT);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    },
+  });
+
+  const handlePostReels = async () => {
+    let formData = new FormData();
+
+    formData.append('Caption', caption);
+    formData.append('Video', {
+      name: 'reels.mp4',
+      uri: photoImage[photoImage.length - 1],
+      type: 'video/mp4',
+    });
+
+    mutate(formData);
   };
   return (
     <View
@@ -334,9 +336,13 @@ const PostReels = ({ navigation, route }: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{ color: theme.background, fontWeight: 'bold' }}>
-            Next
-          </Text>
+          {postNewReels ? (
+            <ActivityIndicator size="small" color={theme.textSecond} />
+          ) : (
+            <Text style={{ color: theme.background, fontWeight: 'bold' }}>
+              Next
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

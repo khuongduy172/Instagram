@@ -62,13 +62,12 @@ const SingleReel = ({ item, index, currentIndex }) => {
           position: 'absolute',
         }}>
         <Video
-          videoRef={videoRef}
+          ref={videoRef}
           onBuffer={onBuffer}
           onError={onError}
           repeat={true}
           resizeMode="cover"
           paused={currentIndex === index ? false : true}
-          shouldPlay={true}
           source={{ uri: item.video }}
           muted={mute}
           style={{
@@ -96,7 +95,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           position: 'absolute',
           width: windowWidth,
           zIndex: 1,
-          bottom: windowHeight * 0.1,
+          bottom: windowHeight * 0.075,
           padding: 10,
         }}>
         <View>
@@ -160,7 +159,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: windowHeight * 0.125,
+          bottom: windowHeight * 0.1,
           right: 0,
           alignItems: 'center',
         }}>
