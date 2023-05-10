@@ -1,11 +1,15 @@
-import { View, Text, Dimensions } from 'react-native';
-import React from 'react';
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import ReelsComponent from '../components/ReelsComponent';
+import { useNavigation } from '@react-navigation/native';
 
 const Reels = () => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+
+  const navigation: any = useNavigation();
+
   return (
     <View
       style={{
@@ -28,7 +32,9 @@ const Reels = () => {
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
           Reels
         </Text>
-        <Feather name="camera" style={{ fontSize: 25, color: 'white' }} />
+        <TouchableOpacity onPress={() => navigation.push('CreateReels')}>
+          <Feather name="camera" style={{ fontSize: 25, color: 'white' }} />
+        </TouchableOpacity>
       </View>
       <ReelsComponent />
     </View>

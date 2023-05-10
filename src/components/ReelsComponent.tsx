@@ -23,6 +23,7 @@ const ReelsComponent = () => {
           key={index}
         />
       )}
+      decelerationRate={'normal'}
       keyExtractor={(item, index) => index}
     />
   );

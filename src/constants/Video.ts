@@ -1,7 +1,7 @@
 export const videoData = [
   {
     video:
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      'https://firebasestorage.googleapis.com/v0/b/instagram-381915.appspot.com/o/instagram%2F05052023064657reels.mp4?alt=media&token=acac70d0-02ff-4757-b328-175781796785',
     postProfile: require('./storage/images/kv.png'),
     title: 'khanhvyccf',
     description: 'Driving on the road...',
@@ -12,7 +12,7 @@ export const videoData = [
   },
   {
     video:
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      'https://firebasestorage.googleapis.com/v0/b/instagram-381915.appspot.com/o/instagram%2F51202341240PM2.mp4?alt=media&token=a649dc23-5b94-4b3a-a038-d922c53439b6',
     postProfile: require('./storage/images/post3.png'),
     title: 'anthony.haidang',
     description: 'Feel the beauty of nature',

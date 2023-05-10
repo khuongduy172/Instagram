@@ -21,6 +21,8 @@ import {
   NewPost,
   DirectScreen,
   MessageScreen,
+  CreateReels,
+  PostReels,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -56,6 +58,8 @@ const AppNavigation = () => {
             <Stack.Screen name="NewPost" component={NewPost} />
             <Stack.Screen name="Direct" component={DirectScreen} />
             <Stack.Screen name="Message" component={MessageScreen} />
+            <Stack.Screen name="CreateReels" component={CreateReels} />
+            <Stack.Screen name="PostReels" component={PostReels} />
           </>
         ) : (
           <>

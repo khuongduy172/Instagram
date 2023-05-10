@@ -38,9 +38,11 @@
     "react-native-shadow-2": "^7.0.7",
     "react-native-super-grid": "^5.0.0",
     "react-native-svg": "^13.8.0",
+    "react-native-svg-transformer": "^1.0.0",
     "react-native-swiper-flatlist": "^3.1.2",
     "react-native-vector-icons": "^9.2.0",
     "react-native-video": "^6.0.0-alpha.6",
+    "react-native-vision-camera": "^2.15.4",
     "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1"

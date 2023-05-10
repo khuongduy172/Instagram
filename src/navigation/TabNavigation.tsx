@@ -14,6 +14,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Foundation from 'react-native-vector-icons/Foundation';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
+import ReelsIcon from '../assets/images/instagram-reels-icon.svg';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,9 +48,7 @@ function TabNavigation() {
             } else if (route.name === 'Camera') {
               iconName = 'plus-square-o';
             } else if (route.name === 'Reels') {
-              iconName = focused
-                ? 'caret-forward-circle'
-                : 'caret-forward-circle-outline';
+              iconName = 'caret-forward-circle-outline';
             } else if (route.name === 'Profile') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
@@ -60,6 +59,10 @@ function TabNavigation() {
 
             if (iconName === 'home') {
               return <Foundation name={iconName} size={size} color={color} />;
+            }
+
+            if (iconName === 'caret-forward-circle-outline') {
+              return <ReelsIcon width={22} height={22} fill={color} />;
             }
 
             return <Ionic name={iconName} size={size} color={color} />;
@@ -115,7 +118,7 @@ function TabNavigation() {
             }
 
             if (iconName === 'caret-forward-circle-outline') {
-              return <Ionic name={iconName} size={size} color={color} />;
+              return <ReelsIcon width={22} height={22} fill={color} />;
             }
 
             if (data && data.avatar) {
