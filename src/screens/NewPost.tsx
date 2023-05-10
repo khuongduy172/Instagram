@@ -13,12 +13,40 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { postStatus } from '../apis/postApi';
 import { useMutation } from 'react-query';
+import { PESDK } from 'react-native-photoeditorsdk';
+import { useIsFocused } from '@react-navigation/native';
 
 const NewPost = ({ route, navigation }) => {
   const { newImageArray } = route.params;
   const [status, setStatus] = useState('');
   const theme = useCustomTheme();
-  console.log(newImageArray);
+
+  const isFocused = useIsFocused();
+  const [editedImageData, setEditedImageData] = useState([]);
+  const openEditorWithImages = async (images: any) => {
+    try {
+      for (const image of images) {
+        const result = await PESDK.openEditor(image.uri);
+        if (result != null) {
+          console.log('editedImagehhhh', result);
+          setEditedImageData(prevImageData => [...prevImageData, result]);
+        } else {
+          return;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isFocused) {
+      openEditorWithImages(newImageArray);
+    }
+  }, [isFocused]);
+
+  console.log('editedImageData', editedImageData);
+  console.log('newImageArray', newImageArray);
 
   const { mutate, isLoading: postNewStatus } = useMutation(postStatus, {
     onSuccess: data => {
@@ -35,13 +63,24 @@ const NewPost = ({ route, navigation }) => {
     let formData = new FormData();
 
     formData.append('Content', status);
-    newImageArray.map((item: any, index: any) => {
-      formData.append('Files', {
-        uri: item.uri,
-        type: 'image/jpeg',
-        name: `image${index}.jpg`,
+
+    if (editedImageData && editedImageData.length > 0) {
+      editedImageData.map((item: any, index: any) => {
+        formData.append('Files', {
+          uri: item.image,
+          type: 'image/jpeg',
+          name: `image${index}.jpg`,
+        });
       });
-    });
+    } else {
+      newImageArray.map((item: any, index: any) => {
+        formData.append('Files', {
+          uri: item.uri,
+          type: 'image/jpeg',
+          name: `image${index}.jpg`,
+        });
+      });
+    }
 
     mutate(formData);
   };
