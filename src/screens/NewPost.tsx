@@ -65,7 +65,7 @@ const NewPost = ({ route, navigation }) => {
     formData.append('Content', status);
 
     if (editedImageData && editedImageData.length > 0) {
-      editedImageData.map((item: any, index: any) => {
+      editedImageData.forEach((item: any, index: any) => {
         formData.append('Files', {
           uri: item.image,
           type: 'image/jpeg',
@@ -73,7 +73,7 @@ const NewPost = ({ route, navigation }) => {
         });
       });
     } else {
-      newImageArray.map((item: any, index: any) => {
+      newImageArray.forEach((item: any, index: any) => {
         formData.append('Files', {
           uri: item.uri,
           type: 'image/jpeg',
