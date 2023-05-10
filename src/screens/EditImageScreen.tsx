@@ -16,7 +16,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 
 const EditImageScreen = ({ route, navigation }: any) => {
-  const editedImageData: any = [];
   const theme = useCustomTheme();
   let { editedImage }: any = route.params;
 
@@ -129,6 +128,7 @@ const EditImageScreen = ({ route, navigation }: any) => {
           onPress={() =>
             navigation.push('NewPost', {
               newImageArray: newImageArray,
+              editedImage: editedImage,
             })
           }>
           <AntDesign

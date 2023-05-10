@@ -17,7 +17,7 @@ import { PESDK } from 'react-native-photoeditorsdk';
 import { useIsFocused } from '@react-navigation/native';
 
 const NewPost = ({ route, navigation }) => {
-  const { newImageArray } = route.params;
+  const { newImageArray, editedImage } = route.params;
   const [status, setStatus] = useState('');
   const theme = useCustomTheme();
 
@@ -26,12 +26,22 @@ const NewPost = ({ route, navigation }) => {
   const openEditorWithImages = async (images: any) => {
     try {
       for (const image of images) {
-        const result = await PESDK.openEditor(image.uri);
-        if (result != null) {
-          console.log('editedImagehhhh', result);
-          setEditedImageData(prevImageData => [...prevImageData, result]);
+        if (newImageArray && newImageArray.length > 0) {
+          const result = await PESDK.openEditor(image.uri);
+          if (result != null) {
+            console.log('editedImagehhhh', result);
+            setEditedImageData(prevImageData => [...prevImageData, result]);
+          } else {
+            return;
+          }
         } else {
-          return;
+          const result = await PESDK.openEditor(image);
+          if (result != null) {
+            console.log('editedImagehhhh', result);
+            setEditedImageData(prevImageData => [...prevImageData, result]);
+          } else {
+            return;
+          }
         }
       }
     } catch (error) {
@@ -41,7 +51,11 @@ const NewPost = ({ route, navigation }) => {
 
   React.useEffect(() => {
     if (isFocused) {
-      openEditorWithImages(newImageArray);
+      if (newImageArray && newImageArray.length > 0) {
+        openEditorWithImages(newImageArray);
+      } else {
+        openEditorWithImages(editedImage);
+      }
     }
   }, [isFocused]);
 
@@ -131,7 +145,11 @@ const NewPost = ({ route, navigation }) => {
       </View>
       <View style={{ padding: 15, marginTop: 10, flexDirection: 'row' }}>
         <Image
-          source={newImageArray[newImageArray.length - 1]}
+          source={
+            newImageArray && newImageArray.length > 0
+              ? { uri: newImageArray[newImageArray.length - 1].uri }
+              : { uri: editedImage[editedImage.length - 1] }
+          }
           style={{ width: 70, height: 70 }}
         />
         <TextInput
