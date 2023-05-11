@@ -23,6 +23,7 @@ import {
   MessageScreen,
   CreateReels,
   PostReels,
+  EditorScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -60,6 +61,7 @@ const AppNavigation = () => {
             <Stack.Screen name="Message" component={MessageScreen} />
             <Stack.Screen name="CreateReels" component={CreateReels} />
             <Stack.Screen name="PostReels" component={PostReels} />
+            <Stack.Screen name="Editor" component={EditorScreen} />
           </>
         ) : (
           <>

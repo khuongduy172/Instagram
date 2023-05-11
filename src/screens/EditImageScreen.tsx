@@ -22,10 +22,10 @@ const EditImageScreen = ({ route, navigation }: any) => {
   console.log('editimage', editedImage);
 
   const [selectedFilter, setSelectedFilter] = useState(0);
+
   const newImageArray: any = [];
   const onExtractImage = ({ nativeEvent }: any) => {
     newImageArray.push(nativeEvent);
-    console.log('ua', newImageArray);
   };
 
   const onSelectFilter = (selectedIndex: any) => {
@@ -80,8 +80,23 @@ const EditImageScreen = ({ route, navigation }: any) => {
   };
 
   const EditNewComponent = () => {
-    return <Text>h</Text>;
+    return (
+      <View
+        style={{
+          backgroundColor: theme.background,
+          width: '100%',
+          height: '100%',
+        }}>
+        <FlatList
+          data={FILTERS}
+          keyExtractor={item => item.title}
+          horizontal={true}
+          renderItem={renderFilterComponent}
+        />
+      </View>
+    );
   };
+
   return (
     <View
       style={{
@@ -113,6 +128,7 @@ const EditImageScreen = ({ route, navigation }: any) => {
           onPress={() =>
             navigation.push('NewPost', {
               newImageArray: newImageArray,
+              editedImage: editedImage,
             })
           }>
           <AntDesign
