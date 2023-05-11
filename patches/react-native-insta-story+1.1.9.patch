@@ -3674,8 +3674,112 @@ diff --git a/node_modules/react-native-insta-story/android/build/tmp/compileDebu
 new file mode 100644
 index 0000000..4e2cc5e
 Binary files /dev/null and b/node_modules/react-native-insta-story/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/react-native-insta-story/src/StoryCircleListItem.tsx b/node_modules/react-native-insta-story/src/StoryCircleListItem.tsx
+index c80e6d8..b3681ef 100644
+--- a/node_modules/react-native-insta-story/src/StoryCircleListItem.tsx
++++ b/node_modules/react-native-insta-story/src/StoryCircleListItem.tsx
+@@ -12,6 +12,7 @@ import { usePrevious } from './helpers/StateHelpers';
+ import { IUserStory, StoryCircleListItemProps } from './interfaces';
+ 
+ import DEFAULT_AVATAR from './assets/images/no_avatar.png';
++import LinearGradient from 'react-native-linear-gradient';
+ 
+ const StoryCircleListItem = ({
+   item,
+@@ -28,6 +29,7 @@ const StoryCircleListItem = ({
+ }: StoryCircleListItemProps) => {
+   const [isPressed, setIsPressed] = useState(item?.seen);
+ 
++
+   const prevSeen = usePrevious(item?.seen);
+ 
+   useEffect(() => {
+@@ -52,31 +54,53 @@ const StoryCircleListItem = ({
+         style={[
+           styles.avatarWrapper,
+           {
+-            height: avatarWrapperSize,
+-            width: avatarWrapperSize,
++            height: avatarWrapperSize + 4,
++            width: avatarWrapperSize + 4,
+           },
+           avatarWrapperStyle,
+-          !isPressed
+-            ? {
+-                borderColor: unPressedBorderColor ?? 'red',
+-              }
+-            : {
+-                borderColor: pressedBorderColor ?? 'grey',
+-              },
+         ]}
+       >
+-        <Image
+-          style={[
+-            {
+-              height: avatarSize,
+-              width: avatarSize,
+-              borderRadius: 100,
+-            },
+-            avatarImageStyle,
+-          ]}
+-          source={{ uri: item.user_image }}
+-          defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
+-        />
++        {!isPressed ? (<LinearGradient
++                    colors={['#ffd600','#ff7a00', '#ff0069', '#d300c5', '#7638fa', ]}
++                    start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
++                    style={{
++                      height: avatarWrapperSize +4,
++                      width: avatarWrapperSize + 4,
++                      borderRadius: 50,
++                      justifyContent: 'center',
++                      alignItems: 'center',
++                      alignSelf: 'center',
++                    }}
++                    >
++                    <Image
++                    style={[
++                      {
++                        height: avatarSize + 4,
++                        width: avatarSize + 4,
++                        borderRadius: 100,
++                        borderWidth: 3,
++                        borderColor: 'white',
++                      },
++                      avatarImageStyle,
++                    ]}
++                    source={{ uri: item.user_image }}
++                    defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
++                  />
++                </LinearGradient>) : (<Image
++                    style={[
++                      {
++                        height: avatarSize + 4,
++                        width: avatarSize + 4,
++                        borderRadius: 100,
++                        borderWidth: 3,
++                        borderColor: 'white',
++                      },
++                      avatarImageStyle,
++                    ]}
++                    source={{ uri: item.user_image }}
++                    defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
++                  />)}
++        
+       </TouchableOpacity>
+       {showText && (
+         <Text
+@@ -112,7 +136,7 @@ const styles = StyleSheet.create({
+     justifyContent: 'center',
+     alignItems: 'center',
+     alignSelf: 'center',
+-    borderColor: 'red',
++    borderColor: '#e4e4e4',
+     borderRadius: 100,
+     height: 64,
+     width: 64,
 diff --git a/node_modules/react-native-insta-story/src/StoryListItem.tsx b/node_modules/react-native-insta-story/src/StoryListItem.tsx
-index 80f3d29..047117a 100644
+index 80f3d29..aaec56e 100644
 --- a/node_modules/react-native-insta-story/src/StoryListItem.tsx
 +++ b/node_modules/react-native-insta-story/src/StoryListItem.tsx
 @@ -20,6 +20,7 @@ import {
@@ -3699,7 +3803,7 @@ index 80f3d29..047117a 100644
    }
  
 +  function startAnotherAnimation(duration: any){
-+    const time = content[current].type === ('video') ? duration : 10000
++    const time = content[current].type === ('video') ? duration * 1000 : duration * 1000 
 +        Animated.timing(progress, {
 +            toValue: 1,
 +            duration: time,
@@ -3732,7 +3836,7 @@ index 80f3d29..047117a 100644
    return (
      <GestureRecognizer
        key={key}
-@@ -209,11 +235,19 @@ export const StoryListItem = ({
+@@ -209,11 +235,17 @@ export const StoryListItem = ({
      >
        <SafeAreaView>
          <View style={styles.backgroundContainer}>
@@ -3745,8 +3849,6 @@ index 80f3d29..047117a 100644
 +                        source={{uri: content[current].story_image}} 
 +                        ref={ref => (videoPlayer.current = ref)}
 +                        resizeMode='contain'
-+                        onLoad={onLoad}
-+                        onEnd={onEnd}
 +                        style={styles.video}
 +                    /> : <Image
 +                    onLoadEnd={() => start()}
@@ -3757,7 +3859,7 @@ index 80f3d29..047117a 100644
            {load && (
              <View style={styles.spinnerContainer}>
                <ActivityIndicator size="large" color={'white'} />
-@@ -426,4 +460,9 @@ const styles = StyleSheet.create({
+@@ -426,4 +458,9 @@ const styles = StyleSheet.create({
      color: 'white',
      marginTop: 5,
    },

@@ -22,6 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedIn } from '../redux/authSlice';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
+import HomeStory from '../components/HomeStory';
+import PostInterface from '../components/PostInterface';
 
 const GetPosts = () => {
   const { isFetching, isError, isSuccess, data } = useQuery(
@@ -87,15 +89,23 @@ function HomeScreen(): JSX.Element {
           alignItems: 'center',
           backgroundColor: theme.background,
         }}>
-        <Image
-          source={instaLogo}
-          style={{
-            width: 100,
-            height: 100,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-          }}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            source={instaLogo}
+            style={{
+              width: 105,
+              height: 60,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+            }}
+          />
+          <Feather
+            name="chevron-down"
+            size={15}
+            color={theme.text}
+            style={{ paddingLeft: 5 }}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',
@@ -105,22 +115,20 @@ function HomeScreen(): JSX.Element {
             <Ionic
               name="ios-heart-outline"
               style={{ fontSize: 24, paddingRight: 20 }}
+              color={theme.text}
             />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Direct')}>
-            <Feather name="send" style={{ fontSize: 24 }} />
+            <Feather name="send" style={{ fontSize: 24 }} color={theme.text} />
           </TouchableOpacity>
         </View>
       </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        {isLoggedIn && (
-          <TouchableOpacity onPress={handleSignOut}>
-            <Text style={{ color: theme.mainButtonColor }}>Log out</Text>
-          </TouchableOpacity>
-        )}
+        <HomeStory />
+        <PostInterface />
       </ScrollView>
     </SafeAreaView>
   );
