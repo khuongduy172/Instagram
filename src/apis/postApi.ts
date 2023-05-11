@@ -8,4 +8,8 @@ const postStatus = async (data: any) => {
   });
 };
 
-export { postStatus };
+const getStatus = async () => {
+  return await axiosInstance.get('/Status/home');
+};
+
+export { postStatus, getStatus };

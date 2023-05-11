@@ -128,6 +128,12 @@ function HomeScreen(): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <HomeStory />
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderColor: '#efefef',
+            marginVertical: 3,
+          }}></View>
         <PostInterface />
       </ScrollView>
     </SafeAreaView>

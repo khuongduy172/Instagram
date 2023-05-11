@@ -1,57 +1,59 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  FlatList,
+} from 'react-native';
+import React, { useState, useRef } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useCustomTheme from '../theme/CustomTheme';
+import moment from 'moment';
+import { useQuery } from 'react-query';
+import { getStatus } from '../apis/postApi';
+import { useFocusEffect } from '@react-navigation/native';
+import PostLoader from './loader/posts';
+import PaginationDot from 'react-native-animated-pagination-dot';
+
+export const useRefetchOnFocus = (refetch: () => void) => {
+  useFocusEffect(() => {
+    refetch();
+  });
+};
 
 const PostInterface = () => {
   const theme = useCustomTheme();
-  const postInfo = [
-    {
-      postTitle: 'anthony.haidang',
-      postPersonImage: require('../constants/storage/images/post3.png'),
-      postImage: require('../constants/storage/images/post3.png'),
-      likes: 765,
-      isLiked: false,
-    },
-    {
-      postTitle: 'sontungmtp',
-      postPersonImage: require('../constants/storage/images/st.png'),
-      postImage: require('../constants/storage/images/st.png'),
-      likes: 765,
-      isLiked: false,
-    },
-    {
-      postTitle: 'mono.hng',
-      postPersonImage: require('../constants/storage/images/mn.png'),
-      postImage: require('../constants/storage/images/mn.png'),
-      likes: 765,
-      isLiked: false,
-    },
-    {
-      postTitle: 'miya.soya',
-      postPersonImage: require('../constants/storage/images/tt.png'),
-      postImage: require('../constants/storage/images/tt.png'),
-      likes: 765,
-      isLiked: false,
-    },
-    {
-      postTitle: 'khanhvyccf',
-      postPersonImage: require('../constants/storage/images/kv.png'),
-      postImage: require('../constants/storage/images/kv.png'),
-      likes: 765,
-      isLiked: false,
-    },
-  ];
+  const width = Dimensions.get('window').width;
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const onViewableItemsChanged = useRef((item: any) => {
+    const index = item.viewableItems[0].index;
+    setCurrentSlideIndex(index);
+  });
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  });
+
+  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
+  const [like, setLike] = useState(false);
+  useRefetchOnFocus(refetch);
+  if (isLoading) {
+    return <PostLoader />;
+  }
+  if (error) {
+    return <Text>Error: {error.message}</Text>;
+  }
+
   return (
-    <View>
-      {postInfo.map((data, index) => {
-        const [like, setLike] = useState(data.isLiked);
+    <>
+      {data.data.map((newData, key) => {
         return (
           <View
-            key={index}
+            key={key}
             style={{
               paddingBottom: 10,
               borderBottomColor: 'gray',
@@ -70,10 +72,10 @@ const PostInterface = () => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={data.postPersonImage}
+                  source={{ uri: newData.owner.avatar }}
                   style={{
-                    width: 40,
-                    height: 40,
+                    width: 30,
+                    height: 30,
                     borderRadius: 100,
                   }}
                 />
@@ -83,9 +85,9 @@ const PostInterface = () => {
                       fontSize: 14,
                       fontWeight: 'bold',
                       color: theme.text,
-                      paddingLeft: 10,
+                      paddingLeft: 7,
                     }}>
-                    {data.postTitle}
+                    {newData.owner.username}
                   </Text>
                 </View>
               </View>
@@ -101,9 +103,22 @@ const PostInterface = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Image
-                source={data.postImage}
-                style={{ width: '100%', height: 400 }}
+              <FlatList
+                data={newData.statusImages}
+                horizontal
+                pagingEnabled
+                keyExtractor={item => item.name}
+                onViewableItemsChanged={onViewableItemsChanged.current}
+                viewabilityConfig={viewabilityConfig.current}
+                renderItem={({ item, index }) => {
+                  return (
+                    <Image
+                      key={index}
+                      source={{ uri: item.url }}
+                      style={{ width: width, height: 400 }}
+                    />
+                  );
+                }}
               />
             </View>
             <View
@@ -112,7 +127,8 @@ const PostInterface = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 paddingHorizontal: 12,
-                paddingVertical: 15,
+                paddingTop: 15,
+                paddingBottom: 10,
               }}>
               <View
                 style={{
@@ -123,95 +139,73 @@ const PostInterface = () => {
                   <AntDesign
                     name={like ? 'heart' : 'hearto'}
                     style={{
-                      paddingRight: 10,
                       fontSize: 20,
-                      color: like ? 'red' : 'black',
+                      color: like ? 'red' : theme.text,
                     }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity style={{ paddingHorizontal: 20 }}>
                   <Ionic
                     name="ios-chatbubble-outline"
                     style={{
                       fontSize: 20,
-                      paddingRight: 10,
                     }}
+                    color={theme.text}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity style={{ paddingRight: 25 }}>
                   <Feather
                     name="send"
                     style={{
                       fontSize: 20,
                     }}
+                    color={theme.text}
                   />
                 </TouchableOpacity>
+                <PaginationDot
+                  activeDotColor={'blue'}
+                  curPage={currentSlideIndex}
+                  maxPage={newData.statusImages.length}
+                />
               </View>
-              <FontAwesome name="bookmark-o" size={20} />
+              <FontAwesome name="bookmark-o" size={20} color={theme.text} />
             </View>
             <View style={{ paddingHorizontal: 15 }}>
-              <Text>
-                Liked by {like ? 'you and' : ''}{' '}
-                {like ? data.likes + 1 : data.likes} others
+              <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                Liked by {like ? 'you and ' : ''}
+                {like ? newData.isReacted : !newData.isReacted}12.136 others
               </Text>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  paddingVertical: 2,
-                }}>
-                Hello ^^
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    color: theme.text,
+                  }}>
+                  {newData.owner.username}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    paddingVertical: 2,
+                    color: theme.text,
+                    paddingLeft: 5,
+                  }}>
+                  {newData.content}
+                </Text>
+              </View>
               <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
                 View all comments
               </Text>
-              {/* <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Image
-                                source={data.postPersonImage}
-                                style={{
-                                    width: 25,
-                                    height: 25,
-                                    borderRadius: 100,
-                                    backgroundColor: "orange",
-                                    marginRight: 10,
-                                }}
-                            />
-                            <TextInput
-                                placeholder="Add a comment"
-                                style={{ opacity: 0.5 }}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Entypo
-                                name="emoji-happy"
-                                style={{
-                                    fontSize: 15,
-                                    color: "lightgreen",
-                                }}
-                            />
-                        </View>
-                    </View> */}
+              <View></View>
+              <Text style={{ fontSize: 10 }}>
+                {moment(newData.createdAt).fromNow()}
+              </Text>
             </View>
           </View>
         );
       })}
-    </View>
+    </>
   );
 };
 
