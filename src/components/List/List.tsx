@@ -5,7 +5,6 @@ import styles from './List.styles';
 
 const Photos = ({ item }: any) => {
   const [state, dispatch, selectedImagesFromAlbum] = UseListState();
-  console.log('List');
   return (
     <>
       <TouchableOpacity

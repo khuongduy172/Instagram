@@ -2,9 +2,7 @@ import Media from './ImageLibrary';
 
 export const mediaList = albumList => {
   const setAlbumList = {};
-  console.log('al', albumList);
   albumList.forEach(photos => {
-    console.log('alumin', photos);
     setAlbumList[photos.node.timestamp] = photos.node.image.uri;
   });
   return setAlbumList;

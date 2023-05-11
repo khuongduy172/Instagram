@@ -32,7 +32,6 @@ const photo = async (getAlbums: any) => {
       return;
     } else {
       const albums = await CameraRoll.getAlbums();
-      console.log('album ne', albums);
       const album = albums.find(a => a.title === getAlbums);
       if (!album) {
         throw new Error(`Album ${getAlbums} not found.`);
