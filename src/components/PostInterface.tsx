@@ -100,9 +100,27 @@ const PostInterface = () => {
             <View
               style={{
                 position: 'relative',
-                justifyContent: 'center',
-                alignItems: 'center',
               }}>
+              {newData.statusImages.length > 1 && (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 5,
+                    borderRadius: 20,
+                    backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                    position: 'absolute',
+                    zIndex: 10,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    right: 0,
+                    margin: 15,
+                  }}>
+                  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                    {currentSlideIndex + 1}/{newData.statusImages.length}
+                  </Text>
+                </View>
+              )}
+
               <FlatList
                 data={newData.statusImages}
                 horizontal
@@ -153,7 +171,7 @@ const PostInterface = () => {
                     color={theme.text}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ paddingRight: 25 }}>
+                <TouchableOpacity style={{ paddingRight: 50 }}>
                   <Feather
                     name="send"
                     style={{
@@ -162,11 +180,13 @@ const PostInterface = () => {
                     color={theme.text}
                   />
                 </TouchableOpacity>
-                <PaginationDot
-                  activeDotColor={'blue'}
-                  curPage={currentSlideIndex}
-                  maxPage={newData.statusImages.length}
-                />
+                {newData.statusImages.length > 1 && (
+                  <PaginationDot
+                    activeDotColor={'#1891f6'}
+                    curPage={currentSlideIndex}
+                    maxPage={newData.statusImages.length}
+                  />
+                )}
               </View>
               <FontAwesome name="bookmark-o" size={20} color={theme.text} />
             </View>

@@ -9,7 +9,7 @@ const postStatus = async (data: any) => {
 };
 
 const getStatus = async () => {
-  return await axiosInstance.get('/Status/home');
+  return await axiosInstance.get('/Status/home?PageNumber=4&PageSize=6');
 };
 
 export { postStatus, getStatus };
