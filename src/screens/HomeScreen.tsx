@@ -25,34 +25,6 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import HomeStory from '../components/HomeStory';
 import PostInterface from '../components/PostInterface';
 
-const GetPosts = () => {
-  const { isFetching, isError, isSuccess, data } = useQuery(
-    'posts',
-    async () => {
-      const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-      if (res) {
-        return res.json();
-      }
-      throw new Error('Posts error');
-    },
-  );
-
-  if (isFetching) {
-    return <PostLoader />;
-  } else if (isError) {
-    console.log('error');
-  }
-
-  return (
-    <>
-      {isSuccess &&
-        data?.map((post: any, index: number) => (
-          <Text key={index}>{post.title}</Text>
-        ))}
-    </>
-  );
-};
-
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation: any = useNavigation();
@@ -90,15 +62,18 @@ function HomeScreen(): JSX.Element {
           backgroundColor: theme.background,
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image
-            source={instaLogo}
-            style={{
-              width: 105,
-              height: 60,
-              resizeMode: 'contain',
-              alignSelf: 'center',
-            }}
-          />
+          <TouchableOpacity onPress={handleSignOut}>
+            <Image
+              source={instaLogo}
+              style={{
+                width: 105,
+                height: 60,
+                resizeMode: 'contain',
+                alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+
           <Feather
             name="chevron-down"
             size={15}

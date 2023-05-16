@@ -8,4 +8,8 @@ const postReels = async (data: any) => {
   });
 };
 
-export { postReels };
+const getReels = async () => {
+  return await axiosInstance.get('/Reel');
+};
+
+export { postReels, getReels };

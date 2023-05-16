@@ -5,8 +5,9 @@ import {
   Image,
   Dimensions,
   FlatList,
+  ImageBackground,
 } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
@@ -18,12 +19,24 @@ import { getStatus } from '../apis/postApi';
 import { useFocusEffect } from '@react-navigation/native';
 import PostLoader from './loader/posts';
 import PaginationDot from 'react-native-animated-pagination-dot';
+import {
+  TapGestureHandler,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+} from 'react-native-reanimated';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
     refetch();
   });
 };
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const PostInterface = () => {
   const theme = useCustomTheme();
@@ -37,9 +50,26 @@ const PostInterface = () => {
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   });
+  const [like, setLike] = useState(false);
+
+  const doubleTapRef = useRef();
+  const scale = useSharedValue(0);
+
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: Math.max(scale.value, 0) }],
+  }));
+
+  const onDoubleTap = useCallback(() => {
+    scale.value = withSpring(1, undefined, isFinished => {
+      if (isFinished) {
+        scale.value = withDelay(500, withSpring(0));
+      }
+    });
+    setLike(prevState => !prevState);
+  }, []);
 
   const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
-  const [like, setLike] = useState(false);
+
   useRefetchOnFocus(refetch);
   if (isLoading) {
     return <PostLoader />;
@@ -130,11 +160,39 @@ const PostInterface = () => {
                 viewabilityConfig={viewabilityConfig.current}
                 renderItem={({ item, index }) => {
                   return (
-                    <Image
-                      key={index}
-                      source={{ uri: item.url }}
-                      style={{ width: width, height: 400 }}
-                    />
+                    <GestureHandlerRootView>
+                      <TapGestureHandler
+                        maxDelayMs={250}
+                        ref={doubleTapRef}
+                        numberOfTaps={2}
+                        onActivated={onDoubleTap}>
+                        <Animated.View>
+                          <ImageBackground
+                            source={{ uri: item.url }}
+                            style={{
+                              width: width,
+                              height: 400,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <AnimatedImage
+                              source={require('../assets/images/heart.png')}
+                              resizeMode="center"
+                              style={[
+                                {
+                                  width: width,
+                                  height: 80,
+                                  shadowOffset: { width: 0, height: 20 },
+                                  shadowOpacity: 0.3,
+                                  shadowRadius: 35,
+                                },
+                                rStyle,
+                              ]}
+                            />
+                          </ImageBackground>
+                        </Animated.View>
+                      </TapGestureHandler>
+                    </GestureHandlerRootView>
                   );
                 }}
               />

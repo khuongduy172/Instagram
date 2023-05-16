@@ -31,7 +31,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
 
   const [mute, setMute] = useState(false);
 
-  const [like, setLike] = useState(item.isLike);
+  const [like, setLike] = useState(item.isReacted);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -68,13 +68,16 @@ const SingleReel = ({ item, index, currentIndex }) => {
           repeat={true}
           resizeMode="cover"
           paused={currentIndex === index ? false : true}
-          source={{ uri: item.video }}
+          source={{
+            uri: 'https://s3-hcm-r1.longvan.net/19420200-instagram/v4.mp4',
+          }}
           muted={mute}
           style={{
             width: '100%',
             height: '100%',
             position: 'absolute',
           }}
+          hideShutterView={true}
         />
       </TouchableOpacity>
       <Ionic
@@ -116,7 +119,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
                 }}>
                 <Image
                   key={index}
-                  source={item.postProfile}
+                  source={{ uri: item.owner.avatar }}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -127,12 +130,12 @@ const SingleReel = ({ item, index, currentIndex }) => {
               </View>
               <Text
                 style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                {item.title}
+                {item.owner.username}
               </Text>
             </View>
           </TouchableOpacity>
           <Text style={{ color: 'white', fontSize: 14, marginHorizontal: 10 }}>
-            {item.description}
+            {item.caption}
           </Text>
           <View
             style={{
@@ -172,20 +175,20 @@ const SingleReel = ({ item, index, currentIndex }) => {
             color={like ? 'red' : 'white'}
           />
           <Text style={{ color: 'white', fontWeight: 'bold' }}>
-            {item.likes}
+            {item.reactCount}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
           <Ionic name="ios-chatbubble-outline" size={25} color="white" />
           <Text style={{ color: 'white', fontWeight: 'bold' }}>
-            {item.comments}
+            {item.commentCount}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
           <Ionic name="paper-plane-outline" size={25} color="white" />
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+          {/* <Text style={{ color: 'white', fontWeight: 'bold' }}>
             {item.shares}
-          </Text>
+          </Text> */}
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
           <Feather name="more-vertical" size={25} color="white" />
@@ -201,7 +204,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           }}>
           <Image
             key={index}
-            source={item.postProfile}
+            source={{ uri: item.owner.avatar }}
             style={{
               width: '100%',
               height: '100%',
