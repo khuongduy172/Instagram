@@ -25,7 +25,7 @@ const ReelsComponent = () => {
 
   return (
     <SwiperFlatList
-      data={videoData}
+      data={ReelData}
       onChangeIndex={handleChangeIndexValue}
       vertical={true}
       renderItem={({ item, index }) => (

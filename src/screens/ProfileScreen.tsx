@@ -91,7 +91,7 @@ const ProfileScreen = () => {
         </View>
       ) : null}
 
-      <ProfileBottomTabView />
+      <ProfileBottomTabView userId={data?.id} />
       <Modal
         isVisible={isModalVisible}
         swipeDirection="down"
@@ -99,13 +99,15 @@ const ProfileScreen = () => {
         useNativeDriver={true}
         style={{
           justifyContent: 'flex-end',
-          margin: 0,
+          marginTop: 400,
+          marginBottom: 0,
+          marginHorizontal: 0,
           backgroundColor: theme.backgroundColor,
         }}>
         <TouchableOpacity
           onPressOut={toggleModal}
           activeOpacity={1}
-          style={{ height: '100%' }}>
+          style={{ height: '150%' }}>
           <View
             style={{
               height: '72%',

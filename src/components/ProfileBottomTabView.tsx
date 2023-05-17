@@ -4,8 +4,11 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import { SimpleGrid } from 'react-native-super-grid';
+import { useQuery } from 'react-query';
+import { getUserReels } from '../apis/reelApi';
+import Video from 'react-native-video';
 
-const ProfileBottomTabView = () => {
+const ProfileBottomTabView = (props: any) => {
   const Tab = createMaterialTopTabNavigator();
   const theme = useCustomTheme();
   const postInfo = [
@@ -16,25 +19,25 @@ const ProfileBottomTabView = () => {
       image: require('../assets/images/h1.jpg'),
     },
     {
-      id: 0,
+      id: 2,
       name: 'anthony.haidang',
       title: 'Winter is comming <3',
       image: require('../assets/images/h2.jpg'),
     },
     {
-      id: 0,
+      id: 3,
       name: 'anthony.haidang',
       title: 'Festival ^^',
       image: require('../assets/images/h3.jpg'),
     },
     {
-      id: 0,
+      id: 4,
       name: 'anthony.haidang',
       title: 'Raining...',
       image: require('../assets/images/h4.jpg'),
     },
     {
-      id: 0,
+      id: 5,
       name: 'anthony.haidang',
       title: 'High from sky ^^',
       image: require('../assets/images/h5.jpg'),
@@ -60,7 +63,7 @@ const ProfileBottomTabView = () => {
             spacing={0}
             data={postInfo}
             renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
+              <Image source={item.image} style={{ width: 120, height: 120 }} />
             )}
             style={{ flex: 1 }}
             listKey={undefined}
@@ -71,6 +74,18 @@ const ProfileBottomTabView = () => {
   };
 
   const Video = () => {
+    const {
+      data: ReelData,
+      isLoading,
+      isError,
+    } = useQuery('getReels', getUserReels(props.userId));
+    console.log('new', ReelData);
+    if (isLoading) {
+      return <Text>Loading</Text>;
+    }
+    if (isError) {
+      return <Text>Error</Text>;
+    }
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -87,10 +102,20 @@ const ProfileBottomTabView = () => {
           <SimpleGrid
             itemDimension={100}
             spacing={0}
-            data={postInfo}
-            renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
-            )}
+            data={ReelData}
+            renderItem={({ item }) => {
+              return (
+                <Video
+                  source={{
+                    uri: item.url,
+                  }}
+                  resizeMode="cover"
+                  style={{ width: 120, height: 120 }}
+                  paused={true}
+                  muted={true}
+                />
+              );
+            }}
             style={{ flex: 1 }}
             listKey={undefined}
           />
@@ -118,7 +143,7 @@ const ProfileBottomTabView = () => {
             spacing={0}
             data={postInfo}
             renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
+              <Image source={item.image} style={{ width: 120, height: 120 }} />
             )}
             style={{ flex: 1 }}
             listKey={undefined}

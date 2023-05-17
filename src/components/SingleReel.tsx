@@ -6,6 +6,8 @@ import {
   Image,
   StatusBar,
   useColorScheme,
+  ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
@@ -13,13 +15,34 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Video from 'react-native-video';
 import { useFocusEffect } from '@react-navigation/native';
+import { viewReels, deleteReel } from '../apis/reelApi';
+import Modal from 'react-native-modal';
+import useCustomTheme from '../theme/CustomTheme';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useMutation } from 'react-query';
+import { useNavigation } from '@react-navigation/native';
 
 const SingleReel = ({ item, index, currentIndex }) => {
+  const navigation = useNavigation();
   const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
+  const theme = useCustomTheme();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible2, setModalVisible2] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const toggleDeleteModal = () => {
+    setModalVisible2(!isModalVisible2);
+  };
 
   const videoRef = useRef(null);
+  const [videoDuration, setVideoDuration] = useState(0);
+  let isViewed = false;
 
   const onBuffer = buffer => {
     // console.log(buffer);
@@ -27,6 +50,35 @@ const SingleReel = ({ item, index, currentIndex }) => {
 
   const onError = error => {
     console.log('error', error);
+  };
+
+  const onLoad = (data: any) => {
+    setVideoDuration(data.duration);
+  };
+
+  const onProgress = async (data: any) => {
+    if (
+      (data.currentTime >= 5 || data.currentTime === videoDuration) &&
+      !isViewed
+    ) {
+      isViewed = true;
+      await viewReels(item.id);
+    }
+  };
+
+  const { mutate, isLoading: deleteReelLoading } = useMutation(deleteReel, {
+    onSuccess: data => {
+      if (data) {
+        ToastAndroid.show('Deleted successfully', ToastAndroid.SHORT);
+        navigation.navigate('Home');
+      } else {
+        ToastAndroid.show('Deleted failed', ToastAndroid.SHORT);
+      }
+    },
+  });
+
+  const handleDelete = () => {
+    mutate(item.id);
   };
 
   const [mute, setMute] = useState(false);
@@ -69,8 +121,10 @@ const SingleReel = ({ item, index, currentIndex }) => {
           resizeMode="cover"
           paused={currentIndex === index ? false : true}
           source={{
-            uri: 'https://s3-hcm-r1.longvan.net/19420200-instagram/v4.mp4',
+            uri: item.url,
           }}
+          onLoad={onLoad}
+          onProgress={onProgress}
           muted={mute}
           style={{
             width: '100%',
@@ -96,7 +150,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
       <View
         style={{
           position: 'absolute',
-          width: windowWidth,
+          width: windowWidth * 0.9,
           zIndex: 1,
           bottom: windowHeight * 0.075,
           padding: 10,
@@ -186,13 +240,267 @@ const SingleReel = ({ item, index, currentIndex }) => {
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
           <Ionic name="paper-plane-outline" size={25} color="white" />
-          {/* <Text style={{ color: 'white', fontWeight: 'bold' }}>
-            {item.shares}
-          </Text> */}
         </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 10 }}>
+        <TouchableOpacity
+          style={{ padding: 10, alignItems: 'center' }}
+          onPress={toggleModal}>
           <Feather name="more-vertical" size={25} color="white" />
         </TouchableOpacity>
+        <Modal
+          isVisible={isModalVisible}
+          swipeDirection="down"
+          onSwipeComplete={toggleModal}
+          useNativeDriver={true}
+          style={{
+            justifyContent: 'flex-end',
+            marginTop: 380,
+            marginBottom: 0,
+            marginHorizontal: 0,
+            backgroundColor: theme.backgroundColor,
+          }}>
+          <TouchableOpacity
+            onPressOut={toggleModal}
+            activeOpacity={1}
+            style={{ height: '150%' }}>
+            <View
+              style={{
+                height: '72%',
+                marginTop: 'auto',
+                backgroundColor: theme.background,
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 30,
+                  height: 5,
+                  borderRadius: 20,
+                  backgroundColor: theme.textSecond,
+                  alignSelf: 'center',
+                  marginTop: 5,
+                }}></View>
+              <View
+                style={{
+                  paddingHorizontal: 20,
+                  paddingTop: 15,
+                  paddingBottom: 10,
+                }}>
+                <TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginVertical: 20,
+                      justifyContent: 'space-between',
+                      marginHorizontal: 50,
+                    }}>
+                    <View
+                      style={{ flexDirection: 'column', alignItems: 'center' }}>
+                      <View
+                        style={{
+                          width: 60,
+                          height: 60,
+                          borderWidth: 1,
+                          borderRadius: 100,
+                          borderColor: theme.text,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Feather name="bookmark" color={theme.text} size={25} />
+                      </View>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          color: theme.text,
+                          marginTop: 10,
+                        }}>
+                        Save
+                      </Text>
+                    </View>
+                    <View
+                      style={{ flexDirection: 'column', alignItems: 'center' }}>
+                      <View
+                        style={{
+                          width: 60,
+                          height: 60,
+                          borderWidth: 1,
+                          borderRadius: 100,
+                          borderColor: theme.text,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Feather
+                          name="rotate-ccw"
+                          color={theme.text}
+                          size={25}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          color: theme.text,
+                          marginTop: 10,
+                        }}>
+                        Remix
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: '#efefef',
+                  marginVertical: 3,
+                }}></View>
+              <TouchableOpacity
+                style={{
+                  paddingTop: 20,
+                  paddingHorizontal: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <FontAwesome name="eye-slash" size={30} color={theme.text} />
+                <Text
+                  style={{ color: theme.text, marginLeft: 15, fontSize: 17 }}>
+                  Not interested
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  padding: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={toggleDeleteModal}>
+                <MaterialCommunityIcons
+                  name="delete-alert-outline"
+                  size={30}
+                  color="#b03347"
+                />
+                <Text
+                  style={{ color: '#b03347', marginLeft: 15, fontSize: 17 }}>
+                  Delete...
+                </Text>
+              </TouchableOpacity>
+              <Modal isVisible={isModalVisible2}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      borderRadius: 20,
+                      width: 250,
+                      height: 235,
+                      backgroundColor: theme.backgroundColor,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        paddingVertical: 25,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                          color: theme.text,
+                        }}>
+                        Are you sure?
+                      </Text>
+                      <Text
+                        style={{
+                          color: theme.textSecond,
+                          paddingHorizontal: 20,
+                          fontSize: 13,
+                          paddingTop: 15,
+                          textAlign: 'center',
+                          width: 200,
+                          lineHeight: 20,
+                        }}>
+                        If you delete now, you will lose this video.
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#efefef',
+                      }}></View>
+                    <TouchableOpacity
+                      onPress={handleDelete}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingVertical: 15,
+                      }}>
+                      {deleteReelLoading ? (
+                        <ActivityIndicator size="small" color="#b03347" />
+                      ) : (
+                        <Text
+                          style={{
+                            paddingHorizontal: 15,
+                            color: '#b03347',
+                          }}>
+                          Delete
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#efefef',
+                      }}></View>
+                    <TouchableOpacity
+                      onPress={toggleDeleteModal}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingVertical: 15,
+                      }}>
+                      <Text
+                        style={{
+                          paddingHorizontal: 15,
+                          color: theme.text,
+                        }}>
+                        Cancel
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: '#efefef',
+                  marginVertical: 3,
+                }}></View>
+              <TouchableOpacity
+                style={{
+                  padding: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <MaterialCommunityIcons
+                  name="drag-horizontal-variant"
+                  size={30}
+                  color={theme.text}
+                />
+                <Text
+                  style={{ color: theme.text, marginLeft: 15, fontSize: 17 }}>
+                  Manage suggested content
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <View
           style={{
             width: 30,
