@@ -58,7 +58,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
 
   const onProgress = async (data: any) => {
     if (
-      (data.currentTime >= 5 || data.currentTime === videoDuration) &&
+      (data.currentTime >= 5 || data.currentTime >= videoDuration / 2) &&
       !isViewed
     ) {
       isViewed = true;
