@@ -50,7 +50,7 @@ const ProfileScreen = () => {
     UserResponse,
     ErrorMessage
   >('userOwner', getUserOwner);
-  useRefetchOnFocus(refetch);
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }

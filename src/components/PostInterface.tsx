@@ -70,7 +70,7 @@ const PostInterface = () => {
 
   const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
 
-  useRefetchOnFocus(refetch);
+  // useRefetchOnFocus(refetch);
   if (isLoading) {
     return <PostLoader />;
   }

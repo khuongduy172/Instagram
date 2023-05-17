@@ -7,8 +7,10 @@ import { SimpleGrid } from 'react-native-super-grid';
 import { useQuery } from 'react-query';
 import { getUserReels } from '../apis/reelApi';
 import Video from 'react-native-video';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileBottomTabView = (props: any) => {
+  console.log('props.userId', props.userId);
   const Tab = createMaterialTopTabNavigator();
   const theme = useCustomTheme();
   const postInfo = [
@@ -74,18 +76,26 @@ const ProfileBottomTabView = (props: any) => {
   };
 
   const Video = () => {
-    const {
-      data: ReelData,
-      isLoading,
-      isError,
-    } = useQuery('getReels', getUserReels(props.userId));
-    console.log('new', ReelData);
-    if (isLoading) {
-      return <Text>Loading</Text>;
-    }
-    if (isError) {
-      return <Text>Error</Text>;
-    }
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [reelData, setReelData] = React.useState<any>([]);
+
+    useFocusEffect(
+      React.useCallback(() => {
+        if (isLoading) return;
+        setIsLoading(true);
+        getUserReels(props.userId)
+          .then(res => {
+            console.log('res', res);
+            setReelData(res.data);
+            setIsLoading(false);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }, [props.userId]),
+    );
+    console.log('reelData', reelData);
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -102,7 +112,7 @@ const ProfileBottomTabView = (props: any) => {
           <SimpleGrid
             itemDimension={100}
             spacing={0}
-            data={ReelData}
+            data={reelData}
             renderItem={({ item }) => {
               return (
                 <Video
