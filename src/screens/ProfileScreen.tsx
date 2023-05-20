@@ -30,11 +30,11 @@ interface ErrorMessage {
   message: string;
 }
 
-export const useRefetchOnFocus = (refetch: () => void) => {
-  useFocusEffect(() => {
-    refetch();
-  });
-};
+// export const useRefetchOnFocus = (refetch: () => void) => {
+//   useFocusEffect(() => {
+//     refetch();
+//   });
+// };
 
 const ProfileScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -91,7 +91,7 @@ const ProfileScreen = () => {
         </View>
       ) : null}
 
-      <ProfileBottomTabView userId={data?.id} />
+      <ProfileBottomTabView />
       <Modal
         isVisible={isModalVisible}
         swipeDirection="down"

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
@@ -8,9 +8,13 @@ import { useQuery } from 'react-query';
 import { getUserReels } from '../apis/reelApi';
 import Video from 'react-native-video';
 import { useFocusEffect } from '@react-navigation/native';
+import { getUserOwner, UserResponse } from '../apis/userApi';
+
+interface ErrorMessage {
+  message: string;
+}
 
 const ProfileBottomTabView = (props: any) => {
-  console.log('props.userId', props.userId);
   const Tab = createMaterialTopTabNavigator();
   const theme = useCustomTheme();
   const postInfo = [
@@ -46,6 +50,29 @@ const ProfileBottomTabView = (props: any) => {
     },
   ];
 
+  const { data: UserData } = useQuery<UserResponse, ErrorMessage>(
+    'userOwner',
+    getUserOwner,
+  );
+
+  const [newData, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getUserReels(UserData?.id);
+        const data = await response.data;
+        setData(data); // Update the component state with the fetched data
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (UserData) {
+      fetchData(); // Call the API when the component mounts
+    }
+  }, [UserData]);
+
   const Post = () => {
     return (
       <ScrollView
@@ -76,26 +103,6 @@ const ProfileBottomTabView = (props: any) => {
   };
 
   const Video = () => {
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [reelData, setReelData] = React.useState<any>([]);
-
-    useFocusEffect(
-      React.useCallback(() => {
-        if (isLoading) return;
-        setIsLoading(true);
-        getUserReels(props.userId)
-          .then(res => {
-            console.log('res', res);
-            setReelData(res.data);
-            setIsLoading(false);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }, [props.userId]),
-    );
-    console.log('reelData', reelData);
-
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -109,26 +116,28 @@ const ProfileBottomTabView = (props: any) => {
             flexWrap: 'wrap',
             justifyContent: 'space-between',
           }}>
-          <SimpleGrid
-            itemDimension={100}
-            spacing={0}
-            data={reelData}
-            renderItem={({ item }) => {
-              return (
-                <Video
-                  source={{
-                    uri: item.url,
-                  }}
-                  resizeMode="cover"
-                  style={{ width: 120, height: 120 }}
-                  paused={true}
-                  muted={true}
-                />
-              );
-            }}
-            style={{ flex: 1 }}
-            listKey={undefined}
-          />
+          {newData && newData.length > 0 ? (
+            <SimpleGrid
+              itemDimension={100}
+              spacing={0}
+              data={newData}
+              renderItem={({ item }) => {
+                return (
+                  <Image
+                    source={{
+                      uri: item.owner.avatar,
+                    }}
+                    resizeMode="cover"
+                    style={{ width: 120, height: 120 }}
+                  />
+                );
+              }}
+              style={{ flex: 1 }}
+              listKey={undefined}
+            />
+          ) : (
+            <Text>No data available</Text>
+          )}
         </View>
       </ScrollView>
     );
