@@ -1,7 +1,6 @@
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import React, { useState } from 'react';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import { videoData } from '../constants/Video';
 import SingleReel from './SingleReel';
 import { getReels } from '../apis/reelApi';
 import { useQuery } from 'react-query';
