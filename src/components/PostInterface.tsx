@@ -6,6 +6,8 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  RefreshControl,
+  StyleSheet,
 } from 'react-native';
 import React, { useState, useRef, useCallback } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
@@ -29,6 +31,7 @@ import Animated, {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
+import { viewStatus } from '../apis/postApi';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
@@ -38,13 +41,23 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = () => {
+const PostInterface = ({ data, isLoading, isError }) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const onViewableItemsChanged = useRef((item: any) => {
     const index = item.viewableItems[0].index;
     setCurrentSlideIndex(index);
+  });
+
+  const _onViewableItemsChanged = useRef(({ viewableItems, changed }) => {
+    // console.log('Visible items are', viewableItems);
+    // console.log('Changed in this iteration, ', changed[0]);
+    viewStatus(viewableItems[0].item.id);
+  });
+
+  const _viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
   });
 
   const viewabilityConfig = useRef({
@@ -68,225 +81,231 @@ const PostInterface = () => {
     setLike(prevState => !prevState);
   }, []);
 
-  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
-
   // useRefetchOnFocus(refetch);
   if (isLoading) {
     return <PostLoader />;
   }
-  if (error) {
-    return <Text>Error: {error.message}</Text>;
+  if (isError) {
+    return <Text>Error: {isError.message}</Text>;
   }
 
   return (
     <>
-      {data &&
-        data.data &&
-        data.data.map((newData, key) => {
-          return (
+      <FlatList
+        data={data}
+        showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={_onViewableItemsChanged.current}
+        keyExtractor={(item, index) => index.toString()}
+        viewabilityConfig={_viewabilityConfig.current}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              paddingBottom: 10,
+              borderBottomColor: 'gray',
+              borderBottomWidth: 0.1,
+            }}>
             <View
-              key={key}
               style={{
-                paddingBottom: 10,
-                borderBottomColor: 'gray',
-                borderBottomWidth: 0.1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: 15,
               }}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: 15,
                 }}>
-                <View
+                <Image
+                  source={{ uri: item.owner.avatar }}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={{ uri: newData.owner.avatar }}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 100,
-                    }}
-                  />
-                  <View style={{ paddingLeft: 5 }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        color: theme.text,
-                        paddingLeft: 7,
-                      }}>
-                      {newData.owner.username}
-                    </Text>
-                  </View>
-                </View>
-                <Feather
-                  name="more-vertical"
-                  style={{ fontSize: 20 }}
-                  color={theme.text}
-                />
-              </View>
-              <View
-                style={{
-                  position: 'relative',
-                }}>
-                {newData.statusImages.length > 1 && (
-                  <View
-                    style={{
-                      paddingHorizontal: 15,
-                      paddingVertical: 5,
-                      borderRadius: 20,
-                      backgroundColor: 'rgba(52, 52, 52, 0.8)',
-                      position: 'absolute',
-                      zIndex: 10,
-                      justifyContent: 'flex-end',
-                      alignItems: 'center',
-                      right: 0,
-                      margin: 15,
-                    }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                      {currentSlideIndex + 1}/{newData.statusImages.length}
-                    </Text>
-                  </View>
-                )}
-
-                <FlatList
-                  data={newData.statusImages}
-                  horizontal
-                  pagingEnabled
-                  keyExtractor={item => item.name}
-                  onViewableItemsChanged={onViewableItemsChanged.current}
-                  viewabilityConfig={viewabilityConfig.current}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <GestureHandlerRootView>
-                        <TapGestureHandler
-                          maxDelayMs={250}
-                          ref={doubleTapRef}
-                          numberOfTaps={2}
-                          onActivated={onDoubleTap}>
-                          <Animated.View>
-                            <ImageBackground
-                              source={{ uri: item.url }}
-                              style={{
-                                width: width,
-                                height: 400,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <AnimatedImage
-                                source={require('../assets/images/heart.png')}
-                                resizeMode="center"
-                                style={[
-                                  {
-                                    width: width,
-                                    height: 80,
-                                    shadowOffset: { width: 0, height: 20 },
-                                    shadowOpacity: 0.3,
-                                    shadowRadius: 35,
-                                  },
-                                  rStyle,
-                                ]}
-                              />
-                            </ImageBackground>
-                          </Animated.View>
-                        </TapGestureHandler>
-                      </GestureHandlerRootView>
-                    );
+                    width: 30,
+                    height: 30,
+                    borderRadius: 100,
                   }}
                 />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingHorizontal: 12,
-                  paddingTop: 15,
-                  paddingBottom: 10,
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity onPress={() => setLike(!like)}>
-                    <AntDesign
-                      name={like ? 'heart' : 'hearto'}
-                      style={{
-                        fontSize: 20,
-                        color: like ? 'red' : theme.text,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ paddingHorizontal: 20 }}>
-                    <Ionic
-                      name="ios-chatbubble-outline"
-                      style={{
-                        fontSize: 20,
-                      }}
-                      color={theme.text}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ paddingRight: 50 }}>
-                    <Feather
-                      name="send"
-                      style={{
-                        fontSize: 20,
-                      }}
-                      color={theme.text}
-                    />
-                  </TouchableOpacity>
-                  {newData.statusImages.length > 1 && (
-                    <PaginationDot
-                      activeDotColor={'#1891f6'}
-                      curPage={currentSlideIndex}
-                      maxPage={newData.statusImages.length}
-                    />
-                  )}
-                </View>
-                <FontAwesome name="bookmark-o" size={20} color={theme.text} />
-              </View>
-              <View style={{ paddingHorizontal: 15 }}>
-                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
-                  Liked by {like ? 'you and ' : ''}
-                  {like ? newData.isReacted : !newData.isReacted}12.136 others
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ paddingLeft: 5 }}>
                   <Text
                     style={{
                       fontSize: 14,
                       fontWeight: 'bold',
                       color: theme.text,
+                      paddingLeft: 7,
                     }}>
-                    {newData.owner.username}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      paddingVertical: 2,
-                      color: theme.text,
-                      paddingLeft: 5,
-                    }}>
-                    {newData.content}
+                    {item.owner.username}
                   </Text>
                 </View>
-                <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
-                  View all comments
+              </View>
+              <Feather
+                name="more-vertical"
+                style={{ fontSize: 20 }}
+                color={theme.text}
+              />
+            </View>
+            <View
+              style={{
+                position: 'relative',
+              }}>
+              {item.statusImages.length > 1 && (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 5,
+                    borderRadius: 20,
+                    backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                    position: 'absolute',
+                    zIndex: 10,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    right: 0,
+                    margin: 15,
+                  }}>
+                  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                    {currentSlideIndex + 1}/{item.statusImages.length}
+                  </Text>
+                </View>
+              )}
+
+              <FlatList
+                data={item.statusImages}
+                horizontal
+                pagingEnabled
+                keyExtractor={(image, index) => index.toString()}
+                onViewableItemsChanged={onViewableItemsChanged.current}
+                viewabilityConfig={viewabilityConfig.current}
+                renderItem={({ item: image }) => {
+                  return (
+                    <GestureHandlerRootView>
+                      <TapGestureHandler
+                        maxDelayMs={250}
+                        ref={doubleTapRef}
+                        numberOfTaps={2}
+                        onActivated={onDoubleTap}>
+                        <Animated.View>
+                          <ImageBackground
+                            source={{ uri: image.url }}
+                            style={{
+                              width: width,
+                              height: 400,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <AnimatedImage
+                              source={require('../assets/images/heart.png')}
+                              resizeMode="center"
+                              style={[
+                                {
+                                  width: width,
+                                  height: 80,
+                                  shadowOffset: { width: 0, height: 20 },
+                                  shadowOpacity: 0.3,
+                                  shadowRadius: 35,
+                                },
+                                rStyle,
+                              ]}
+                            />
+                          </ImageBackground>
+                        </Animated.View>
+                      </TapGestureHandler>
+                    </GestureHandlerRootView>
+                  );
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 12,
+                paddingTop: 15,
+                paddingBottom: 10,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity onPress={() => setLike(!like)}>
+                  <AntDesign
+                    name={like ? 'heart' : 'hearto'}
+                    style={{
+                      fontSize: 20,
+                      color: like ? 'red' : theme.text,
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ paddingHorizontal: 20 }}>
+                  <Ionic
+                    name="ios-chatbubble-outline"
+                    style={{
+                      fontSize: 20,
+                    }}
+                    color={theme.text}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ paddingRight: 50 }}>
+                  <Feather
+                    name="send"
+                    style={{
+                      fontSize: 20,
+                    }}
+                    color={theme.text}
+                  />
+                </TouchableOpacity>
+                {item.statusImages.length > 1 && (
+                  <PaginationDot
+                    activeDotColor={'#1891f6'}
+                    curPage={currentSlideIndex}
+                    maxPage={item.statusImages.length}
+                  />
+                )}
+              </View>
+              <FontAwesome name="bookmark-o" size={20} color={theme.text} />
+            </View>
+            <View style={{ paddingHorizontal: 15 }}>
+              <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                Liked by {like ? 'you and ' : ''}
+                {like ? item.isReacted : !item.isReacted}12.136 others
+              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    color: theme.text,
+                  }}>
+                  {item.owner.username}
                 </Text>
-                <View></View>
-                <Text style={{ fontSize: 10 }}>
-                  {moment(newData.createdAt).fromNow()}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    paddingVertical: 2,
+                    color: theme.text,
+                    paddingLeft: 5,
+                  }}>
+                  {item.content}
                 </Text>
               </View>
+              <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
+                View all comments
+              </Text>
+              <View></View>
+              <Text style={{ fontSize: 10 }}>
+                {moment(item.createdAt).fromNow()}
+              </Text>
             </View>
-          );
-        })}
+          </View>
+        )}
+      />
     </>
   );
 };
 
 export default PostInterface;
+
+const styles = StyleSheet.create({
+  refreshControl: {
+    backgroundColor: '#fff',
+  },
+});

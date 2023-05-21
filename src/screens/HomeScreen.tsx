@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,7 +9,10 @@ import {
   Image,
   TouchableOpacity,
   ToastAndroid,
+  FlatList,
+  RefreshControl,
 } from 'react-native';
+import { getStatus } from '../apis/postApi';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -36,7 +39,6 @@ function HomeScreen(): JSX.Element {
     height: '100%',
   };
 
-  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   const handleSignOut = async () => {
@@ -50,6 +52,19 @@ function HomeScreen(): JSX.Element {
     scheme === 'dark'
       ? require('../assets/images/insta-dark.png')
       : require('../assets/images/insta.png');
+
+  const _viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  });
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refetch().then(() => setIsRefreshing(false));
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -99,18 +114,44 @@ function HomeScreen(): JSX.Element {
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <HomeStory />
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: '#efefef',
-            marginVertical: 3,
-          }}></View>
-        <PostInterface />
-      </ScrollView>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={[{ key: 'homestory' }, { key: 'postinterface' }]}
+        viewabilityConfig={_viewabilityConfig.current}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            colors={['#000']}
+            progressBackgroundColor="#ffffff"
+          />
+        }
+        renderItem={({ item }) => {
+          switch (item.key) {
+            case 'homestory':
+              return <HomeStory />;
+            case 'postinterface':
+              return (
+                <>
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderColor: '#efefef',
+                      marginVertical: 3,
+                    }}
+                  />
+                  <PostInterface
+                    data={data}
+                    isLoading={isLoading}
+                    isError={error}
+                  />
+                </>
+              );
+            default:
+              return null;
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }
