@@ -101,7 +101,7 @@ function HomeScreen(): JSX.Element {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Activity')}>
             <Ionic
               name="ios-heart-outline"
               style={{ fontSize: 24, paddingRight: 20 }}

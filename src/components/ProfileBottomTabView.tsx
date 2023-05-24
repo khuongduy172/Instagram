@@ -96,7 +96,11 @@ const ProfileBottomTabView = (props: any) => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ width: '100%', height: '100%' }}>
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: theme.background,
+        }}>
         <View
           style={{
             width: '100%',

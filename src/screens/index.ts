@@ -17,3 +17,5 @@ export { default as MessageScreen } from './MessageScreen';
 export { default as CreateReels } from './CreateReels';
 export { default as PostReels } from './PostReels';
 export { default as EditorScreen } from './EditorScreen';
+export { default as ActivityScreen } from './ActivityScreen';
+export { default as ClientProfile } from './ClientProfile';
