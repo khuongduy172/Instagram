@@ -123,7 +123,11 @@ const PostInterface = ({ data, isLoading, isError }) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={{ uri: item.owner.avatar }}
+                  source={{
+                    uri: item.owner.avatar
+                      ? item.owner.avatar
+                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
+                  }}
                   style={{
                     width: 30,
                     height: 30,

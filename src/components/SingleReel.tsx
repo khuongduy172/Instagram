@@ -175,7 +175,11 @@ const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
                 }}>
                 <Image
                   key={index}
-                  source={{ uri: item.owner.avatar }}
+                  source={{
+                    uri: item.owner.avatar
+                      ? item.owner.avatar
+                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
+                  }}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -514,7 +518,11 @@ const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
           }}>
           <Image
             key={index}
-            source={{ uri: item.owner.avatar }}
+            source={{
+              uri: item.owner.avatar
+                ? item.owner.avatar
+                : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
+            }}
             style={{
               width: '100%',
               height: '100%',
