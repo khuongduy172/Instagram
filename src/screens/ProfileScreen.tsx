@@ -30,11 +30,11 @@ interface ErrorMessage {
   message: string;
 }
 
-export const useRefetchOnFocus = (refetch: () => void) => {
-  useFocusEffect(() => {
-    refetch();
-  });
-};
+// export const useRefetchOnFocus = (refetch: () => void) => {
+//   useFocusEffect(() => {
+//     refetch();
+//   });
+// };
 
 const ProfileScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -50,7 +50,7 @@ const ProfileScreen = () => {
     UserResponse,
     ErrorMessage
   >('userOwner', getUserOwner);
-  useRefetchOnFocus(refetch);
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -99,13 +99,15 @@ const ProfileScreen = () => {
         useNativeDriver={true}
         style={{
           justifyContent: 'flex-end',
-          margin: 0,
+          marginTop: 400,
+          marginBottom: 0,
+          marginHorizontal: 0,
           backgroundColor: theme.backgroundColor,
         }}>
         <TouchableOpacity
           onPressOut={toggleModal}
           activeOpacity={1}
-          style={{ height: '100%' }}>
+          style={{ height: '150%' }}>
           <View
             style={{
               height: '72%',

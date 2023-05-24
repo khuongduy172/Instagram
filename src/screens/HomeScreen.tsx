@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,7 +9,10 @@ import {
   Image,
   TouchableOpacity,
   ToastAndroid,
+  FlatList,
+  RefreshControl,
 } from 'react-native';
+import { getStatus } from '../apis/postApi';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -22,34 +25,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedIn } from '../redux/authSlice';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
-
-const GetPosts = () => {
-  const { isFetching, isError, isSuccess, data } = useQuery(
-    'posts',
-    async () => {
-      const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-      if (res) {
-        return res.json();
-      }
-      throw new Error('Posts error');
-    },
-  );
-
-  if (isFetching) {
-    return <PostLoader />;
-  } else if (isError) {
-    console.log('error');
-  }
-
-  return (
-    <>
-      {isSuccess &&
-        data?.map((post: any, index: number) => (
-          <Text key={index}>{post.title}</Text>
-        ))}
-    </>
-  );
-};
+import HomeStory from '../components/HomeStory';
+import PostInterface from '../components/PostInterface';
 
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -62,7 +39,6 @@ function HomeScreen(): JSX.Element {
     height: '100%',
   };
 
-  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   const handleSignOut = async () => {
@@ -77,6 +53,19 @@ function HomeScreen(): JSX.Element {
       ? require('../assets/images/insta-dark.png')
       : require('../assets/images/insta.png');
 
+  const _viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  });
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refetch().then(() => setIsRefreshing(false));
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <View
@@ -87,41 +76,82 @@ function HomeScreen(): JSX.Element {
           alignItems: 'center',
           backgroundColor: theme.background,
         }}>
-        <Image
-          source={instaLogo}
-          style={{
-            width: 100,
-            height: 100,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-          }}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={handleSignOut}>
+            <Image
+              source={instaLogo}
+              style={{
+                width: 105,
+                height: 60,
+                resizeMode: 'contain',
+                alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+
+          <Feather
+            name="chevron-down"
+            size={15}
+            color={theme.text}
+            style={{ paddingLeft: 5 }}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Activity')}>
             <Ionic
               name="ios-heart-outline"
               style={{ fontSize: 24, paddingRight: 20 }}
+              color={theme.text}
             />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Direct')}>
-            <Feather name="send" style={{ fontSize: 24 }} />
+            <Feather name="send" style={{ fontSize: 24 }} color={theme.text} />
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        {isLoggedIn && (
-          <TouchableOpacity onPress={handleSignOut}>
-            <Text style={{ color: theme.mainButtonColor }}>Log out</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={[{ key: 'homestory' }, { key: 'postinterface' }]}
+        viewabilityConfig={_viewabilityConfig.current}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            colors={['#000']}
+            progressBackgroundColor="#ffffff"
+          />
+        }
+        renderItem={({ item }) => {
+          switch (item.key) {
+            case 'homestory':
+              return <HomeStory />;
+            case 'postinterface':
+              return (
+                <>
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderColor: '#efefef',
+                      marginVertical: 3,
+                    }}
+                  />
+                  <PostInterface
+                    data={data}
+                    isLoading={isLoading}
+                    isError={error}
+                  />
+                </>
+              );
+            default:
+              return null;
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }

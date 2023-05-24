@@ -8,4 +8,12 @@ const postStatus = async (data: any) => {
   });
 };
 
-export { postStatus };
+const getStatus = async () => {
+  return await axiosInstance.get('/Status/home');
+};
+
+const viewStatus = async (id: string) => {
+  return await axiosInstance.post(`/Status/${id}/view`);
+};
+
+export { postStatus, getStatus, viewStatus };

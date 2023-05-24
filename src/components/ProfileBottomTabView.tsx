@@ -1,11 +1,21 @@
 import { View, Text, ScrollView, Image } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import { SimpleGrid } from 'react-native-super-grid';
+import { useQuery } from 'react-query';
+import { getUserReels } from '../apis/reelApi';
+import Video from 'react-native-video';
+import { useFocusEffect } from '@react-navigation/native';
+import { getUserOwner, UserResponse } from '../apis/userApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileBottomTabView = () => {
+interface ErrorMessage {
+  message: string;
+}
+
+const ProfileBottomTabView = (props: any) => {
   const Tab = createMaterialTopTabNavigator();
   const theme = useCustomTheme();
   const postInfo = [
@@ -16,36 +26,81 @@ const ProfileBottomTabView = () => {
       image: require('../assets/images/h1.jpg'),
     },
     {
-      id: 0,
+      id: 2,
       name: 'anthony.haidang',
       title: 'Winter is comming <3',
       image: require('../assets/images/h2.jpg'),
     },
     {
-      id: 0,
+      id: 3,
       name: 'anthony.haidang',
       title: 'Festival ^^',
       image: require('../assets/images/h3.jpg'),
     },
     {
-      id: 0,
+      id: 4,
       name: 'anthony.haidang',
       title: 'Raining...',
       image: require('../assets/images/h4.jpg'),
     },
     {
-      id: 0,
+      id: 5,
       name: 'anthony.haidang',
       title: 'High from sky ^^',
       image: require('../assets/images/h5.jpg'),
     },
   ];
 
+  const { data: UserData } = useQuery<UserResponse, ErrorMessage>(
+    'userOwner',
+    getUserOwner,
+  );
+
+  const [newData, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getUserReels(UserData?.id);
+        const data = await response.data;
+        await AsyncStorage.setItem('reels', JSON.stringify(data)); // Stringify the data before storing it
+
+        // Update the component state with the fetched data
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (UserData) {
+      fetchData(); // Call the API when the component mounts
+    }
+  }, [UserData]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let data = await AsyncStorage.getItem('reels');
+        if (data) {
+          data = JSON.parse(data); // Parse the data back to an object
+          setData(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const Post = () => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ width: '100%', height: '100%' }}>
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: theme.background,
+        }}>
         <View
           style={{
             width: '100%',
@@ -60,7 +115,7 @@ const ProfileBottomTabView = () => {
             spacing={0}
             data={postInfo}
             renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
+              <Image source={item.image} style={{ width: 120, height: 120 }} />
             )}
             style={{ flex: 1 }}
             listKey={undefined}
@@ -71,6 +126,7 @@ const ProfileBottomTabView = () => {
   };
 
   const Video = () => {
+    console.log('reelsVid', newData);
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -84,16 +140,28 @@ const ProfileBottomTabView = () => {
             flexWrap: 'wrap',
             justifyContent: 'space-between',
           }}>
-          <SimpleGrid
-            itemDimension={100}
-            spacing={0}
-            data={postInfo}
-            renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
-            )}
-            style={{ flex: 1 }}
-            listKey={undefined}
-          />
+          {newData && newData.length > 0 ? (
+            <SimpleGrid
+              itemDimension={100}
+              spacing={0}
+              data={newData}
+              renderItem={({ item }) => {
+                return (
+                  <Image
+                    source={{
+                      uri: item.owner.avatar,
+                    }}
+                    resizeMode="cover"
+                    style={{ width: 120, height: 120 }}
+                  />
+                );
+              }}
+              style={{ flex: 1 }}
+              listKey={undefined}
+            />
+          ) : (
+            <Text>No data available</Text>
+          )}
         </View>
       </ScrollView>
     );
@@ -118,7 +186,7 @@ const ProfileBottomTabView = () => {
             spacing={0}
             data={postInfo}
             renderItem={({ item }) => (
-              <Image source={item.image} style={{ width: 119, height: 135 }} />
+              <Image source={item.image} style={{ width: 120, height: 120 }} />
             )}
             style={{ flex: 1 }}
             listKey={undefined}

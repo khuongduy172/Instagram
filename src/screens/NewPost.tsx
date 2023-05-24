@@ -86,10 +86,18 @@ const NewPost = ({ route, navigation }) => {
           name: `image${index}.jpg`,
         });
       });
-    } else {
+    } else if (newImageArray && newImageArray.length > 0) {
       newImageArray.forEach((item: any, index: any) => {
         formData.append('Files', {
           uri: item.uri,
+          type: 'image/jpeg',
+          name: `image${index}.jpg`,
+        });
+      });
+    } else {
+      editedImage.forEach((item: any, index: any) => {
+        formData.append('Files', {
+          uri: item,
           type: 'image/jpeg',
           name: `image${index}.jpg`,
         });

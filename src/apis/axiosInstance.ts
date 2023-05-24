@@ -1,6 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthResponse } from './authApi';
+import store from '../redux/store';
+import { setLoggedIn } from '../redux/authSlice';
 
 const axiosInstance = axios.create({
   // baseURL: 'https://83ba-123-21-33-87.ngrok-free.app/api',
@@ -37,6 +39,13 @@ axiosInstance.interceptors.response.use(
           token: await AsyncStorage.getItem('accessToken'),
           refreshToken: await AsyncStorage.getItem('refreshToken'),
         };
+
+        if (!body.token || !body.refreshToken) {
+          console.log('body: ', body);
+          store.dispatch(setLoggedIn(false));
+          return Promise.reject(error);
+        }
+
         const result = await axiosInstance.post<any, AuthResponse>(
           '/Auth/refresh',
           body,
@@ -48,17 +57,19 @@ axiosInstance.interceptors.response.use(
             ...config.headers,
             authorization: `Bearer ${result?.token}`,
           };
-          console.log('refetch');
+          console.log('refetched');
           return axios(config);
         } else {
           console.log("Can't refresh token");
           await AsyncStorage.removeItem('accessToken');
           await AsyncStorage.removeItem('refreshToken');
+          store.dispatch(setLoggedIn(false));
         }
       } catch (error) {
         console.log(error);
         await AsyncStorage.removeItem('accessToken');
         await AsyncStorage.removeItem('refreshToken');
+        store.dispatch(setLoggedIn(false));
       }
     }
     return Promise.reject(error);
