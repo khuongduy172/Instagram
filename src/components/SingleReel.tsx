@@ -23,7 +23,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useMutation } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
 
-const SingleReel = ({ item, index, currentIndex }) => {
+const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
   const navigation = useNavigation();
   const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
@@ -98,6 +98,8 @@ const SingleReel = ({ item, index, currentIndex }) => {
     }, []),
   );
 
+  console.log('check source', videoUrl);
+
   return (
     <View
       style={{
@@ -121,7 +123,7 @@ const SingleReel = ({ item, index, currentIndex }) => {
           resizeMode="cover"
           paused={currentIndex === index ? false : true}
           source={{
-            uri: item.url,
+            uri: videoUrl,
           }}
           onLoad={onLoad}
           onProgress={onProgress}

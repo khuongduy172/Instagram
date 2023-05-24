@@ -9,6 +9,7 @@ import { getUserReels } from '../apis/reelApi';
 import Video from 'react-native-video';
 import { useFocusEffect } from '@react-navigation/native';
 import { getUserOwner, UserResponse } from '../apis/userApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ErrorMessage {
   message: string;
@@ -62,7 +63,9 @@ const ProfileBottomTabView = (props: any) => {
       try {
         const response = await getUserReels(UserData?.id);
         const data = await response.data;
-        setData(data); // Update the component state with the fetched data
+        await AsyncStorage.setItem('reels', JSON.stringify(data)); // Stringify the data before storing it
+
+        // Update the component state with the fetched data
       } catch (error) {
         console.error(error);
       }
@@ -72,6 +75,22 @@ const ProfileBottomTabView = (props: any) => {
       fetchData(); // Call the API when the component mounts
     }
   }, [UserData]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let data = await AsyncStorage.getItem('reels');
+        if (data) {
+          data = JSON.parse(data); // Parse the data back to an object
+          setData(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const Post = () => {
     return (
@@ -103,6 +122,7 @@ const ProfileBottomTabView = (props: any) => {
   };
 
   const Video = () => {
+    console.log('reelsVid', newData);
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}

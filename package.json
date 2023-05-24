@@ -29,6 +29,7 @@
     "react-native-animated-pagination-dot": "^0.4.0",
     "react-native-dotenv": "^3.4.8",
     "react-native-fbsdk-next": "^11.2.0",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.10.0",
     "react-native-image-crop-picker": "^0.39.0",
     "react-native-image-filter-kit": "^0.8.0",

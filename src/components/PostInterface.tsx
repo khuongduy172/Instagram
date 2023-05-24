@@ -50,10 +50,16 @@ const PostInterface = ({ data, isLoading, isError }) => {
     setCurrentSlideIndex(index);
   });
 
+  const previousViewedItems = useRef([]);
+
   const _onViewableItemsChanged = useRef(({ viewableItems, changed }) => {
-    // console.log('Visible items are', viewableItems);
-    // console.log('Changed in this iteration, ', changed[0]);
-    viewStatus(viewableItems[0].item.id);
+    const newViewedItems = viewableItems.filter(
+      item => !previousViewedItems.current.includes(item.item.id),
+    );
+    newViewedItems.forEach(item => {
+      viewStatus(item.item.id);
+    });
+    previousViewedItems.current = viewableItems.map(item => item.item.id);
   });
 
   const _viewabilityConfig = useRef({
