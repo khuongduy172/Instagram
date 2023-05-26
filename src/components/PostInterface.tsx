@@ -41,7 +41,13 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = ({ data, isLoading, isError }) => {
+const PostInterface = ({
+  data,
+  isLoading,
+  loadMore,
+  renderSpinner,
+  isFetchingNextPage,
+}) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -51,14 +57,21 @@ const PostInterface = ({ data, isLoading, isError }) => {
   });
 
   const previousViewedItems = useRef([]);
+  const processedIds = useRef([]);
 
-  const _onViewableItemsChanged = useRef(({ viewableItems, changed }) => {
+  const _onViewableItemsChanged = useRef(({ viewableItems }) => {
     const newViewedItems = viewableItems.filter(
       item => !previousViewedItems.current.includes(item.item.id),
     );
+
     newViewedItems.forEach(item => {
-      viewStatus(item.item.id);
+      const id = item.item.id;
+      if (!processedIds.current.includes(id)) {
+        viewStatus(id);
+        processedIds.current.push(id);
+      }
     });
+
     previousViewedItems.current = viewableItems.map(item => item.item.id);
   });
 
@@ -91,9 +104,6 @@ const PostInterface = ({ data, isLoading, isError }) => {
   if (isLoading) {
     return <PostLoader />;
   }
-  if (isError) {
-    return <Text>Error: {isError.message}</Text>;
-  }
 
   return (
     <>
@@ -103,6 +113,9 @@ const PostInterface = ({ data, isLoading, isError }) => {
         onViewableItemsChanged={_onViewableItemsChanged.current}
         keyExtractor={(item, index) => index.toString()}
         viewabilityConfig={_viewabilityConfig.current}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={isFetchingNextPage ? renderSpinner : null}
         renderItem={({ item }) => (
           <View
             style={{

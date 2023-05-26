@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,6 +11,7 @@ import {
   ToastAndroid,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { getStatus } from '../apis/postApi';
 
@@ -18,7 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
-import { useQuery } from 'react-query';
+import { useQuery, useInfiniteQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,12 +60,32 @@ function HomeScreen(): JSX.Element {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
+  const [newData, setNewData] = useState([]);
+
+  const { data, isLoading, error, refetch, isFetching } = useQuery(
+    'getPosts',
+    getStatus,
+    {
+      onSuccess: newData => {
+        setNewData(oldData => [...oldData, ...newData]);
+      },
+    },
+  );
+
+  const loadMore = () => {
+    refetch();
+  };
+
+  const renderSpinner = () => {
+    return <ActivityIndicator size="large" color={theme.textSecond} />;
+  };
 
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     refetch().then(() => setIsRefreshing(false));
   }, []);
+
+  console.log('newData', newData);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -141,9 +162,11 @@ function HomeScreen(): JSX.Element {
                     }}
                   />
                   <PostInterface
-                    data={data}
+                    data={newData}
                     isLoading={isLoading}
-                    isError={error}
+                    loadMore={loadMore}
+                    renderSpinner={renderSpinner}
+                    isFetchingNextPage={isFetching}
                   />
                 </>
               );
