@@ -41,13 +41,7 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = ({
-  data,
-  isLoading,
-  loadMore,
-  renderSpinner,
-  isFetchingNextPage,
-}) => {
+const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -113,9 +107,7 @@ const PostInterface = ({
         onViewableItemsChanged={_onViewableItemsChanged.current}
         keyExtractor={(item, index) => index.toString()}
         viewabilityConfig={_viewabilityConfig.current}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.3}
-        ListFooterComponent={isFetchingNextPage ? renderSpinner : null}
+        ListFooterComponent={loading ? renderSpinner : null}
         renderItem={({ item }) => (
           <View
             style={{

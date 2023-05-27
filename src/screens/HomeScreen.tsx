@@ -58,34 +58,53 @@ function HomeScreen(): JSX.Element {
     itemVisiblePercentThreshold: 50,
   });
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const [newData, setNewData] = useState([]);
-
-  const { data, isLoading, error, refetch, isFetching } = useQuery(
-    'getPosts',
-    getStatus,
-    {
-      onSuccess: newData => {
-        setNewData(oldData => [...oldData, ...newData]);
-      },
-    },
-  );
-
-  const loadMore = () => {
-    refetch();
+  const fetchData = async () => {
+    await getStatus()
+      .then(response => {
+        setData(response);
+        setRefreshing(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setRefreshing(false);
+      });
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log('check', data);
 
   const renderSpinner = () => {
     return <ActivityIndicator size="large" color={theme.textSecond} />;
   };
 
-  const onRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    refetch().then(() => setIsRefreshing(false));
-  }, []);
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setData([]);
+    fetchData();
+  };
 
-  console.log('newData', newData);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMoreData = async () => {
+    if (!loading) {
+      setLoading(true);
+      await getStatus()
+        .then(response => {
+          setData(prevData => [...prevData, ...response]);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setLoading(false);
+        });
+    }
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -141,12 +160,14 @@ function HomeScreen(): JSX.Element {
         viewabilityConfig={_viewabilityConfig.current}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
             colors={['#000']}
             progressBackgroundColor="#ffffff"
           />
         }
+        onEndReached={fetchMoreData}
+        onEndReachedThreshold={0.5}
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':
@@ -162,11 +183,10 @@ function HomeScreen(): JSX.Element {
                     }}
                   />
                   <PostInterface
-                    data={newData}
-                    isLoading={isLoading}
-                    loadMore={loadMore}
+                    data={data}
+                    isLoading={refreshing}
                     renderSpinner={renderSpinner}
-                    isFetchingNextPage={isFetching}
+                    loading={loading}
                   />
                 </>
               );
