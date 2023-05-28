@@ -118,7 +118,7 @@ const ReelsComponent = () => {
       onEndReached={fetchMoreData}
       onEndReachedThreshold={0}
       decelerationRate={'normal'}
-      keyExtractor={item => item.id.toString()}
+      keyExtractor={(item, index) => item.id.toString() + index.toString()}
     />
   );
 };
