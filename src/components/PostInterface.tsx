@@ -8,6 +8,8 @@ import {
   ImageBackground,
   RefreshControl,
   StyleSheet,
+  ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState, useRef, useCallback } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
@@ -16,8 +18,8 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useCustomTheme from '../theme/CustomTheme';
 import moment from 'moment';
-import { useQuery } from 'react-query';
-import { getStatus } from '../apis/postApi';
+import { useMutation } from 'react-query';
+import { getStatus, deleteStatus } from '../apis/postApi';
 import { useFocusEffect } from '@react-navigation/native';
 import PostLoader from './loader/posts';
 import PaginationDot from 'react-native-animated-pagination-dot';
@@ -32,6 +34,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { viewStatus } from '../apis/postApi';
+import Modal from 'react-native-modal';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
@@ -41,7 +46,7 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = ({ data, isLoading, isError }) => {
+const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -51,14 +56,21 @@ const PostInterface = ({ data, isLoading, isError }) => {
   });
 
   const previousViewedItems = useRef([]);
+  const processedIds = useRef([]);
 
-  const _onViewableItemsChanged = useRef(({ viewableItems, changed }) => {
+  const _onViewableItemsChanged = useRef(({ viewableItems }) => {
     const newViewedItems = viewableItems.filter(
       item => !previousViewedItems.current.includes(item.item.id),
     );
+
     newViewedItems.forEach(item => {
-      viewStatus(item.item.id);
+      const id = item.item.id;
+      if (!processedIds.current.includes(id)) {
+        viewStatus(id);
+        processedIds.current.push(id);
+      }
     });
+
     previousViewedItems.current = viewableItems.map(item => item.item.id);
   });
 
@@ -87,12 +99,33 @@ const PostInterface = ({ data, isLoading, isError }) => {
     setLike(prevState => !prevState);
   }, []);
 
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible2, setModalVisible2] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const toggleDeleteModal = () => {
+    setModalVisible2(!isModalVisible2);
+  };
+
+  const navigation: any = useNavigation();
+
+  const { mutate, isLoading: deleteReelLoading } = useMutation(deleteStatus, {
+    onSuccess: data => {
+      if (data) {
+        ToastAndroid.show('Deleted successfully', ToastAndroid.SHORT);
+        navigation.navigate('Home');
+      } else {
+        ToastAndroid.show('Deleted failed', ToastAndroid.SHORT);
+      }
+    },
+  });
+
   // useRefetchOnFocus(refetch);
   if (isLoading) {
     return <PostLoader />;
-  }
-  if (isError) {
-    return <Text>Error: {isError.message}</Text>;
   }
 
   return (
@@ -103,6 +136,7 @@ const PostInterface = ({ data, isLoading, isError }) => {
         onViewableItemsChanged={_onViewableItemsChanged.current}
         keyExtractor={(item, index) => index.toString()}
         viewabilityConfig={_viewabilityConfig.current}
+        ListFooterComponent={loading ? renderSpinner : null}
         renderItem={({ item }) => (
           <View
             style={{
@@ -146,11 +180,208 @@ const PostInterface = ({ data, isLoading, isError }) => {
                   </Text>
                 </View>
               </View>
-              <Feather
-                name="more-vertical"
-                style={{ fontSize: 20 }}
-                color={theme.text}
-              />
+              <TouchableOpacity onPress={toggleModal}>
+                <Feather
+                  name="more-vertical"
+                  style={{ fontSize: 20 }}
+                  color={theme.text}
+                />
+              </TouchableOpacity>
+
+              <Modal
+                isVisible={isModalVisible}
+                swipeDirection="down"
+                onSwipeComplete={toggleModal}
+                useNativeDriver={true}
+                style={{
+                  justifyContent: 'flex-end',
+                  marginTop: 380,
+                  marginBottom: 0,
+                  marginHorizontal: 0,
+                  backgroundColor: theme.backgroundColor,
+                }}>
+                <TouchableOpacity
+                  onPressOut={toggleModal}
+                  activeOpacity={1}
+                  style={{ height: '150%' }}>
+                  <View
+                    style={{
+                      height: '72%',
+                      marginTop: 'auto',
+                      backgroundColor: theme.background,
+                      borderTopLeftRadius: 15,
+                      borderTopRightRadius: 15,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 30,
+                        height: 5,
+                        borderRadius: 20,
+                        backgroundColor: theme.textSecond,
+                        alignSelf: 'center',
+                        marginTop: 5,
+                      }}></View>
+                    <View
+                      style={{
+                        paddingHorizontal: 20,
+                        paddingTop: 15,
+                        paddingBottom: 10,
+                      }}>
+                      <TouchableOpacity>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginVertical: 20,
+                            justifyContent: 'space-between',
+                            marginHorizontal: 50,
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                width: 60,
+                                height: 60,
+                                borderWidth: 1,
+                                borderRadius: 100,
+                                borderColor: theme.text,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Feather
+                                name="bookmark"
+                                color={theme.text}
+                                size={25}
+                              />
+                            </View>
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                color: theme.text,
+                                marginTop: 10,
+                              }}>
+                              Save
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                width: 60,
+                                height: 60,
+                                borderWidth: 1,
+                                borderRadius: 100,
+                                borderColor: theme.text,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Feather
+                                name="rotate-ccw"
+                                color={theme.text}
+                                size={25}
+                              />
+                            </View>
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                color: theme.text,
+                                marginTop: 10,
+                              }}>
+                              Remix
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#efefef',
+                        marginVertical: 3,
+                      }}></View>
+                    <TouchableOpacity
+                      style={{
+                        paddingTop: 20,
+                        paddingHorizontal: 20,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <FontAwesome
+                        name="eye-slash"
+                        size={30}
+                        color={theme.text}
+                      />
+                      <Text
+                        style={{
+                          color: theme.text,
+                          marginLeft: 15,
+                          fontSize: 17,
+                        }}>
+                        Not interested
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        padding: 20,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        mutate(item.id);
+                        toggleModal();
+                      }}>
+                      <MaterialCommunityIcons
+                        name="delete-alert-outline"
+                        size={30}
+                        color="#b03347"
+                      />
+                      <Text
+                        style={{
+                          color: '#b03347',
+                          marginLeft: 15,
+                          fontSize: 17,
+                        }}>
+                        Delete...
+                      </Text>
+                    </TouchableOpacity>
+
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#efefef',
+                        marginVertical: 3,
+                      }}></View>
+                    <TouchableOpacity
+                      style={{
+                        padding: 20,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <MaterialCommunityIcons
+                        name="drag-horizontal-variant"
+                        size={30}
+                        color={theme.text}
+                      />
+                      <Text
+                        style={{
+                          color: theme.text,
+                          marginLeft: 15,
+                          fontSize: 17,
+                        }}>
+                        Manage suggested content
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              </Modal>
             </View>
             <View
               style={{

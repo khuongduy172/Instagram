@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,6 +11,7 @@ import {
   ToastAndroid,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { getStatus } from '../apis/postApi';
 
@@ -18,7 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
-import { useQuery } from 'react-query';
+import { useQuery, useInfiniteQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,14 +58,51 @@ function HomeScreen(): JSX.Element {
     itemVisiblePercentThreshold: 50,
   });
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { data, isLoading, error, refetch } = useQuery('getPosts', getStatus);
+  const fetchData = async () => {
+    await getStatus()
+      .then(response => {
+        setData(response);
+        setRefreshing(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setRefreshing(false);
+      });
+  };
 
-  const onRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    refetch().then(() => setIsRefreshing(false));
+  useEffect(() => {
+    fetchData().catch(error => console.error(error));
   }, []);
+
+  const renderSpinner = () => {
+    return <ActivityIndicator size="large" color={theme.textSecond} />;
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setData([]);
+    fetchData().catch(error => console.error(error));
+  };
+
+  const [loading, setLoading] = useState(false);
+
+  const fetchMoreData = async () => {
+    if (!loading) {
+      setLoading(true);
+      await getStatus()
+        .then(response => {
+          setData(prevData => [...prevData, ...response]);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setLoading(false);
+        });
+    }
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -120,12 +158,14 @@ function HomeScreen(): JSX.Element {
         viewabilityConfig={_viewabilityConfig.current}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
             colors={['#000']}
             progressBackgroundColor="#ffffff"
           />
         }
+        onEndReached={fetchMoreData}
+        onEndReachedThreshold={0}
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':
@@ -142,8 +182,9 @@ function HomeScreen(): JSX.Element {
                   />
                   <PostInterface
                     data={data}
-                    isLoading={isLoading}
-                    isError={error}
+                    isLoading={refreshing}
+                    renderSpinner={renderSpinner}
+                    loading={loading}
                   />
                 </>
               );

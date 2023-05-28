@@ -5,6 +5,8 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -43,6 +45,8 @@ const ProfileScreen = () => {
     setModalVisible(!isModalVisible);
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
 
@@ -50,6 +54,11 @@ const ProfileScreen = () => {
     UserResponse,
     ErrorMessage
   >('userOwner', getUserOwner);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    refetch().then(() => setRefreshing(false));
+  };
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -70,7 +79,14 @@ const ProfileScreen = () => {
             accountName={data.username}
             toggleModal={toggleModal}
           />
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }>
             <ProfileIntro
               name={data.name}
               profileImage={data.avatar}

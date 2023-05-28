@@ -16,4 +16,8 @@ const viewStatus = async (id: string) => {
   return await axiosInstance.post(`/Status/${id}/view`);
 };
 
-export { postStatus, getStatus, viewStatus };
+const deleteStatus = async (id: string) => {
+  return await axiosInstance.delete(`/Status/${id}`);
+};
+
+export { postStatus, getStatus, viewStatus, deleteStatus };
