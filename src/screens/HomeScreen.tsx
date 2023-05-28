@@ -74,10 +74,8 @@ function HomeScreen(): JSX.Element {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData().catch(error => console.error(error));
   }, []);
-
-  console.log('check', data);
 
   const renderSpinner = () => {
     return <ActivityIndicator size="large" color={theme.textSecond} />;
@@ -86,7 +84,7 @@ function HomeScreen(): JSX.Element {
   const handleRefresh = () => {
     setRefreshing(true);
     setData([]);
-    fetchData();
+    fetchData().catch(error => console.error(error));
   };
 
   const [loading, setLoading] = useState(false);
@@ -167,7 +165,7 @@ function HomeScreen(): JSX.Element {
           />
         }
         onEndReached={fetchMoreData}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0}
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':
