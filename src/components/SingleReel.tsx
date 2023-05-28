@@ -9,7 +9,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -22,8 +22,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useMutation } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
+import RNFS from 'react-native-fs';
+import PostLoader from './loader/posts';
+import ContentLoader, { Rect, Circle, Path } from 'react-content-loader/native';
 
-const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
+const SingleReel = React.memo(({ item, index, currentIndex }) => {
   const navigation = useNavigation();
   const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
@@ -98,7 +101,82 @@ const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
     }, []),
   );
 
-  console.log('check source', videoUrl);
+  const [localUrl, setLocalUrl] = useState(null);
+  useEffect(() => {
+    const downloadVideo = async () => {
+      try {
+        const videoFileName = item.id.toString() + '.mp4';
+        const videoPath = `${RNFS.DocumentDirectoryPath}/${videoFileName}`;
+
+        // Check if the video file already exists in the cache
+        const fileExists = await RNFS.exists(videoPath);
+        if (!fileExists) {
+          // Video file does not exist, download and save it
+          await RNFS.downloadFile({
+            fromUrl: item.url,
+            toFile: videoPath,
+          }).promise;
+        }
+
+        setLocalUrl(videoPath);
+      } catch (error) {
+        console.error('Error downloading video:', error);
+      }
+    };
+
+    if (index === currentIndex) {
+      downloadVideo();
+    }
+  }, [index, currentIndex]);
+
+  if (!localUrl) {
+    return (
+      <View
+        style={{
+          width: windowWidth,
+          height: windowHeight,
+          position: 'relative',
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => setMute(!mute)}
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" color="#fff" />
+        </TouchableOpacity>
+        <View
+          style={{
+            position: 'absolute',
+            width: windowWidth * 0.9,
+            zIndex: 1,
+            bottom: windowHeight * 0.075,
+            padding: 10,
+          }}>
+          <View>
+            <ContentLoader
+              speed={2}
+              width={400}
+              height={160}
+              viewBox="0 0 400 160"
+              backgroundColor="#ffffff"
+              foregroundColor="#ffffff">
+              <Circle cx="20" cy="20" r="20" />
+              <Rect x="48" y="8" rx="3" ry="3" width="88" height="6" />
+              <Rect x="48" y="26" rx="3" ry="3" width="52" height="6" />
+              <Rect x="0" y="88" rx="3" ry="3" width="300" height="6" />
+              <Rect x="0" y="104" rx="3" ry="3" width="300" height="6" />
+              <Rect x="0" y="120" rx="3" ry="3" width="300" height="6" />
+            </ContentLoader>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -115,26 +193,30 @@ const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
           height: '100%',
           position: 'absolute',
         }}>
-        <Video
-          ref={videoRef}
-          onBuffer={onBuffer}
-          onError={onError}
-          repeat={true}
-          resizeMode="cover"
-          paused={currentIndex === index ? false : true}
-          source={{
-            uri: videoUrl,
-          }}
-          onLoad={onLoad}
-          onProgress={onProgress}
-          muted={mute}
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-          }}
-          hideShutterView={true}
-        />
+        {localUrl ? (
+          <Video
+            ref={videoRef}
+            onBuffer={onBuffer}
+            onError={onError}
+            repeat={true}
+            resizeMode="cover"
+            paused={currentIndex === index ? false : true}
+            source={{
+              uri: 'file://' + localUrl,
+            }}
+            onLoad={onLoad}
+            onProgress={onProgress}
+            muted={mute}
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+            }}
+            hideShutterView={true}
+          />
+        ) : (
+          <Text>Loading...</Text>
+        )}
       </TouchableOpacity>
       <Ionic
         name="volume-mute"
@@ -534,6 +616,6 @@ const SingleReel = ({ item, index, currentIndex, videoUrl }) => {
       </View>
     </View>
   );
-};
+});
 
 export default SingleReel;

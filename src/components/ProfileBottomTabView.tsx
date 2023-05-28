@@ -96,6 +96,7 @@ const ProfileBottomTabView = (props: any) => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
         style={{
           width: '100%',
           height: '100%',
