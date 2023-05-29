@@ -27,6 +27,7 @@ import {
   ActivityScreen,
   ProfileScreen,
   ClientProfile,
+  CommentScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -68,6 +69,7 @@ const AppNavigation = () => {
             <Stack.Screen name="Activity" component={ActivityScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="ClientProfile" component={ClientProfile} />
+            <Stack.Screen name="Comment" component={CommentScreen} />
           </>
         ) : (
           <>

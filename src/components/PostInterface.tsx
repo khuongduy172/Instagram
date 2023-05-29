@@ -37,6 +37,8 @@ import { viewStatus } from '../apis/postApi';
 import Modal from 'react-native-modal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import { postReact } from '../apis/reactApi';
+import ShareIcon from '../assets/images/instagram-share-icon.svg';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
@@ -97,6 +99,7 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
       }
     });
     setLike(prevState => !prevState);
+    postReact(data[currentSlideIndex].id);
   }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -104,10 +107,6 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-  };
-
-  const toggleDeleteModal = () => {
-    setModalVisible2(!isModalVisible2);
   };
 
   const navigation: any = useNavigation();
@@ -467,7 +466,11 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity onPress={() => setLike(!like)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setLike(!like);
+                    postReact(item.id);
+                  }}>
                   <AntDesign
                     name={like ? 'heart' : 'hearto'}
                     style={{
@@ -486,13 +489,7 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={{ paddingRight: 50 }}>
-                  <Feather
-                    name="send"
-                    style={{
-                      fontSize: 20,
-                    }}
-                    color={theme.text}
-                  />
+                  <ShareIcon width={20} height={20} color={theme.text} />
                 </TouchableOpacity>
                 {item.statusImages.length > 1 && (
                   <PaginationDot
@@ -505,10 +502,18 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
               <FontAwesome name="bookmark-o" size={20} color={theme.text} />
             </View>
             <View style={{ paddingHorizontal: 15 }}>
-              <Text style={{ color: theme.text, fontWeight: 'bold' }}>
-                Liked by {like ? 'you and ' : ''}
-                {like ? item.isReacted : !item.isReacted}12.136 others
-              </Text>
+              {like ? (
+                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                  Liked by {like ? 'you and ' : ''}
+                  {like ? item.isReacted : !item.isReacted}
+                  {item.reactCount} others
+                </Text>
+              ) : (
+                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                  {item.reactCount} likes
+                </Text>
+              )}
+
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={{
@@ -528,10 +533,20 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   {item.content}
                 </Text>
               </View>
-              <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
-                View all comments
-              </Text>
-              <View></View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.push('Comment', {
+                    avatar: item.owner.avatar,
+                    username: item.owner.username,
+                    createdAt: item.createdAt,
+                    content: item.content,
+                  })
+                }>
+                <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
+                  View all comments
+                </Text>
+              </TouchableOpacity>
+
               <Text style={{ fontSize: 10 }}>
                 {moment(item.createdAt).fromNow()}
               </Text>
