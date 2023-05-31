@@ -39,6 +39,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from '@react-navigation/native';
 import { postReact } from '../apis/reactApi';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
+import Avatar from './Avatar';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
@@ -155,12 +156,8 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={{
-                    uri: item.owner.avatar
-                      ? item.owner.avatar
-                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-                  }}
+                <Avatar
+                  uri={item.owner.avatar}
                   style={{
                     width: 30,
                     height: 30,
@@ -489,7 +486,7 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={{ paddingRight: 50 }}>
-                  <ShareIcon width={20} height={20} color={theme.text} />
+                  <ShareIcon width={20} height={20} fill={theme.text} />
                 </TouchableOpacity>
                 {item.statusImages.length > 1 && (
                   <PaginationDot

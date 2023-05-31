@@ -25,6 +25,7 @@ import { useNavigation } from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import PostLoader from './loader/posts';
 import ContentLoader, { Rect, Circle, Path } from 'react-content-loader/native';
+import Avatar from './Avatar';
 
 const SingleReel = React.memo(({ item, index, currentIndex }) => {
   const navigation = useNavigation();
@@ -255,13 +256,9 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
                   backgroundColor: 'white',
                   margin: 10,
                 }}>
-                <Image
+                <Avatar
                   key={index}
-                  source={{
-                    uri: item.owner.avatar
-                      ? item.owner.avatar
-                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-                  }}
+                  uri={item.owner.avatar}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -598,13 +595,9 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
             borderColor: 'white',
             marginTop: 20,
           }}>
-          <Image
+          <Avatar
             key={index}
-            source={{
-              uri: item.owner.avatar
-                ? item.owner.avatar
-                : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-            }}
+            uri={item.owner.avatar}
             style={{
               width: '100%',
               height: '100%',

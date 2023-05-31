@@ -12,6 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
 import moment from 'moment';
 import CommentList from '../components/CommentList';
+import Avatar from '../components/Avatar';
 
 const CommentScreen = ({ route, navigation }: any) => {
   const { avatar, username, createdAt, content }: any = route.params;
@@ -48,7 +49,7 @@ const CommentScreen = ({ route, navigation }: any) => {
             position: 'absolute',
             right: 25,
           }}>
-          <ShareIcon width={25} height={25} color={theme.text} />
+          <ShareIcon width={25} height={25} fill={theme.text} />
         </TouchableOpacity>
       </View>
       <ScrollView>
@@ -59,8 +60,8 @@ const CommentScreen = ({ route, navigation }: any) => {
             marginTop: 10,
           }}>
           <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={{ uri: avatar }}
+            <Avatar
+              uri={avatar}
               style={{ width: 40, height: 40, borderRadius: 100 }}
             />
             <View
@@ -125,8 +126,8 @@ const CommentScreen = ({ route, navigation }: any) => {
           borderTopWidth: 1,
           borderTopColor: theme.borderColor,
         }}>
-        <Image
-          source={{ uri: avatar }}
+        <Avatar
+          uri={avatar}
           style={{ width: 35, height: 35, borderRadius: 100 }}
         />
         <TextInput
@@ -143,7 +144,7 @@ const CommentScreen = ({ route, navigation }: any) => {
             position: 'absolute',
             right: 25,
           }}>
-          <ShareIcon width={20} height={20} color={theme.text} />
+          <ShareIcon width={20} height={20} fill={theme.text} />
         </TouchableOpacity>
       </View>
     </View>

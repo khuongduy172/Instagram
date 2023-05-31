@@ -149,7 +149,7 @@ function HomeScreen(): JSX.Element {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Direct')}>
-            <ShareIcon width={20} height={20} color={theme.text} />
+            <ShareIcon width={20} height={20} fill={theme.text} />
           </TouchableOpacity>
         </View>
       </View>
