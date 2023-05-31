@@ -186,6 +186,7 @@ function HomeScreen(): JSX.Element {
                     isLoading={refreshing}
                     renderSpinner={renderSpinner}
                     loading={loading}
+                    fetchData={fetchData}
                   />
                 </>
               );

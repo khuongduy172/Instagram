@@ -49,7 +49,13 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
+const PostInterface = ({
+  data,
+  isLoading,
+  renderSpinner,
+  loading,
+  fetchData,
+}) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -99,8 +105,6 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
         scale.value = withDelay(500, withSpring(0));
       }
     });
-    setLike(prevState => !prevState);
-    postReact(data[currentSlideIndex].id);
   }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -417,7 +421,12 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                         maxDelayMs={250}
                         ref={doubleTapRef}
                         numberOfTaps={2}
-                        onActivated={onDoubleTap}>
+                        onActivated={() => {
+                          onDoubleTap();
+                          postReact(item.id);
+                          setLike(prevState => !prevState);
+                          fetchData();
+                        }}>
                         <Animated.View>
                           <ImageBackground
                             source={{ uri: image.url }}
@@ -467,12 +476,13 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   onPress={() => {
                     setLike(!like);
                     postReact(item.id);
+                    fetchData();
                   }}>
                   <AntDesign
-                    name={like ? 'heart' : 'hearto'}
+                    name={item.isReacted ? 'heart' : 'hearto'}
                     style={{
                       fontSize: 20,
-                      color: like ? 'red' : theme.text,
+                      color: item.isReacted ? 'red' : theme.text,
                     }}
                   />
                 </TouchableOpacity>
