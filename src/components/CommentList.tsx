@@ -1,7 +1,6 @@
 import { View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import useCustomTheme from '../theme/CustomTheme';
-import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const CommentList = () => {

@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import CommentList from '../components/CommentList';
 import Avatar from '../components/Avatar';
 
@@ -86,7 +86,7 @@ const CommentScreen = ({ route, navigation }: any) => {
                     color: theme.textSecond,
                     fontWeight: 'bold',
                   }}>
-                  {moment(createdAt).fromNow()}
+                  {moment.utc(item.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
                 </Text>
               </View>
               <Text

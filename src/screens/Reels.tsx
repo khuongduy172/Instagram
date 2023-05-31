@@ -1,5 +1,5 @@
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import ReelsComponent from '../components/ReelsComponent';
 import { useNavigation } from '@react-navigation/native';
@@ -7,8 +7,21 @@ import { useNavigation } from '@react-navigation/native';
 const Reels = () => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+  const [audiostatus, setAudioStatus] = useState(true);
+
+  const playerRef: any = useRef();
 
   const navigation: any = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setAudioStatus(false);
+
+      playerRef.current.pauseVideo();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View
@@ -36,7 +49,7 @@ const Reels = () => {
           <Feather name="camera" style={{ fontSize: 25, color: 'white' }} />
         </TouchableOpacity>
       </View>
-      <ReelsComponent />
+      <ReelsComponent playerRef={playerRef} />
     </View>
   );
 };

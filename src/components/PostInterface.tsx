@@ -17,7 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useCustomTheme from '../theme/CustomTheme';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { useMutation } from 'react-query';
 import { getStatus, deleteStatus } from '../apis/postApi';
 import { useFocusEffect } from '@react-navigation/native';
@@ -545,7 +545,7 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
               </TouchableOpacity>
 
               <Text style={{ fontSize: 10 }}>
-                {moment(item.createdAt).fromNow()}
+                {moment.utc(item.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
               </Text>
             </View>
           </View>

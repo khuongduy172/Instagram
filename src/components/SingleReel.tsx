@@ -9,7 +9,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useImperativeHandle } from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -27,7 +27,7 @@ import PostLoader from './loader/posts';
 import ContentLoader, { Rect, Circle, Path } from 'react-content-loader/native';
 import Avatar from './Avatar';
 
-const SingleReel = React.memo(({ item, index, currentIndex }) => {
+const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
   const navigation = useNavigation();
   const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
@@ -130,6 +130,12 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
     }
   }, [index, currentIndex]);
 
+  const [paused, setPaused] = useState(false);
+
+  useImperativeHandle(playerRef, () => ({
+    pauseVideo: () => setPaused(true),
+  }));
+
   if (!localUrl) {
     return (
       <View
@@ -201,7 +207,7 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
             onError={onError}
             repeat={true}
             resizeMode="cover"
-            paused={currentIndex === index ? false : true}
+            paused={(currentIndex === index ? false : true) || paused}
             source={{
               uri: 'file://' + localUrl,
             }}
