@@ -486,7 +486,17 @@ const PostInterface = ({
                     }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ paddingHorizontal: 20 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.push('Comment', {
+                      avatar: item.owner.avatar,
+                      username: item.owner.username,
+                      createdAt: item.createdAt,
+                      content: item.content,
+                      id: item.id,
+                    })
+                  }
+                  style={{ paddingHorizontal: 20 }}>
                   <Ionic
                     name="ios-chatbubble-outline"
                     style={{
