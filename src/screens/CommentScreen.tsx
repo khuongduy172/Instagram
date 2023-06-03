@@ -5,18 +5,47 @@ import {
   Image,
   ScrollView,
   TextInput,
+  ActivityIndicator,
+  Keyboard,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
 import moment from 'moment-timezone';
 import CommentList from '../components/CommentList';
 import Avatar from '../components/Avatar';
+import useSignalR from '../hooks/useSignalR';
+import { useMutation } from 'react-query';
+import { postComment } from '../apis/postApi';
 
 const CommentScreen = ({ route, navigation }: any) => {
-  const { avatar, username, createdAt, content }: any = route.params;
+  const { avatar, username, createdAt, content, id }: any = route.params;
   const theme = useCustomTheme();
+
+  const connection = useSignalR();
+
+  useEffect(() => {
+    if (connection) {
+      // Subscribe to a specific event
+      connection.on('AddCommentAsync', data => {
+        console.log('Received event:', data);
+        // Handle the event data
+      });
+      console.log('join room: ', id);
+      connection.invoke('JoinRoom', id).catch(err => console.error(err));
+
+      // ...subscribe to other events or perform other SignalR operations
+    }
+  }, [connection]);
+
+  const { mutate, isLoading } = useMutation(postComment);
+
+  const createComment = () => {
+    mutate({ content: caption, statusId: id });
+    setCaption('');
+    Keyboard.dismiss();
+  };
 
   const [caption, setCaption] = useState('');
   return (
@@ -86,7 +115,7 @@ const CommentScreen = ({ route, navigation }: any) => {
                     color: theme.textSecond,
                     fontWeight: 'bold',
                   }}>
-                  {moment.utc(item.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+                  {moment.utc(createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
                 </Text>
               </View>
               <Text
@@ -107,11 +136,6 @@ const CommentScreen = ({ route, navigation }: any) => {
             marginVertical: 3,
           }}
         />
-        <CommentList />
-        <CommentList />
-        <CommentList />
-        <CommentList />
-        <CommentList />
         <CommentList />
         <CommentList />
         <CommentList />
@@ -138,13 +162,20 @@ const CommentScreen = ({ route, navigation }: any) => {
             width: '85%',
           }}
           onChangeText={text => setCaption(text)}
+          value={caption}
         />
         <TouchableOpacity
+          onPress={createComment}
+          disabled={isLoading}
           style={{
             position: 'absolute',
             right: 25,
           }}>
-          <ShareIcon width={20} height={20} fill={theme.text} />
+          {isLoading ? (
+            <ActivityIndicator size="small" color={theme.text} />
+          ) : (
+            <ShareIcon width={20} height={20} fill={theme.text} />
+          )}
         </TouchableOpacity>
       </View>
     </View>
