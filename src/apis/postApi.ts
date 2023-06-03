@@ -20,4 +20,13 @@ const deleteStatus = async (id: string) => {
   return await axiosInstance.delete(`/Status/${id}`);
 };
 
-export { postStatus, getStatus, viewStatus, deleteStatus };
+interface ICreateCommentRequest {
+  statusId: string;
+  content: string;
+}
+
+const postComment = async (data: ICreateCommentRequest) => {
+  return await axiosInstance.post(`/Status/${data.statusId}/comment`, data);
+};
+
+export { postStatus, getStatus, viewStatus, deleteStatus, postComment };
