@@ -31,7 +31,7 @@ const postComment = async (data: ICreateCommentRequest) => {
 
 const getStatusCommentByPage = async (page: number, statusId: string) => {
   return await axiosInstance.get(
-    `/Status/${statusId}/comment?PageNumber=${page}&PageSize=5`,
+    `/Status/${statusId}/comment?PageNumber=${page}&PageSize=8`,
   );
 };
 

@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
@@ -23,6 +23,7 @@ const CommentScreen = ({ route, navigation }: any) => {
   const { avatar, username, createdAt, content, id }: any = route.params;
   const [caption, setCaption] = useState('');
   const [pageData, setPageData] = useState([]);
+  const scrollViewRef = useRef<ScrollView>(null);
   const theme = useCustomTheme();
 
   const connection = useSignalR();
@@ -31,8 +32,9 @@ const CommentScreen = ({ route, navigation }: any) => {
     if (connection) {
       // Subscribe to a specific event
       connection.on('AddCommentAsync', data => {
-        console.log('Received event:', data);
         // Handle the event data
+        setPageData(prevData => [data, ...prevData]);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
       });
       console.log('join room: ', id);
       connection.invoke('JoinRoom', id).catch(err => console.error(err));
@@ -57,12 +59,10 @@ const CommentScreen = ({ route, navigation }: any) => {
         getNextPageParam: lastPage =>
           lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
         onSuccess: data => {
-          setPageData(prevData => [...data.pages.flatMap(page => page.data)]);
+          setPageData([...data.pages.flatMap(page => page.data)]);
         },
       },
     );
-
-  console.log('first', pageData);
 
   return (
     <View
@@ -98,6 +98,7 @@ const CommentScreen = ({ route, navigation }: any) => {
         </TouchableOpacity>
       </View>
       <ScrollView
+        ref={scrollViewRef}
         onScroll={event => {
           const { layoutMeasurement, contentOffset, contentSize } =
             event.nativeEvent;
@@ -166,20 +167,18 @@ const CommentScreen = ({ route, navigation }: any) => {
             marginVertical: 3,
           }}
         />
-        {data?.pages
-          .flatMap(page => page.data)
-          .map((item: any) => (
-            <CommentList
-              key={item.id}
-              commentId={item.id}
-              avatar={item.owner.avatar}
-              username={item.owner.name}
-              createdAt={item.createdAt}
-              isOwner={item.isOwner}
-              content={item.content}
-              ownerId={item.ownerId}
-            />
-          ))}
+        {pageData?.map((item: any) => (
+          <CommentList
+            key={item.id}
+            commentId={item.id}
+            avatar={item.owner.avatar}
+            username={item.owner.name}
+            createdAt={item.createdAt}
+            isOwner={item.isOwner}
+            content={item.content}
+            ownerId={item.ownerId}
+          />
+        ))}
       </ScrollView>
       <View
         style={{

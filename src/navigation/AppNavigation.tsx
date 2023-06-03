@@ -45,10 +45,9 @@ const AppNavigation = () => {
       if (user) {
         store.dispatch(setLoggedIn(true));
         setIsLoading(false);
-      } else {
-        setIsLoading(false);
       }
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
