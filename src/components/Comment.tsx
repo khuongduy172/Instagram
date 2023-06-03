@@ -1,11 +1,10 @@
-import { View, Text, Image, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import useCustomTheme from '../theme/CustomTheme';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Avatar from './Avatar';
 import moment from 'moment';
 
-const CommentList = ({
+const Comment = ({
   commentId,
   avatar,
   username,
@@ -78,4 +77,4 @@ const CommentList = ({
   );
 };
 
-export default CommentList;
+export default Comment;

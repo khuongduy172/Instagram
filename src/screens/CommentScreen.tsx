@@ -13,7 +13,7 @@ import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
 import moment from 'moment-timezone';
-import CommentList from '../components/CommentList';
+import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import useSignalR from '../hooks/useSignalR';
 import { useInfiniteQuery, useMutation } from 'react-query';
@@ -168,7 +168,7 @@ const CommentScreen = ({ route, navigation }: any) => {
           }}
         />
         {pageData?.map((item: any) => (
-          <CommentList
+          <Comment
             key={item.id}
             commentId={item.id}
             avatar={item.owner.avatar}
