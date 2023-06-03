@@ -29,4 +29,17 @@ const postComment = async (data: ICreateCommentRequest) => {
   return await axiosInstance.post(`/Status/${data.statusId}/comment`, data);
 };
 
-export { postStatus, getStatus, viewStatus, deleteStatus, postComment };
+const getStatusCommentByPage = async (page: number, statusId: string) => {
+  return await axiosInstance.get(
+    `/Status/${statusId}/comment?PageNumber=${page}&PageSize=5`,
+  );
+};
+
+export {
+  postStatus,
+  getStatus,
+  viewStatus,
+  deleteStatus,
+  postComment,
+  getStatusCommentByPage,
+};

@@ -2,16 +2,24 @@ import { View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Avatar from './Avatar';
+import moment from 'moment';
 
-const CommentList = () => {
+const CommentList = ({
+  commentId,
+  avatar,
+  username,
+  createdAt,
+  isOwner,
+  content,
+  ownerId,
+}: any) => {
   const theme = useCustomTheme();
   return (
     <View style={{ padding: 15 }}>
       <View style={{ flexDirection: 'row' }}>
-        <Image
-          source={{
-            uri: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80',
-          }}
+        <Avatar
+          uri={avatar}
           style={{ width: 40, height: 40, borderRadius: 100, marginTop: 8 }}
         />
         <View
@@ -22,7 +30,7 @@ const CommentList = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text
               style={{ fontSize: 13, fontWeight: 'bold', color: theme.text }}>
-              test
+              {username}
             </Text>
             <Text
               style={{
@@ -31,22 +39,23 @@ const CommentList = () => {
                 color: theme.textSecond,
                 fontWeight: 'bold',
               }}>
-              4 hours ago
+              {moment.utc(createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
             </Text>
           </View>
           <Text style={{ fontSize: 15, color: theme.text, paddingVertical: 7 }}>
-            Test content
+            {content}
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: 13,
               color: theme.textSecond,
               fontWeight: 'bold',
             }}>
             Reply
-          </Text>
+          </Text> */}
         </View>
-        <View
+        {/* DELETE COMMENT HERE */}
+        {/* <View
           style={{
             flexDirection: 'column',
             alignItems: 'center',
@@ -63,7 +72,7 @@ const CommentList = () => {
             }}>
             2
           </Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );

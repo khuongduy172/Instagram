@@ -16,11 +16,13 @@ import moment from 'moment-timezone';
 import CommentList from '../components/CommentList';
 import Avatar from '../components/Avatar';
 import useSignalR from '../hooks/useSignalR';
-import { useMutation } from 'react-query';
-import { postComment } from '../apis/postApi';
+import { useInfiniteQuery, useMutation } from 'react-query';
+import { getStatusCommentByPage, postComment } from '../apis/postApi';
 
 const CommentScreen = ({ route, navigation }: any) => {
   const { avatar, username, createdAt, content, id }: any = route.params;
+  const [caption, setCaption] = useState('');
+  const [pageData, setPageData] = useState([]);
   const theme = useCustomTheme();
 
   const connection = useSignalR();
@@ -47,7 +49,21 @@ const CommentScreen = ({ route, navigation }: any) => {
     Keyboard.dismiss();
   };
 
-  const [caption, setCaption] = useState('');
+  const { fetchNextPage, hasNextPage, isFetchingNextPage, data, ...result } =
+    useInfiniteQuery(
+      `${id}-comments`,
+      ({ pageParam = 1 }) => getStatusCommentByPage(pageParam, id),
+      {
+        getNextPageParam: lastPage =>
+          lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+        onSuccess: data => {
+          setPageData(prevData => [...data.pages.flatMap(page => page.data)]);
+        },
+      },
+    );
+
+  console.log('first', pageData);
+
   return (
     <View
       style={{
@@ -81,7 +97,21 @@ const CommentScreen = ({ route, navigation }: any) => {
           <ShareIcon width={25} height={25} fill={theme.text} />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView
+        onScroll={event => {
+          const { layoutMeasurement, contentOffset, contentSize } =
+            event.nativeEvent;
+
+          // Calculate when to trigger the next page fetch
+          const isCloseToBottom =
+            layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - 20;
+
+          if (isCloseToBottom && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        }}
+        scrollEventThrottle={400}>
         <View
           style={{
             flexDirection: 'column',
@@ -136,10 +166,20 @@ const CommentScreen = ({ route, navigation }: any) => {
             marginVertical: 3,
           }}
         />
-        <CommentList />
-        <CommentList />
-        <CommentList />
-        <CommentList />
+        {data?.pages
+          .flatMap(page => page.data)
+          .map((item: any) => (
+            <CommentList
+              key={item.id}
+              commentId={item.id}
+              avatar={item.owner.avatar}
+              username={item.owner.name}
+              createdAt={item.createdAt}
+              isOwner={item.isOwner}
+              content={item.content}
+              ownerId={item.ownerId}
+            />
+          ))}
       </ScrollView>
       <View
         style={{
