@@ -551,20 +551,22 @@ const PostInterface = ({
                   {item.content}
                 </Text>
               </View>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.push('Comment', {
-                    avatar: item.owner.avatar,
-                    username: item.owner.username,
-                    createdAt: item.createdAt,
-                    content: item.content,
-                    id: item.id,
-                  })
-                }>
-                <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
-                  View all comments
-                </Text>
-              </TouchableOpacity>
+              {item.commentCount > 0 && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.push('Comment', {
+                      avatar: item.owner.avatar,
+                      username: item.owner.username,
+                      createdAt: item.createdAt,
+                      content: item.content,
+                      id: item.id,
+                    })
+                  }>
+                  <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
+                    View all {item.commentCount} comments
+                  </Text>
+                </TouchableOpacity>
+              )}
 
               <Text style={{ fontSize: 10 }}>
                 {moment.utc(item.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
