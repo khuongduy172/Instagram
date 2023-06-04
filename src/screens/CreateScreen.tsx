@@ -9,9 +9,13 @@ import SelectedImage from '../components/SelectedImage';
 import SelectAlbum from '../components/SelectedAlbum';
 import PostHeader from '../components/PostHeader';
 import useCustomTheme from '../theme/CustomTheme';
+import Media from '../helper/ImageLibrary';
 
 const CreateScreen = () => {
   const navigation = useNavigation();
+  Media.getAlbumList()
+    .then(res => (initialState.albumName = res[0].title))
+    .catch(err => console.log(err));
   const [state, dispatch] = useReducer<any>(PostReducer, initialState);
   const [loaded, setLoaded] = useState(false);
   const theme = useCustomTheme();

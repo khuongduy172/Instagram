@@ -63,26 +63,25 @@ const SelectAlbum = () => {
               }}></View>
             <ScrollView>
               <View style={{ padding: 10 }}>
-                {state.albumList &&
-                  state.albumList.map((album: any, index: any) => (
-                    <TouchableNativeFeedback
-                      key={index}
-                      style={{ width: '100%' }}
-                      onPress={() => {
-                        dispatch({ type: 'SET_ALBUM_NAME', payload: album });
-                        dispatch({ type: 'MODAL' });
-                      }}>
-                      <View style={{ padding: 10 }}>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            color: theme.text,
-                          }}>
-                          {album}
-                        </Text>
-                      </View>
-                    </TouchableNativeFeedback>
-                  ))}
+                {state.albumList?.map((album: any, index: any) => (
+                  <TouchableNativeFeedback
+                    key={index}
+                    style={{ width: '100%' }}
+                    onPress={() => {
+                      dispatch({ type: 'SET_ALBUM_NAME', payload: album });
+                      dispatch({ type: 'MODAL' });
+                    }}>
+                    <View style={{ padding: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: theme.text,
+                        }}>
+                        {album}
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                ))}
               </View>
             </ScrollView>
           </View>
