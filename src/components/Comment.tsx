@@ -19,6 +19,7 @@ const Comment = ({
       <View style={{ flexDirection: 'row' }}>
         <Avatar
           uri={avatar}
+          userId={ownerId}
           style={{ width: 40, height: 40, borderRadius: 100, marginTop: 8 }}
         />
         <View

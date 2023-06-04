@@ -265,6 +265,7 @@ const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
                 <Avatar
                   key={index}
                   uri={item.owner.avatar}
+                  userId={item.owner.id}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -604,6 +605,7 @@ const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
           <Avatar
             key={index}
             uri={item.owner.avatar}
+            userId={item.owner.id}
             style={{
               width: '100%',
               height: '100%',

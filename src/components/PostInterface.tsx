@@ -162,6 +162,7 @@ const PostInterface = ({
                 }}>
                 <Avatar
                   uri={item.owner.avatar}
+                  userId={item.owner.id}
                   style={{
                     width: 30,
                     height: 30,
