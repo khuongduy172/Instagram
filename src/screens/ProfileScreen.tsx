@@ -54,11 +54,19 @@ const ProfileScreen = ({ route }: any) => {
   const { data, isLoading, error, refetch } = useQuery<
     UserResponse,
     ErrorMessage
-  >(`userOwner-${userId}`, () => userId ? getUserById(userId) : getUserOwner());
+  >(`userOwner-${userId}`, () =>
+    userId ? getUserById(userId) : getUserOwner(),
+  );
 
   const handleRefresh = () => {
     setRefreshing(true);
-    refetch().then(() => setRefreshing(false));
+    refetch()
+      .then(() => setRefreshing(false))
+      .catch(e => console.log(e));
+  };
+
+  const handleRefreshWithoutLoanding = () => {
+    refetch().catch(e => console.log(e));
   };
 
   if (isLoading) {
@@ -67,6 +75,7 @@ const ProfileScreen = ({ route }: any) => {
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
+  console.log('first', data?.followStatus);
   return (
     <View
       style={{
@@ -98,11 +107,14 @@ const ProfileScreen = ({ route }: any) => {
               status={data.bio}
             />
             <ProfileButton
-              owner={data.isOwner ? 0 : 1}
+              isOwner={data.isOwner}
+              userId={data.id}
               name={data.name}
               accountName={data.username}
               profileImage={data.avatar}
               status={data.bio}
+              followStatus={data.followStatus}
+              handleRefresh={handleRefreshWithoutLoanding}
             />
             <StoryHighlight />
           </ScrollView>

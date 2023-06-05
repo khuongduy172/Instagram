@@ -21,7 +21,9 @@ const ProfileHeader = ({ accountName, toggleModal, isClientUser }: any) => {
       }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {isClientUser && (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 10 }}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ marginRight: 10 }}>
             <AntDesign name="arrowleft" size={30} color={theme.backButton} />
           </TouchableOpacity>
         )}
@@ -32,27 +34,29 @@ const ProfileHeader = ({ accountName, toggleModal, isClientUser }: any) => {
           <EvilIcons name="chevron-down" size={25} color={theme.text} />
         )}
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Camera');
+      {!isClientUser && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          <FontAwesome name="plus-square-o" size={25} color={theme.text} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleModal}>
-          <SimpleLineIcons
-            name="menu"
-            size={25}
-            color={theme.text}
-            style={{ paddingLeft: 25 }}
-          />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Camera');
+            }}>
+            <FontAwesome name="plus-square-o" size={25} color={theme.text} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleModal}>
+            <SimpleLineIcons
+              name="menu"
+              size={25}
+              color={theme.text}
+              style={{ paddingLeft: 25 }}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
