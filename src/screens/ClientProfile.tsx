@@ -13,7 +13,7 @@ import ProfileIntro from '../components/ProfileIntro';
 import ProfileButton from '../components/ProfileButton';
 import StoryHighlight from '../components/StoryHighlight';
 import ProfileBottomTabView from '../components/ProfileBottomTabView';
-import { getUserOwner, UserResponse } from '../apis/userApi';
+import { getUserById, getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import { useFocusEffect } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -36,7 +36,7 @@ interface ErrorMessage {
 //   });
 // };
 
-const ClientProfile = ({ route, navigation }) => {
+const ClientProfile = ({ route, navigation }: any) => {
   const {
     name,
     profileImage,
@@ -45,6 +45,7 @@ const ClientProfile = ({ route, navigation }) => {
     followers,
     following,
     status,
+    userId,
   } = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -54,14 +55,16 @@ const ClientProfile = ({ route, navigation }) => {
 
   const theme = useCustomTheme();
 
-  // const { data, isLoading, error, refetch } = useQuery<
-  //   UserResponse,
-  //   ErrorMessage
-  // >('userOwner', getUserOwner);
+  const { data, isLoading, error, refetch } = useQuery<
+    UserResponse,
+    ErrorMessage
+  >(`user-${userId}`, () => getUserById(userId));
 
-  // if (isLoading) {
-  //   return <Text>Loading...</Text>;
-  // }
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  console.log(data)
   // if (error) {
   //   return <Text>Error: {error.message}</Text>;
   // }
@@ -88,7 +91,7 @@ const ClientProfile = ({ route, navigation }) => {
               color: theme.text,
               paddingHorizontal: 30,
             }}>
-            {name}
+            {data.name}
           </Text>
           <Feather
             name="more-vertical"

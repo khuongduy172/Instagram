@@ -15,7 +15,7 @@ import ProfileIntro from '../components/ProfileIntro';
 import ProfileButton from '../components/ProfileButton';
 import StoryHighlight from '../components/StoryHighlight';
 import ProfileBottomTabView from '../components/ProfileBottomTabView';
-import { getUserOwner, UserResponse } from '../apis/userApi';
+import { getUserById, getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import { useFocusEffect } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -38,7 +38,8 @@ interface ErrorMessage {
 //   });
 // };
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ route }: any) => {
+  const userId = route?.params?.userId;
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -53,7 +54,7 @@ const ProfileScreen = () => {
   const { data, isLoading, error, refetch } = useQuery<
     UserResponse,
     ErrorMessage
-  >('userOwner', getUserOwner);
+  >(`userOwner-${userId}`, () => userId ? getUserById(userId) : getUserOwner());
 
   const handleRefresh = () => {
     setRefreshing(true);
@@ -78,6 +79,7 @@ const ProfileScreen = () => {
           <ProfileHeader
             accountName={data.username}
             toggleModal={toggleModal}
+            isClientUser={userId}
           />
           <ScrollView
             showsVerticalScrollIndicator={false}

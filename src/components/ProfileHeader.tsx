@@ -5,8 +5,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import useCustomTheme from '../theme/CustomTheme';
 import { useNavigation } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const ProfileHeader = ({ accountName, toggleModal }: any) => {
+const ProfileHeader = ({ accountName, toggleModal, isClientUser }: any) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
   return (
@@ -19,6 +20,11 @@ const ProfileHeader = ({ accountName, toggleModal }: any) => {
         flexDirection: 'row',
       }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {isClientUser && (
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 10 }}>
+            <AntDesign name="arrowleft" size={30} color={theme.backButton} />
+          </TouchableOpacity>
+        )}
         <Text style={{ fontSize: 20, color: theme.text, fontWeight: 'bold' }}>
           {accountName}
         </Text>
