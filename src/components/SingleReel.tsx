@@ -9,7 +9,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useImperativeHandle } from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -25,8 +25,9 @@ import { useNavigation } from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import PostLoader from './loader/posts';
 import ContentLoader, { Rect, Circle, Path } from 'react-content-loader/native';
+import Avatar from './Avatar';
 
-const SingleReel = React.memo(({ item, index, currentIndex }) => {
+const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
   const navigation = useNavigation();
   const scheme = useColorScheme();
   const windowHeight = Dimensions.get('window').height;
@@ -129,6 +130,12 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
     }
   }, [index, currentIndex]);
 
+  const [paused, setPaused] = useState(false);
+
+  useImperativeHandle(playerRef, () => ({
+    pauseVideo: () => setPaused(true),
+  }));
+
   if (!localUrl) {
     return (
       <View
@@ -200,7 +207,7 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
             onError={onError}
             repeat={true}
             resizeMode="cover"
-            paused={currentIndex === index ? false : true}
+            paused={(currentIndex === index ? false : true) || paused}
             source={{
               uri: 'file://' + localUrl,
             }}
@@ -255,13 +262,10 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
                   backgroundColor: 'white',
                   margin: 10,
                 }}>
-                <Image
+                <Avatar
                   key={index}
-                  source={{
-                    uri: item.owner.avatar
-                      ? item.owner.avatar
-                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-                  }}
+                  uri={item.owner.avatar}
+                  userId={item.owner.id}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -598,13 +602,10 @@ const SingleReel = React.memo(({ item, index, currentIndex }) => {
             borderColor: 'white',
             marginTop: 20,
           }}>
-          <Image
+          <Avatar
             key={index}
-            source={{
-              uri: item.owner.avatar
-                ? item.owner.avatar
-                : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-            }}
+            uri={item.owner.avatar}
+            userId={item.owner.id}
             style={{
               width: '100%',
               height: '100%',

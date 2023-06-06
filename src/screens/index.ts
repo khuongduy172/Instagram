@@ -19,3 +19,4 @@ export { default as PostReels } from './PostReels';
 export { default as EditorScreen } from './EditorScreen';
 export { default as ActivityScreen } from './ActivityScreen';
 export { default as ClientProfile } from './ClientProfile';
+export { default as CommentScreen } from './CommentScreen';

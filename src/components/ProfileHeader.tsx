@@ -4,9 +4,11 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import useCustomTheme from '../theme/CustomTheme';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileHeader = ({ accountName, toggleModal }: any) => {
   const theme = useCustomTheme();
+  const navigation: any = useNavigation();
   return (
     <View
       style={{
@@ -30,7 +32,12 @@ const ProfileHeader = ({ accountName, toggleModal }: any) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <FontAwesome name="plus-square-o" size={25} color={theme.text} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Camera');
+          }}>
+          <FontAwesome name="plus-square-o" size={25} color={theme.text} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggleModal}>
           <SimpleLineIcons
             name="menu"

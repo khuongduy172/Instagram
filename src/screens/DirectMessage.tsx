@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import { useFocusEffect } from '@react-navigation/native';
+import useCustomTheme from '../theme/CustomTheme';
 
 interface ErrorMessage {
   message: string;
@@ -18,6 +19,7 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const DirectMessage = () => {
   const navigation = useNavigation();
+  const theme = useCustomTheme();
 
   const { data, isLoading, error, refetch } = useQuery<
     UserResponse,
@@ -73,18 +75,20 @@ const DirectMessage = () => {
                 position: 'relative',
                 flexDirection: 'column',
                 paddingHorizontal: 10,
+                paddingTop: 10,
               }}>
               {item.id === 1 ? (
                 <View
                   style={{
                     position: 'absolute',
-                    top: -10,
+                    top: 0,
                     right: 10,
                     zIndex: 1,
                     width: 30,
                     height: 30,
                     borderRadius: 100,
-                    backgroundColor: 'white',
+                    backgroundColor: theme.backgroundButton,
+                    borderColor: theme.borderColor,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
@@ -92,7 +96,7 @@ const DirectMessage = () => {
                     name="plus"
                     style={{
                       fontSize: 20,
-                      color: 'black',
+                      color: theme.text,
                       borderRadius: 100,
                     }}
                   />

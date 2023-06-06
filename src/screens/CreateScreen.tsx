@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View, BackHandler } from 'react-native';
+import { StyleSheet, View, BackHandler } from 'react-native';
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import * as Permissions from 'react-native-permissions';
 import { PostContext } from '../helper/ImageLibrary';
 import { initialState, PostReducer } from '../redux/imageSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import ListPhotos from '../components/ListPhotos';
 import SelectedImage from '../components/SelectedImage';

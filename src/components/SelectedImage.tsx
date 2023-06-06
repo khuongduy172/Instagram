@@ -11,14 +11,8 @@ const SelectedImage = () => {
   const theme = useCustomTheme();
 
   useEffect(() => {
-    console.log('selectedImage render');
-    console.log(' ');
-  });
-
-  useEffect(() => {
     async function getSelectedImage() {
       const photo = await Media.photo(state.albumName);
-      console.log(photo);
 
       dispatch({ type: 'SET_MEDIA', payload: photo?.edges });
       dispatch({ type: 'DEFAULT_IMAGE' });

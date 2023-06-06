@@ -145,7 +145,12 @@ const ActivityScreen = () => {
   const navigation = useNavigation();
   const theme = useCustomTheme();
   return (
-    <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: theme.background,
+      }}>
       <View
         style={{
           flexDirection: 'row',

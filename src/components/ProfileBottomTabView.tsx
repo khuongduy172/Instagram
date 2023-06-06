@@ -10,6 +10,7 @@ import Video from 'react-native-video';
 import { useFocusEffect } from '@react-navigation/native';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Avatar from './Avatar';
 
 interface ErrorMessage {
   message: string;
@@ -148,12 +149,9 @@ const ProfileBottomTabView = (props: any) => {
               data={newData}
               renderItem={({ item }) => {
                 return (
-                  <Image
-                    source={{
-                      uri: item.owner.avatar,
-                    }}
-                    resizeMode="cover"
-                    style={{ width: 120, height: 120 }}
+                  <Avatar
+                    uri={item.owner.avatar}
+                    style={{ width: 120, height: 120, resizeMode: 'cover' }}
                   />
                 );
               }}

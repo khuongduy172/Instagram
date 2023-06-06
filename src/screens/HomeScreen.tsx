@@ -28,6 +28,7 @@ import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import HomeStory from '../components/HomeStory';
 import PostInterface from '../components/PostInterface';
+import ShareIcon from '../assets/images/instagram-share-icon.svg';
 
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -148,7 +149,7 @@ function HomeScreen(): JSX.Element {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Direct')}>
-            <Feather name="send" style={{ fontSize: 24 }} color={theme.text} />
+            <ShareIcon width={20} height={20} fill={theme.text} />
           </TouchableOpacity>
         </View>
       </View>
@@ -185,6 +186,7 @@ function HomeScreen(): JSX.Element {
                     isLoading={refreshing}
                     renderSpinner={renderSpinner}
                     loading={loading}
+                    fetchData={fetchData}
                   />
                 </>
               );

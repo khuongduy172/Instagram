@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFS from 'react-native-fs';
 import useCustomTheme from '../theme/CustomTheme';
 
-const ReelsComponent = () => {
+const ReelsComponent = ({ playerRef }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const theme = useCustomTheme();
 
@@ -100,6 +100,7 @@ const ReelsComponent = () => {
       vertical={true}
       renderItem={({ item, index }) => (
         <SingleReel
+          playerRef={playerRef}
           item={item}
           index={index}
           currentIndex={currentIndex}

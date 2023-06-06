@@ -13,6 +13,7 @@ import DirectMessage from './DirectMessage';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import { useFocusEffect } from '@react-navigation/native';
+import useCustomTheme from '../theme/CustomTheme';
 
 interface ErrorMessage {
   message: string;
@@ -26,6 +27,7 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const DirectScreen = () => {
   const navigation = useNavigation();
+  const theme = useCustomTheme();
   const { data, isLoading, error, refetch } = useQuery<
     UserResponse,
     ErrorMessage
@@ -40,7 +42,7 @@ const DirectScreen = () => {
   return (
     <View
       style={{
-        backgroundColor: 'white',
+        backgroundColor: theme.background,
         width: '100%',
         height: '100%',
         padding: 10,
@@ -52,7 +54,7 @@ const DirectScreen = () => {
           justifyContent: 'space-between',
         }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={30} color="black" />
+          <AntDesign name="arrowleft" size={30} color={theme.text} />
         </TouchableOpacity>
         <View
           style={{
@@ -67,13 +69,13 @@ const DirectScreen = () => {
                 fontSize: 20,
                 marginLeft: 10,
                 fontWeight: 'bold',
-                color: 'black',
+                color: theme.text,
               }}>
               {data.username}
             </Text>
             <Feather
               name="chevron-down"
-              color="black"
+              color={theme.text}
               size={20}
               style={{
                 paddingHorizontal: 5,
@@ -84,11 +86,11 @@ const DirectScreen = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Feather
               name="video"
-              color="black"
+              color={theme.text}
               size={30}
               style={{ paddingHorizontal: 20 }}
             />
-            <AntDesign name="plus" color="black" size={30} />
+            <AntDesign name="plus" color={theme.text} size={30} />
           </View>
         </View>
       </View>
@@ -97,22 +99,23 @@ const DirectScreen = () => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#efefef',
+          backgroundColor: theme.textInputBackground,
           marginTop: 30,
           borderRadius: 10,
         }}>
         <AntDesign
           name="search1"
-          color="black"
+          color={theme.text}
           opacity={0.8}
           size={15}
           style={{ paddingHorizontal: 20 }}
         />
         <TextInput
           placeholder="Search"
+          placeholderTextColor={theme.placeholderTextColor}
           style={{
             flex: 1,
-            backgroundColor: '#efefef',
+            backgroundColor: theme.textInputBackground,
             borderRadius: 15,
             justifyContent: 'center',
             alignItems: 'center',

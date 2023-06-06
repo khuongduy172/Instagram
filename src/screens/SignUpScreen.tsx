@@ -101,7 +101,7 @@ const SignUpScreen = ({ navigation }: any) => {
   return (
     <View
       style={{
-        backgroundColor: theme.colors.background,
+        backgroundColor: theme.background,
         width: '100%',
         height: '100%',
       }}>

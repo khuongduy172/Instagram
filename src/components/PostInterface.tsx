@@ -17,7 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useCustomTheme from '../theme/CustomTheme';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { useMutation } from 'react-query';
 import { getStatus, deleteStatus } from '../apis/postApi';
 import { useFocusEffect } from '@react-navigation/native';
@@ -37,6 +37,9 @@ import { viewStatus } from '../apis/postApi';
 import Modal from 'react-native-modal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import { postReact } from '../apis/reactApi';
+import ShareIcon from '../assets/images/instagram-share-icon.svg';
+import Avatar from './Avatar';
 
 export const useRefetchOnFocus = (refetch: () => void) => {
   useFocusEffect(() => {
@@ -46,7 +49,13 @@ export const useRefetchOnFocus = (refetch: () => void) => {
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
+const PostInterface = ({
+  data,
+  isLoading,
+  renderSpinner,
+  loading,
+  fetchData,
+}) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -96,7 +105,6 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
         scale.value = withDelay(500, withSpring(0));
       }
     });
-    setLike(prevState => !prevState);
   }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -104,10 +112,6 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-  };
-
-  const toggleDeleteModal = () => {
-    setModalVisible2(!isModalVisible2);
   };
 
   const navigation: any = useNavigation();
@@ -156,12 +160,9 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={{
-                    uri: item.owner.avatar
-                      ? item.owner.avatar
-                      : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-                  }}
+                <Avatar
+                  uri={item.owner.avatar}
+                  userId={item.owner.id}
                   style={{
                     width: 30,
                     height: 30,
@@ -421,7 +422,12 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                         maxDelayMs={250}
                         ref={doubleTapRef}
                         numberOfTaps={2}
-                        onActivated={onDoubleTap}>
+                        onActivated={() => {
+                          onDoubleTap();
+                          postReact(item.id);
+                          setLike(prevState => !prevState);
+                          fetchData();
+                        }}>
                         <Animated.View>
                           <ImageBackground
                             source={{ uri: image.url }}
@@ -467,16 +473,31 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity onPress={() => setLike(!like)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setLike(!like);
+                    postReact(item.id);
+                    fetchData();
+                  }}>
                   <AntDesign
-                    name={like ? 'heart' : 'hearto'}
+                    name={item.isReacted ? 'heart' : 'hearto'}
                     style={{
                       fontSize: 20,
-                      color: like ? 'red' : theme.text,
+                      color: item.isReacted ? 'red' : theme.text,
                     }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ paddingHorizontal: 20 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.push('Comment', {
+                      avatar: item.owner.avatar,
+                      username: item.owner.username,
+                      createdAt: item.createdAt,
+                      content: item.content,
+                      id: item.id,
+                    })
+                  }
+                  style={{ paddingHorizontal: 20 }}>
                   <Ionic
                     name="ios-chatbubble-outline"
                     style={{
@@ -486,13 +507,7 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={{ paddingRight: 50 }}>
-                  <Feather
-                    name="send"
-                    style={{
-                      fontSize: 20,
-                    }}
-                    color={theme.text}
-                  />
+                  <ShareIcon width={20} height={20} fill={theme.text} />
                 </TouchableOpacity>
                 {item.statusImages.length > 1 && (
                   <PaginationDot
@@ -505,10 +520,18 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
               <FontAwesome name="bookmark-o" size={20} color={theme.text} />
             </View>
             <View style={{ paddingHorizontal: 15 }}>
-              <Text style={{ color: theme.text, fontWeight: 'bold' }}>
-                Liked by {like ? 'you and ' : ''}
-                {like ? item.isReacted : !item.isReacted}12.136 others
-              </Text>
+              {like ? (
+                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                  Liked by {like ? 'you and ' : ''}
+                  {like ? item.isReacted : !item.isReacted}
+                  {item.reactCount} others
+                </Text>
+              ) : (
+                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                  {item.reactCount} likes
+                </Text>
+              )}
+
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={{
@@ -528,12 +551,25 @@ const PostInterface = ({ data, isLoading, renderSpinner, loading }) => {
                   {item.content}
                 </Text>
               </View>
-              <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
-                View all comments
-              </Text>
-              <View></View>
+              {item.commentCount > 0 && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.push('Comment', {
+                      avatar: item.owner.avatar,
+                      username: item.owner.username,
+                      createdAt: item.createdAt,
+                      content: item.content,
+                      id: item.id,
+                    })
+                  }>
+                  <Text style={{ opacity: 0.4, paddingVertical: 2 }}>
+                    View all {item.commentCount} comments
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               <Text style={{ fontSize: 10 }}>
-                {moment(item.createdAt).fromNow()}
+                {moment.utc(item.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
               </Text>
             </View>
           </View>

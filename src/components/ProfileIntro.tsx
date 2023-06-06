@@ -1,6 +1,7 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import useCustomTheme from '../theme/CustomTheme';
+import Avatar from './Avatar';
 
 const ProfileIntro = ({
   profileImage,
@@ -21,12 +22,8 @@ const ProfileIntro = ({
           flexDirection: 'row',
         }}>
         <View style={{ alignItems: 'flex-start' }}>
-          <Image
-            source={{
-              uri: profileImage
-                ? profileImage
-                : 'https://cdn-icons-png.flaticon.com/512/860/860733.png',
-            }}
+          <Avatar
+            uri={profileImage}
             style={{
               resizeMode: 'cover',
               width: 80,
