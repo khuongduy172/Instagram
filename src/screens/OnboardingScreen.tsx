@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   useColorScheme,
 } from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import React from 'react';
+import useCustomTheme from '../theme/CustomTheme';
 
 const OnboardingScreen = () => {
   const navigation: any = useNavigation();
   const theme = useTheme();
   const scheme = useColorScheme();
+  const themeSecond = useCustomTheme();
   const instaLogo =
     scheme === 'dark'
       ? require('../assets/images/insta-dark.png')
@@ -20,7 +22,7 @@ const OnboardingScreen = () => {
   return (
     <View
       style={{
-        backgroundColor: theme.colors.background,
+        backgroundColor: themeSecond.background,
         width: '100%',
         height: '100%',
       }}>
@@ -51,7 +53,7 @@ const OnboardingScreen = () => {
             marginTop: 25,
           }}
           onPress={() => navigation.push('Login')}>
-          <Text style={{color: 'white', fontWeight: '700'}}>Log In</Text>
+          <Text style={{ color: 'white', fontWeight: '700' }}>Log In</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.bottomContainer}>

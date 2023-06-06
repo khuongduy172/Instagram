@@ -1,9 +1,14 @@
 package com.instagram;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+import android.content.res.Configuration;
+import org.devio.rn.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
 
@@ -30,6 +35,23 @@ public class MainActivity extends ReactActivity {
         DefaultNewArchitectureEntryPoint.getFabricEnabled(), // fabricEnabled
         // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
         DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
-        );
+    ) {
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+          case Configuration.UI_MODE_NIGHT_YES:
+            setTheme(R.style.DarkTheme);
+            break;
+          case Configuration.UI_MODE_NIGHT_NO:
+            setTheme(R.style.LightTheme);
+            break;
+          default:
+            setTheme(R.style.LightTheme);
+        }
+
+       SplashScreen.show((MainActivity) getContext());
+        super.onCreate(savedInstanceState);
+      }
+    };
   }
 }
