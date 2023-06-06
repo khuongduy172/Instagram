@@ -4,7 +4,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import { StatusBar, useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme, View } from 'react-native';
 import TabNavigation from './TabNavigation';
 import { Provider, useSelector } from 'react-redux';
 import store from '../redux/store';
@@ -32,11 +32,15 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
 import { ActivityIndicator } from 'react-native-paper';
+import SplashScreen from 'react-native-splash-screen';
+import useCustomTheme from '../theme/CustomTheme';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
   const [isLoading, setIsLoading] = React.useState(true);
+  const scheme = useColorScheme();
+  const theme = useCustomTheme();
 
   const checkLoginStatus = async () => {
     const token = await AsyncStorage.getItem('accessToken');
@@ -53,7 +57,11 @@ const AppNavigation = () => {
   useEffect(() => {
     checkLoginStatus();
   }, []);
-  const scheme = useColorScheme();
+
+  if (!isLoading) {
+    SplashScreen.hide();
+  }
+
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar
@@ -61,7 +69,26 @@ const AppNavigation = () => {
         backgroundColor={scheme === 'dark' ? '#000' : '#fff'}
       />
       {isLoading ? (
-        <ActivityIndicator style={{}} size={'large'} />
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: theme.background,
+          }}>
+          <ActivityIndicator
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            color="#ff7a00"
+            size={'large'}
+          />
+        </View>
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {isLoggedIn ? (
