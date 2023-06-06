@@ -73,7 +73,7 @@ const AppNavigation = () => {
           style={{
             width: '100%',
             height: '100%',
-            backgroundColor: theme.background,
+            backgroundColor: theme.backgroundColor,
           }}>
           <ActivityIndicator
             style={{
