@@ -3,6 +3,7 @@ import React from 'react';
 import { SearchUserResponse } from '../apis/userApi';
 import Avatar from './Avatar';
 import useCustomTheme from '../theme/CustomTheme';
+import { useNavigation } from '@react-navigation/native';
 
 interface IUserSearchItemProps {
   data: SearchUserResponse;
@@ -10,9 +11,11 @@ interface IUserSearchItemProps {
 
 const UserSearchItem = ({ data }: IUserSearchItemProps) => {
   const theme = useCustomTheme();
+  const navigation = useNavigation();
   return (
     <View>
       <TouchableOpacity
+        onPress={() => navigation.navigate('Message', { user: data })}
         style={{
           flex: 1,
           flexDirection: 'row',

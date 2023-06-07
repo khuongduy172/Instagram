@@ -7,22 +7,24 @@ import {
 } from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
 import { debounce } from 'lodash';
 import { SearchUserResponse, searchUser } from '../apis/userApi';
 import UserSearchItem from '../components/UserSearchItem';
+import { SearchToSendMessageProps } from '../navigation/RootNavigationProps';
 
-const SearchToSendMessageScreen = () => {
-  const navigation = useNavigation();
+const SearchToSendMessageScreen = ({
+  route,
+  navigation,
+}: SearchToSendMessageProps) => {
   const theme = useCustomTheme();
   const [data, setData] = React.useState<SearchUserResponse[]>([]);
   const debounceSearch = debounce(async (text: string) => {
     console.log(text);
-    if (text === '') {
+    if (text === '' || text.trim() === '') {
       setData([]);
     } else {
-      const result = await searchUser(text);
+      const result = await searchUser(text.trim());
       if (result) {
         setData(result);
       }
