@@ -27,6 +27,7 @@ import {
   ActivityScreen,
   ProfileScreen,
   CommentScreen,
+  SearchToSendMessageScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
@@ -108,6 +109,10 @@ const AppNavigation = () => {
               <Stack.Screen name="EditImage" component={EditImageScreen} />
               <Stack.Screen name="NewPost" component={NewPost} />
               <Stack.Screen name="Direct" component={DirectScreen} />
+              <Stack.Screen
+                name="SearchToSendMessage"
+                component={SearchToSendMessageScreen}
+              />
               <Stack.Screen name="Message" component={MessageScreen} />
               <Stack.Screen name="CreateReels" component={CreateReels} />
               <Stack.Screen name="PostReels" component={PostReels} />

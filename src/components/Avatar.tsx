@@ -2,7 +2,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-const Avatar = ({ uri, style, userId }: any) => {
+const Avatar = ({ uri, style, userId, disabled = false }: any) => {
   const navigation = useNavigation();
   const navigateToProfile = () => {
     if (userId) {
@@ -10,7 +10,7 @@ const Avatar = ({ uri, style, userId }: any) => {
     }
   };
   return (
-    <TouchableOpacity onPress={navigateToProfile}>
+    <TouchableOpacity onPress={navigateToProfile} disabled={disabled}>
       <Image
         source={{
           uri: uri
