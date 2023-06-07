@@ -106,7 +106,7 @@ const AppNavigation = () => {
               <Stack.Screen name="Editor" component={EditorScreen} />
               <Stack.Screen name="Activity" component={ActivityScreen} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="ClientProfile" component={ClientProfile} />
+              <Stack.Screen name="ClientProfile" component={ProfileScreen} />
               <Stack.Screen name="Comment" component={CommentScreen} />
             </>
           ) : (

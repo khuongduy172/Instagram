@@ -8,8 +8,11 @@ import {
   ToastAndroid,
   useColorScheme,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { postRegister } from '../apis/authApi';
 import { RadioButton } from 'react-native-paper';
@@ -27,6 +30,19 @@ const SignUpScreen = ({ navigation }: any) => {
 
   const [seePassword, setSeePassword] = useState(true);
   const [checkEmailValid, setCheckEmailValid] = useState(false);
+
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
+  const inputRef3 = useRef(null);
+  const inputRef4 = useRef(null);
+  const inputRef5 = useRef(null);
+
+  const handleNextInput = (currentRef: any, nextRef: any) => {
+    currentRef.current.blur();
+    if (nextRef) {
+      nextRef.current.focus();
+    }
+  };
 
   const handleCheckEmail = (text: string) => {
     let re = /\S+@\S+\.\S+/;
@@ -94,249 +110,278 @@ const SignUpScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
   const scheme = useColorScheme();
 
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 200;
+
   const instaLogo =
     scheme === 'dark'
       ? require('../assets/images/insta-dark.png')
       : require('../assets/images/insta.png');
   return (
-    <View
-      style={{
-        backgroundColor: theme.background,
-        width: '100%',
-        height: '100%',
-      }}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{ padding: 15 }}>
-        <MaterialIcons
-          name="arrow-back-ios"
-          size={30}
-          color={theme.backButton}
-        />
-      </TouchableOpacity>
-      <View
+    <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={keyboardVerticalOffset}>
+      <ScrollView
         style={{
-          paddingHorizontal: 15,
-          justifyContent: 'center',
-          alignContent: 'center',
-          marginTop: -30,
-          marginBottom: 10,
+          backgroundColor: theme.colors.background,
+          width: '100%',
+          height: '100%',
+          flex: 1
         }}>
-        <Image
-          source={instaLogo}
-          style={{
-            width: 150,
-            height: 150,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-          }}
-        />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ padding: 15 }}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={30}
+            color={theme.backButton}
+          />
+        </TouchableOpacity>
         <View
           style={{
-            borderWidth: 0.5,
-            borderRadius: 5,
-            borderColor: theme.borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.backgroundColor,
+            paddingHorizontal: 15,
+            justifyContent: 'center',
+            alignContent: 'center',
+            marginTop: -30,
+            marginBottom: 10,
           }}>
-          <TextInput
-            style={{ padding: 10, width: '100%' }}
-            placeholder="Email"
-            value={email}
-            keyboardType="email-address"
-            onChangeText={text => handleCheckEmail(text)}
+          <Image
+            source={instaLogo}
+            style={{
+              width: 150,
+              height: 150,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+            }}
           />
-        </View>
-        {checkEmailValid ? (
-          <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
-            Wrong format email
-          </Text>
-        ) : (
-          <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
-        )}
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderRadius: 5,
-            borderColor: theme.borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.backgroundColor,
-            marginTop: 10,
-          }}>
-          <TextInput
-            style={{ padding: 10, width: '100%' }}
-            placeholder="Password"
-            value={password}
-            secureTextEntry={seePassword}
-            onChangeText={text => setPassword(text)}
-          />
-          <TouchableOpacity
-            style={{ position: 'absolute', right: 0, padding: 10 }}
-            onPress={() => setSeePassword(!seePassword)}>
-            <Entypo
-              name={seePassword ? 'eye' : 'eye-with-line'}
-              size={15}
-              color={theme.colors.text}
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 5,
+              borderColor: theme.borderColor,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.backgroundColor,
+            }}>
+            <TextInput
+              style={{ padding: 10, width: '100%' }}
+              ref={inputRef1}
+              onSubmitEditing={() => handleNextInput(inputRef1, inputRef2)}
+              placeholder="Email"
+              value={email}
+              keyboardType="email-address"
+              onChangeText={text => handleCheckEmail(text)}
             />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderRadius: 5,
-            borderColor: theme.borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.backgroundColor,
-            marginTop: 30,
-          }}>
-          <TextInput
-            style={{ padding: 10, width: '100%' }}
-            placeholder="Confirm Password"
-            value={passwordConfirm}
-            secureTextEntry={seePassword}
-            onChangeText={text => setPasswordConfirm(text)}
-          />
-          <TouchableOpacity
-            style={{ position: 'absolute', right: 0, padding: 10 }}
-            onPress={() => setSeePassword(!seePassword)}>
-            <Entypo
-              name={seePassword ? 'eye' : 'eye-with-line'}
-              size={15}
-              color={theme.colors.text}
+          </View>
+          {checkEmailValid && email ? (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
+              Wrong format email
+            </Text>
+          ) : (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
+          )}
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 5,
+              borderColor: theme.borderColor,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.backgroundColor,
+              marginTop: 10,
+            }}>
+            <TextInput
+              style={{ padding: 10, width: '100%' }}
+              ref={inputRef2}
+              onSubmitEditing={() => handleNextInput(inputRef2, inputRef3)}
+              placeholder="Password"
+              value={password}
+              secureTextEntry={seePassword}
+              onChangeText={text => setPassword(text)}
             />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderRadius: 5,
-            borderColor: theme.borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.backgroundColor,
-            marginTop: 30,
-          }}>
-          <TextInput
-            style={{ padding: 10, width: '100%' }}
-            placeholder="Your name"
-            value={name}
-            onChangeText={text => setName(text)}
-          />
-        </View>
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderRadius: 5,
-            borderColor: theme.borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.backgroundColor,
-            marginTop: 30,
-          }}>
-          <TextInput
-            style={{ padding: 10, width: '100%' }}
-            placeholder="Username"
-            value={username}
-            onChangeText={text => setUsername(text)}
-          />
-        </View>
+            <TouchableOpacity
+              style={{ position: 'absolute', right: 0, padding: 10 }}
+              onPress={() => setSeePassword(!seePassword)}>
+              <Entypo
+                name={seePassword ? 'eye' : 'eye-with-line'}
+                size={15}
+                color={theme.colors.text}
+              />
+            </TouchableOpacity>
+          </View>
+          {checkPasswordValidity(password) && password ? (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
+              {checkPasswordValidity(password)}
+            </Text>
+          ) : (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
+          )}
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 5,
+              borderColor: theme.borderColor,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.backgroundColor,
+              marginTop: 10,
+            }}>
+            <TextInput
+              style={{ padding: 10, width: '100%' }}
+              ref={inputRef3}
+              onSubmitEditing={() => handleNextInput(inputRef3, inputRef4)}
+              placeholder="Confirm Password"
+              value={passwordConfirm}
+              secureTextEntry={seePassword}
+              onChangeText={text => setPasswordConfirm(text)}
+            />
+            <TouchableOpacity
+              style={{ position: 'absolute', right: 0, padding: 10 }}
+              onPress={() => setSeePassword(!seePassword)}>
+              <Entypo
+                name={seePassword ? 'eye' : 'eye-with-line'}
+                size={15}
+                color={theme.colors.text}
+              />
+            </TouchableOpacity>
+          </View>
+          {password !== passwordConfirm && passwordConfirm ? (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}>
+              Password confirm not matching
+            </Text>
+          ) : (
+            <Text style={{ alignSelf: 'flex-end', color: 'red' }}></Text>
+          )}
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 5,
+              borderColor: theme.borderColor,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.backgroundColor,
+              marginTop: 10,
+            }}>
+            <TextInput
+              style={{ padding: 10, width: '100%' }}
+              ref={inputRef4}
+              onSubmitEditing={() => handleNextInput(inputRef4, inputRef5)}
+              placeholder="Your name"
+              value={name}
+              onChangeText={text => setName(text)}
+            />
+          </View>
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 5,
+              borderColor: theme.borderColor,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.backgroundColor,
+              marginTop: 30,
+            }}>
+            <TextInput
+              style={{ padding: 10, width: '100%' }}
+              ref={inputRef5}
+              onSubmitEditing={() => handleNextInput(inputRef5, null)}
+              placeholder="Username"
+              value={username}
+              onChangeText={text => setUsername(text)}
+            />
+          </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 30,
-          }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 14, paddingRight: 30 }}>
-            Gender
-          </Text>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              marginTop: 30,
             }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 14, paddingRight: 30 }}>
+              Gender
+            </Text>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingRight: 30,
+                justifyContent: 'space-between',
               }}>
-              <RadioButton
-                value="Male"
-                status={isMale === true ? 'checked' : 'unchecked'}
-                onPress={() => setIsMale(true)}
-                color="#3797EF"
-              />
-              <Text style={{ color: theme.colors.text }}>Male</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <RadioButton
-                value="Female"
-                status={isMale === false ? 'checked' : 'unchecked'}
-                onPress={() => setIsMale(false)}
-                color="#3797EF"
-              />
-              <Text>Female</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingRight: 30,
+                }}>
+                <RadioButton
+                  value="Male"
+                  status={isMale === true ? 'checked' : 'unchecked'}
+                  onPress={() => setIsMale(true)}
+                  color="#3797EF"
+                />
+                <Text style={{ color: theme.colors.text }}>Male</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton
+                  value="Female"
+                  status={isMale === false ? 'checked' : 'unchecked'}
+                  onPress={() => setIsMale(false)}
+                  color="#3797EF"
+                />
+                <Text>Female</Text>
+              </View>
             </View>
           </View>
-        </View>
 
-        {email == '' || password == '' || checkEmailValid == true ? (
-          <TouchableOpacity
-            disabled
-            style={{
-              padding: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.primary,
-              opacity: 0.6,
-              borderRadius: 5,
-              marginTop: 25,
-            }}
-            onPress={handleSignUp}>
-            <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={isLoading}
-            style={{
-              padding: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.primary,
-              borderRadius: 5,
-              marginTop: 25,
-            }}
-            onPress={handleSignUp}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
+          {email == '' || password == '' || checkEmailValid == true ? (
+            <TouchableOpacity
+              disabled
+              style={{
+                padding: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.colors.primary,
+                opacity: 0.6,
+                borderRadius: 5,
+                marginTop: 25,
+              }}
+              onPress={handleSignUp}>
               <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
-            )}
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.bottomContainer}>
-        <View
-          style={{
-            borderBottomColor: '#e1e1e1',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            alignSelf: 'stretch',
-          }}
-        />
-        <View style={styles.bottomSignUp}>
-          <Text style={styles.textBottom}>Have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.push('Login')}>
-            <Text style={styles.signUp}>Log In.</Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              disabled={isLoading}
+              style={{
+                padding: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.colors.primary,
+                borderRadius: 5,
+                marginTop: 25,
+              }}
+              onPress={handleSignUp}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
+              )}
+            </TouchableOpacity>
+          )}
         </View>
-      </View>
-    </View>
+
+        <View style={styles.bottomContainer}>
+          <View
+            style={{
+              borderBottomColor: '#e1e1e1',
+              borderBottomWidth: StyleSheet.hairlineWidth,
+              alignSelf: 'stretch',
+            }}
+          />
+          <View style={styles.bottomSignUp}>
+            <Text style={styles.textBottom}>Have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.push('Login')}>
+              <Text style={styles.signUp}>Log In.</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

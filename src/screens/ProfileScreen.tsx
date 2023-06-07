@@ -15,7 +15,7 @@ import ProfileIntro from '../components/ProfileIntro';
 import ProfileButton from '../components/ProfileButton';
 import StoryHighlight from '../components/StoryHighlight';
 import ProfileBottomTabView from '../components/ProfileBottomTabView';
-import { getUserOwner, UserResponse } from '../apis/userApi';
+import { getUserById, getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import { useFocusEffect } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -38,7 +38,8 @@ interface ErrorMessage {
 //   });
 // };
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ route }: any) => {
+  const userId = route?.params?.userId;
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -53,11 +54,19 @@ const ProfileScreen = () => {
   const { data, isLoading, error, refetch } = useQuery<
     UserResponse,
     ErrorMessage
-  >('userOwner', getUserOwner);
+  >(`userOwner-${userId}`, () =>
+    userId ? getUserById(userId) : getUserOwner(),
+  );
 
   const handleRefresh = () => {
     setRefreshing(true);
-    refetch().then(() => setRefreshing(false));
+    refetch()
+      .then(() => setRefreshing(false))
+      .catch(e => console.log(e));
+  };
+
+  const handleRefreshWithoutLoanding = () => {
+    refetch().catch(e => console.log(e));
   };
 
   if (isLoading) {
@@ -66,6 +75,7 @@ const ProfileScreen = () => {
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
+  console.log('first', data?.followStatus);
   return (
     <View
       style={{
@@ -78,6 +88,7 @@ const ProfileScreen = () => {
           <ProfileHeader
             accountName={data.username}
             toggleModal={toggleModal}
+            isClientUser={userId}
           />
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -96,11 +107,14 @@ const ProfileScreen = () => {
               status={data.bio}
             />
             <ProfileButton
-              owner={data.isOwner ? 0 : 1}
+              isOwner={data.isOwner}
+              userId={data.id}
               name={data.name}
               accountName={data.username}
               profileImage={data.avatar}
               status={data.bio}
+              followStatus={data.followStatus}
+              handleRefresh={handleRefreshWithoutLoanding}
             />
             <StoryHighlight />
           </ScrollView>

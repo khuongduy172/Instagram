@@ -29,6 +29,10 @@ const getUserOwner = async () => {
   return await axiosInstance.get<UserResponse, any>('/User/me');
 };
 
+const getUserById = async (userId: string) => {
+  return await axiosInstance.get<UserResponse, any>(`/User/${userId}`);
+};
+
 const editUserOwner = async (data: any) => {
   return await axiosInstance.put<UserEdit, any>('/User', data);
 };
@@ -41,5 +45,5 @@ const updateUserImage = async (data: any) => {
   });
 };
 
-export { getUserOwner, editUserOwner, updateUserImage };
+export { getUserOwner, editUserOwner, updateUserImage, getUserById };
 export type { UserResponse };
