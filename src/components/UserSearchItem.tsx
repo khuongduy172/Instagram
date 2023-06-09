@@ -7,15 +7,27 @@ import { useNavigation } from '@react-navigation/native';
 
 interface IUserSearchItemProps {
   data: SearchUserResponse;
+  routeName?: string;
 }
 
-const UserSearchItem = ({ data }: IUserSearchItemProps) => {
+const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
   const theme = useCustomTheme();
   const navigation = useNavigation();
+
+  const onPress = () => {
+    if (routeName && routeName == 'SearchToSendMessage') {
+      navigation.navigate('Message', { user: data });
+    }
+
+    if (routeName && routeName == 'SearchMain') {
+      navigation.push('ClientProfile', { userId: data.id });
+    }
+  };
+
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Message', { user: data })}
+        onPress={onPress}
         style={{
           flex: 1,
           flexDirection: 'row',

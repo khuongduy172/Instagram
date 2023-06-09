@@ -20,4 +20,4 @@ export { default as EditorScreen } from './EditorScreen';
 export { default as ActivityScreen } from './ActivityScreen';
 export { default as ClientProfile } from './ClientProfile';
 export { default as CommentScreen } from './CommentScreen';
-export { default as SearchToSendMessageScreen } from './SearchToSendMessageScreen';
+export { default as SearchMainScreen } from './SearchMainScreen';

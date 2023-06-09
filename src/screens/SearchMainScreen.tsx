@@ -11,12 +11,15 @@ import useCustomTheme from '../theme/CustomTheme';
 import { debounce } from 'lodash';
 import { SearchUserResponse, searchUser } from '../apis/userApi';
 import UserSearchItem from '../components/UserSearchItem';
-import { SearchToSendMessageProps } from '../navigation/RootNavigationProps';
+import {
+  SearchMainProps,
+  SearchToSendMessageProps,
+} from '../navigation/RootNavigationProps';
 
-const SearchToSendMessageScreen = ({
+const SearchMainScreen = ({
   route,
   navigation,
-}: SearchToSendMessageProps) => {
+}: SearchToSendMessageProps | SearchMainProps) => {
   const theme = useCustomTheme();
   const [data, setData] = React.useState<SearchUserResponse[]>([]);
   const debounceSearch = debounce(async (text: string) => {
@@ -79,10 +82,12 @@ const SearchToSendMessageScreen = ({
       />
       <FlatList
         data={data}
-        renderItem={({ item }) => <UserSearchItem data={item} />}
+        renderItem={({ item }) => (
+          <UserSearchItem data={item} routeName={route.name} />
+        )}
       />
     </View>
   );
 };
 
-export default SearchToSendMessageScreen;
+export default SearchMainScreen;
