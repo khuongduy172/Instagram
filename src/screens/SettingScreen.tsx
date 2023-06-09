@@ -18,6 +18,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedIn } from '../redux/authSlice';
+import PushNotification from 'react-native-push-notification';
+import { getUserOwner } from '../apis/userApi';
 
 const SettingScreen = ({ route, navigation }: any) => {
   const theme = useCustomTheme();
@@ -26,6 +28,12 @@ const SettingScreen = ({ route, navigation }: any) => {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const handleSignOut = async () => {
+    // delete channel for push notification
+    let user = await getUserOwner();
+    if (user) {
+      PushNotification.deleteChannel(user.id);
+    }
+
     await AsyncStorage.removeItem('accessToken');
     dispatch(setLoggedIn(false));
     navigation.navigate('Onboarding');

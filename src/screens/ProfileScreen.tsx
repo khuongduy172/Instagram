@@ -75,7 +75,7 @@ const ProfileScreen = ({ route }: any) => {
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
-  console.log('first', data?.followStatus);
+
   return (
     <View
       style={{

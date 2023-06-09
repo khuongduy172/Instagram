@@ -16,10 +16,18 @@ import axios from 'axios';
 import { REACT_APP_GPT_API_KEY, REACT_APP_GPT_API_URL } from '@env';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useCustomTheme from '../theme/CustomTheme';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const MessageScreen = ({ route, navigation }) => {
+type RootStackParamList = {
+  Message: { user: any };
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Message'>;
+
+const MessageScreen = ({ route, navigation }: Props) => {
   const { name, accountName, followers, follow, following, post, image } =
-    route.params;
+    route.params.user;
+  console.log(route.params.user);
   const theme = useCustomTheme();
   const [data, setData] = useState([]);
   const apiKey = REACT_APP_GPT_API_KEY;
@@ -68,7 +76,11 @@ const MessageScreen = ({ route, navigation }) => {
           justifyContent: 'space-between',
           paddingBottom: 15,
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.pop();
+            navigation.goBack();
+          }}>
           <AntDesign name="arrowleft" size={30} color="black" />
         </TouchableOpacity>
         <View

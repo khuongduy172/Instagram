@@ -26,14 +26,15 @@ import {
   EditorScreen,
   ActivityScreen,
   ProfileScreen,
-  ClientProfile,
   CommentScreen,
+  SearchMainScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
 import { ActivityIndicator } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import useCustomTheme from '../theme/CustomTheme';
+import PushNotification from 'react-native-push-notification';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -49,6 +50,14 @@ const AppNavigation = () => {
       if (user) {
         store.dispatch(setLoggedIn(true));
         setIsLoading(false);
+        PushNotification.createChannel(
+          {
+            channelId: user.id,
+            channelName: 'Instagram',
+          },
+          created =>
+            console.log(`createChannel returned '${created}' ${user.id}`),
+        );
       }
     }
     setIsLoading(false);
@@ -100,6 +109,11 @@ const AppNavigation = () => {
               <Stack.Screen name="EditImage" component={EditImageScreen} />
               <Stack.Screen name="NewPost" component={NewPost} />
               <Stack.Screen name="Direct" component={DirectScreen} />
+              <Stack.Screen
+                name="SearchToSendMessage"
+                component={SearchMainScreen}
+              />
+              <Stack.Screen name="SearchMain" component={SearchMainScreen} />
               <Stack.Screen name="Message" component={MessageScreen} />
               <Stack.Screen name="CreateReels" component={CreateReels} />
               <Stack.Screen name="PostReels" component={PostReels} />
