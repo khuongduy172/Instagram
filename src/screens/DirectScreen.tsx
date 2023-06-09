@@ -90,45 +90,51 @@ const DirectScreen = () => {
               size={30}
               style={{ paddingHorizontal: 20 }}
             />
-            <AntDesign name="plus" color={theme.text} size={30} />
+            <TouchableOpacity
+              onPress={() => navigation.push('SearchToSendMessage')}>
+              <AntDesign name="plus" color={theme.text} size={30} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: theme.textInputBackground,
-          marginTop: 30,
-          borderRadius: 10,
-        }}>
-        <AntDesign
-          name="search1"
-          color={theme.text}
-          opacity={0.8}
-          size={15}
-          style={{ paddingHorizontal: 20 }}
-        />
-        <TextInput
-          placeholder="Search"
-          placeholderTextColor={theme.placeholderTextColor}
+      <TouchableOpacity onPress={() => navigation.push('SearchToSendMessage')}>
+        <View
           style={{
-            flex: 1,
-            backgroundColor: theme.textInputBackground,
-            borderRadius: 15,
+            flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '100%',
-            color: 'black',
-            fontSize: 18,
-            paddingTop: 5,
-            paddingRight: 10,
-            paddingBottom: 10,
-            paddingLeft: 0,
-          }}
-        />
-      </View>
+            backgroundColor: theme.textInputBackground,
+            marginTop: 30,
+            borderRadius: 10,
+          }}>
+          <AntDesign
+            name="search1"
+            color={theme.text}
+            opacity={0.8}
+            size={15}
+            style={{ paddingHorizontal: 20 }}
+          />
+          <TextInput
+            placeholder="Search"
+            editable={false}
+            placeholderTextColor={theme.placeholderTextColor}
+            style={{
+              flex: 1,
+              backgroundColor: theme.textInputBackground,
+              borderRadius: 15,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              color: 'black',
+              fontSize: 18,
+              paddingTop: 5,
+              paddingRight: 10,
+              paddingBottom: 10,
+              paddingLeft: 0,
+            }}
+          />
+        </View>
+      </TouchableOpacity>
       <View>
         <DirectMessage />
         <View

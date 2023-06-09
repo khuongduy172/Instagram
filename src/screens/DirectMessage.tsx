@@ -36,7 +36,9 @@ const DirectMessage = () => {
     {
       id: 1,
       name: 'Write notes',
-      image: data ? { uri: data.avatar } : require('../assets/images/gpt.png'),
+      image: data?.avatar
+        ? { uri: data.avatar }
+        : require('../assets/images/gpt.png'),
       accountName: 'anthony.haidang',
     },
     {
