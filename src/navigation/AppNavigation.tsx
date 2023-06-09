@@ -26,7 +26,6 @@ import {
   EditorScreen,
   ActivityScreen,
   ProfileScreen,
-  ClientProfile,
   CommentScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -34,6 +33,7 @@ import { getUserOwner } from '../apis/userApi';
 import { ActivityIndicator } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import useCustomTheme from '../theme/CustomTheme';
+import PushNotification from 'react-native-push-notification';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -49,6 +49,14 @@ const AppNavigation = () => {
       if (user) {
         store.dispatch(setLoggedIn(true));
         setIsLoading(false);
+        PushNotification.createChannel(
+          {
+            channelId: user.id,
+            channelName: 'Instagram',
+          },
+          created =>
+            console.log(`createChannel returned '${created}' ${user.id}`),
+        );
       }
     }
     setIsLoading(false);

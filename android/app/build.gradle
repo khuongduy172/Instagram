@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'ly.img.android.sdk'
 apply plugin: 'kotlin-android'
 apply plugin: "com.facebook.react"
@@ -186,6 +187,8 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation('com.facebook.android:facebook-android-sdk:latest.release')
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
+    // implementation('com.google.firebase:firebase-analytics:17.3.0')
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
