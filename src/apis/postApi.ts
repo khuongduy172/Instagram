@@ -35,6 +35,10 @@ const getStatusCommentByPage = async (page: number, statusId: string) => {
   );
 };
 
+const deleteComment = async (commentId: string) => {
+  return await axiosInstance.delete(`/Status/comment/${commentId}`);
+};
+
 export {
   postStatus,
   getStatus,
@@ -42,4 +46,5 @@ export {
   deleteStatus,
   postComment,
   getStatusCommentByPage,
+  deleteComment,
 };

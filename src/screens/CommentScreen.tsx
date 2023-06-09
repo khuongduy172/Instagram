@@ -7,6 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
   Keyboard,
+  RefreshControl,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -25,6 +26,8 @@ const CommentScreen = ({ route, navigation }: any) => {
   const [pageData, setPageData] = useState([]);
   const scrollViewRef = useRef<ScrollView>(null);
   const theme = useCustomTheme();
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const connection = useSignalR();
 
@@ -51,18 +54,32 @@ const CommentScreen = ({ route, navigation }: any) => {
     Keyboard.dismiss();
   };
 
-  const { fetchNextPage, hasNextPage, isFetchingNextPage, data, ...result } =
-    useInfiniteQuery(
-      `${id}-comments`,
-      ({ pageParam = 1 }) => getStatusCommentByPage(pageParam, id),
-      {
-        getNextPageParam: lastPage =>
-          lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-        onSuccess: data => {
-          setPageData([...data.pages.flatMap(page => page.data)]);
-        },
+  const {
+    fetchNextPage,
+    refetch,
+    isRefetching,
+    hasNextPage,
+    isFetchingNextPage,
+    data,
+    ...result
+  } = useInfiniteQuery(
+    `${id}-comments`,
+    ({ pageParam = 1 }) => getStatusCommentByPage(pageParam, id),
+    {
+      getNextPageParam: lastPage =>
+        lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+      onSuccess: data => {
+        setPageData([...data.pages.flatMap(page => page.data)]);
       },
-    );
+    },
+  );
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    refetch()
+      .then(() => setRefreshing(false))
+      .catch(e => console.log(e));
+  };
 
   return (
     <View
@@ -98,6 +115,9 @@ const CommentScreen = ({ route, navigation }: any) => {
         </TouchableOpacity>
       </View>
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
         ref={scrollViewRef}
         onScroll={event => {
           const { layoutMeasurement, contentOffset, contentSize } =
@@ -172,11 +192,12 @@ const CommentScreen = ({ route, navigation }: any) => {
             key={item.id}
             commentId={item.id}
             avatar={item.owner.avatar}
-            username={item.owner.name}
+            username={item.owner.username}
             createdAt={item.createdAt}
             isOwner={item.isOwner}
             content={item.content}
             ownerId={item.ownerId}
+            refetch={refetch}
           />
         ))}
       </ScrollView>
