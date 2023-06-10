@@ -128,7 +128,11 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            navigation.pop();
+            const routes = navigation.getState()?.routes;
+            const prevRoute: any = routes[routes.length - 2];
+            if (prevRoute.name == 'SearchToSendMessage') {
+              navigation.pop();
+            }
             navigation.goBack();
           }}>
           <AntDesign name="arrowleft" size={30} color={theme.text} />

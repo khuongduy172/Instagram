@@ -1,12 +1,20 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+} from 'react-native';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import DirectMessage from './DirectMessage';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
 import useCustomTheme from '../theme/CustomTheme';
+import { getUserMessageList } from '../apis/messageApi';
+import UserMessageItem from '../components/UserMessageItem';
 
 interface ErrorMessage {
   message: string;
@@ -18,6 +26,11 @@ const DirectScreen = () => {
   const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
     'userOwner',
     getUserOwner,
+  );
+
+  const { data: listMessage }: any = useQuery(
+    'list-message',
+    getUserMessageList,
   );
 
   if (isLoading) {
@@ -122,7 +135,7 @@ const DirectScreen = () => {
         </View>
       </TouchableOpacity>
       <View>
-        <DirectMessage />
+        <DirectMessage data={data} />
         <View
           style={{
             flexDirection: 'row',
@@ -144,38 +157,45 @@ const DirectScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingVertical: 50,
-          }}>
-          <Text
+        {listMessage ? (
+          <FlatList
+            data={listMessage}
+            renderItem={({ item }) => <UserMessageItem data={item} />}
+          />
+        ) : (
+          <View
             style={{
-              color: theme.text,
-              fontSize: 20,
-              paddingVertical: 10,
-              textAlign: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              paddingVertical: 50,
             }}>
-            Message your friends with Direct
-          </Text>
-          <Text style={{ textAlign: 'center' }}>
-            Private message or directly share favorite articles with friends
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.push('SearchToSendMessage')}>
             <Text
               style={{
-                color: theme.colors.primary,
-                fontSize: 14,
-                fontWeight: 'bold',
+                color: theme.text,
+                fontSize: 20,
                 paddingVertical: 10,
+                textAlign: 'center',
               }}>
-              Send Message
+              Message your friends with Direct
             </Text>
-          </TouchableOpacity>
-        </View>
+            <Text style={{ textAlign: 'center' }}>
+              Private message or directly share favorite articles with friends
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.push('SearchToSendMessage')}>
+              <Text
+                style={{
+                  color: theme.colors.primary,
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  paddingVertical: 10,
+                }}>
+                Send Message
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );

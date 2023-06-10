@@ -1,27 +1,35 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { SearchUserResponse } from '../apis/userApi';
+import React, { useEffect } from 'react';
 import Avatar from './Avatar';
 import useCustomTheme from '../theme/CustomTheme';
 import { useNavigation } from '@react-navigation/native';
-
-interface IUserSearchItemProps {
-  data: SearchUserResponse;
-  routeName?: string;
+import { useSelector } from 'react-redux';
+interface IUserMessageItemProps {
+  data: any;
 }
-
-const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
+const UserMessageItem = ({ data }: IUserMessageItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
 
-  const onPress = () => {
-    if (routeName && routeName == 'SearchToSendMessage') {
-      navigation.push('Message', { user: { ...data, image: data.avatar } });
-    }
+  const currentUserId = useSelector(
+    (state: any) => state.currentUser.currentUserId,
+  );
 
-    if (routeName && routeName == 'SearchMain') {
-      navigation.push('ClientProfile', { userId: data.id });
-    }
+  const onPress = () => {
+    const result =
+      currentUserId == data.receiverId
+        ? {
+            id: data.senderId,
+            name: data.sender.name,
+            image: data.sender.avatar,
+          }
+        : {
+            id: data.receiverId,
+            name: data.receiver.name,
+            image: data.receiver.avatar,
+          };
+
+    navigation.push('Message', { user: result });
   };
 
   return (
@@ -36,7 +44,11 @@ const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
         }}>
         <View style={{ padding: 5 }}>
           <Avatar
-            uri={data.avatar}
+            uri={
+              currentUserId == data.receiverId
+                ? data.sender.avatar
+                : data.receiver.avatar
+            }
             disabled={true}
             style={{ width: 50, height: 50, borderRadius: 100 }}
           />
@@ -54,10 +66,14 @@ const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
               color: theme.text,
               fontSize: 18,
             }}>
-            {data.name}
+            {currentUserId == data.receiverId
+              ? data.sender.name
+              : data.receiver.name}
           </Text>
           <Text style={{ marginTop: 1, color: theme.placeholderTextColor }}>
-            {data.username}
+            {currentUserId == data.receiverId
+              ? data.content
+              : `You: ${data.content}`}
           </Text>
         </View>
       </TouchableOpacity>
@@ -65,4 +81,4 @@ const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
   );
 };
 
-export default UserSearchItem;
+export default UserMessageItem;
