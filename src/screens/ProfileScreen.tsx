@@ -65,7 +65,7 @@ const ProfileScreen = ({ route }: any) => {
       .catch(e => console.log(e));
   };
 
-  const handleRefreshWithoutLoanding = () => {
+  const handleRefreshWithoutLoading = () => {
     refetch().catch(e => console.log(e));
   };
 
@@ -114,7 +114,7 @@ const ProfileScreen = ({ route }: any) => {
               profileImage={data.avatar}
               status={data.bio}
               followStatus={data.followStatus}
-              handleRefresh={handleRefreshWithoutLoanding}
+              handleRefresh={handleRefreshWithoutLoading}
             />
             <StoryHighlight />
           </ScrollView>
