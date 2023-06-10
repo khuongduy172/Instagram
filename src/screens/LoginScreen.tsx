@@ -53,6 +53,7 @@ const LoginScreen = ({ navigation }: any) => {
       if (data && data.token) {
         await AsyncStorage.setItem('accessToken', data.token);
         await AsyncStorage.setItem('refreshToken', data.refreshToken);
+        await AsyncStorage.setItem('currentUserId', data.userId);
         console.log(data.token);
         dispatch(setLoggedIn(true));
         ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
@@ -67,6 +68,7 @@ const LoginScreen = ({ navigation }: any) => {
         if (data && data.token) {
           await AsyncStorage.setItem('accessToken', data.token);
           await AsyncStorage.setItem('refreshToken', data.refreshToken);
+          await AsyncStorage.setItem('currentUserId', data.userId);
           dispatch(setLoggedIn(true));
           ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
         }

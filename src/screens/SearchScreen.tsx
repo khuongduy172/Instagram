@@ -2,8 +2,6 @@ import React, { useState, useRef } from 'react';
 import {
   View,
   StatusBar,
-  ScrollView,
-  TouchableOpacity,
   Dimensions,
   Image,
   Text,
@@ -15,9 +13,12 @@ import SearchContent from '../components/SearchContent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import useCustomTheme from '../theme/CustomTheme';
 
 const SearchScreen = () => {
   const [image, setImage] = useState(null);
+
+  const theme = useCustomTheme();
 
   const getData = data => {
     setImage(data);
@@ -35,7 +36,7 @@ const SearchScreen = () => {
       style={{
         width: '100%',
         height: '100%',
-        backgroundColor: 'white',
+        backgroundColor: theme.background,
         position: 'relative',
       }}>
       <FlatList

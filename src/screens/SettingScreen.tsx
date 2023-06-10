@@ -35,6 +35,8 @@ const SettingScreen = ({ route, navigation }: any) => {
     }
 
     await AsyncStorage.removeItem('accessToken');
+    await AsyncStorage.removeItem('refreshToken');
+    await AsyncStorage.removeItem('currentUserId');
     dispatch(setLoggedIn(false));
     navigation.navigate('Onboarding');
     ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);

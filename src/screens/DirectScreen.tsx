@@ -1,38 +1,25 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import DirectMessage from './DirectMessage';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
-import { useFocusEffect } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
 
 interface ErrorMessage {
   message: string;
 }
 
-export const useRefetchOnFocus = (refetch: () => void) => {
-  useFocusEffect(() => {
-    refetch();
-  });
-};
-
 const DirectScreen = () => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const theme = useCustomTheme();
-  const { data, isLoading, error, refetch } = useQuery<
-    UserResponse,
-    ErrorMessage
-  >('userOwner', getUserOwner);
-  useRefetchOnFocus(refetch);
+  const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
+    'userOwner',
+    getUserOwner,
+  );
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -71,7 +58,7 @@ const DirectScreen = () => {
                 fontWeight: 'bold',
                 color: theme.text,
               }}>
-              {data.username}
+              {data?.username}
             </Text>
             <Feather
               name="chevron-down"
@@ -110,7 +97,6 @@ const DirectScreen = () => {
           <AntDesign
             name="search1"
             color={theme.text}
-            opacity={0.8}
             size={15}
             style={{ paddingHorizontal: 20 }}
           />
@@ -143,11 +129,17 @@ const DirectScreen = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 15 }}>
-            Message
+          <Text
+            style={{
+              color: theme.text,
+              fontWeight: 'bold',
+              fontSize: 15,
+              marginLeft: 5,
+            }}>
+            Messages
           </Text>
           <TouchableOpacity>
-            <Text style={{ color: '#3493d9', fontSize: 15 }}>
+            <Text style={{ color: theme.colors.primary, fontSize: 15 }}>
               Message Requests
             </Text>
           </TouchableOpacity>
@@ -161,7 +153,7 @@ const DirectScreen = () => {
           }}>
           <Text
             style={{
-              color: 'black',
+              color: theme.text,
               fontSize: 20,
               paddingVertical: 10,
               textAlign: 'center',
@@ -171,10 +163,11 @@ const DirectScreen = () => {
           <Text style={{ textAlign: 'center' }}>
             Private message or directly share favorite articles with friends
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push('SearchToSendMessage')}>
             <Text
               style={{
-                color: '#3493d9',
+                color: theme.colors.primary,
                 fontSize: 14,
                 fontWeight: 'bold',
                 paddingVertical: 10,

@@ -1,14 +1,10 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
   View,
   useColorScheme,
   Image,
   TouchableOpacity,
-  ToastAndroid,
   FlatList,
   RefreshControl,
   ActivityIndicator,
@@ -21,9 +17,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import { useQuery, useInfiniteQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoggedIn } from '../redux/authSlice';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import HomeStory from '../components/HomeStory';
@@ -39,15 +32,6 @@ function HomeScreen(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : '#ffffff',
     width: '100%',
     height: '100%',
-  };
-
-  const dispatch = useDispatch();
-
-  const handleSignOut = async () => {
-    await AsyncStorage.removeItem('accessToken');
-    dispatch(setLoggedIn(false));
-    navigation.navigate('Onboarding');
-    ToastAndroid.show('Logout successfully', ToastAndroid.SHORT);
   };
   const scheme = useColorScheme();
   const instaLogo =
@@ -116,7 +100,7 @@ function HomeScreen(): JSX.Element {
           backgroundColor: theme.background,
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity onPress={handleSignOut}>
+          <TouchableOpacity>
             <Image
               source={instaLogo}
               style={{

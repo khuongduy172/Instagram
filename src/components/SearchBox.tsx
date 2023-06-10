@@ -2,11 +2,16 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import useCustomTheme from '../theme/CustomTheme';
+import { useNavigation } from '@react-navigation/native';
 
 const SearchBox = () => {
   const theme = useCustomTheme();
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('SearchMain');
+      }}>
       <View
         style={{
           justifyContent: 'center',
