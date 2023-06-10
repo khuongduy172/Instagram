@@ -4,28 +4,21 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
-import { useFocusEffect } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
+import Avatar from '../components/Avatar';
 
 interface ErrorMessage {
   message: string;
 }
 
-export const useRefetchOnFocus = (refetch: () => void) => {
-  useFocusEffect(() => {
-    refetch();
-  });
-};
-
 const DirectMessage = () => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const theme = useCustomTheme();
 
-  const { data, isLoading, error, refetch } = useQuery<
-    UserResponse,
-    ErrorMessage
-  >('userOwner', getUserOwner);
-  useRefetchOnFocus(refetch);
+  const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
+    'userOwner',
+    getUserOwner,
+  );
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -35,43 +28,31 @@ const DirectMessage = () => {
   const directInfo = [
     {
       id: 1,
-      name: 'Write notes',
-      image: data?.avatar
-        ? { uri: data.avatar }
-        : require('../assets/images/gpt.png'),
-      accountName: 'anthony.haidang',
+      name: 'Your notes',
+      image: data?.avatar,
     },
     {
       id: 0,
-      name: 'chatgpt',
+      name: 'ChatGPT',
       image: require('../assets/images/gpt.png'),
-      accountName: 'ChatGPT',
-      followers: '14M',
-      following: '425',
-      post: '1,2k',
-      follow: false,
     },
   ];
+
+  const handlePress = (item: any) => {
+    if (item.name === 'Your notes') {
+      return;
+    }
+
+    navigation.push('Message', { user: item });
+  };
   return (
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       style={{ paddingVertical: 20 }}>
-      {directInfo.map((item, index) => {
+      {directInfo.map(item => {
         return (
-          <TouchableOpacity
-            key={index}
-            onPress={() =>
-              navigation.push('Message', {
-                accountName: item.accountName,
-                followers: item.followers,
-                following: item.following,
-                post: item.post,
-                name: item.name,
-                image: item.image,
-                follow: item.follow,
-              })
-            }>
+          <TouchableOpacity key={item.id} onPress={() => handlePress(item)}>
             <View
               style={{
                 position: 'relative',
@@ -79,7 +60,7 @@ const DirectMessage = () => {
                 paddingHorizontal: 10,
                 paddingTop: 10,
               }}>
-              {item.id === 1 ? (
+              {item.name === 'Your notes' ? (
                 <View
                   style={{
                     position: 'absolute',
@@ -112,22 +93,34 @@ const DirectMessage = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={item.image}
-                  style={{
-                    resizeMode: 'cover',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 100,
-                    backgroundColor: 'orange',
-                  }}
-                />
+                {item.name === 'ChatGPT' ? (
+                  <Image
+                    source={item.image}
+                    style={{
+                      resizeMode: 'cover',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 100,
+                      backgroundColor: 'orange',
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    uri={item.image}
+                    style={{
+                      resizeMode: 'cover',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 100,
+                      backgroundColor: 'orange',
+                    }}
+                  />
+                )}
               </View>
               <Text
                 style={{
                   textAlign: 'center',
                   fontSize: 12,
-                  opacity: item.id === 0 ? 1 : 0.5,
                   paddingTop: 15,
                 }}>
                 {item.name}

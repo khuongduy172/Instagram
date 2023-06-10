@@ -16,7 +16,7 @@ const UserSearchItem = ({ data, routeName }: IUserSearchItemProps) => {
 
   const onPress = () => {
     if (routeName && routeName == 'SearchToSendMessage') {
-      navigation.navigate('Message', { user: data });
+      navigation.navigate('Message', { user: { ...data, image: data.avatar } });
     }
 
     if (routeName && routeName == 'SearchMain') {
