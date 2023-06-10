@@ -19,6 +19,8 @@ import Avatar from '../components/Avatar';
 import useSignalR from '../hooks/useSignalR';
 import { useInfiniteQuery, useMutation } from 'react-query';
 import { getStatusCommentByPage, postComment } from '../apis/postApi';
+import Feather from 'react-native-vector-icons/Feather';
+import { deleteComment } from '../apis/postApi';
 
 const CommentScreen = ({ route, navigation }: any) => {
   const { avatar, username, createdAt, content, id }: any = route.params;
@@ -81,6 +83,22 @@ const CommentScreen = ({ route, navigation }: any) => {
       .catch(e => console.log(e));
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedComment, setSelectedComment] = useState<any>(null);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleDeleteComment = async () => {
+    try {
+      setIsDeleting(true);
+      await deleteComment(selectedComment);
+      refetch();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <View
       style={{
@@ -88,32 +106,71 @@ const CommentScreen = ({ route, navigation }: any) => {
         height: '100%',
         backgroundColor: theme.background,
       }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: 15,
-        }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={30} color={theme.backButton} />
-        </TouchableOpacity>
-        <Text
+      {isOpen ? (
+        <View
           style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: theme.text,
-            paddingHorizontal: 30,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+            backgroundColor: '#0195f7',
           }}>
-          Comments
-        </Text>
-        <TouchableOpacity
+          <TouchableOpacity onPress={() => setIsOpen(false)}>
+            <AntDesign name="close" size={30} color="#fff" />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#fff',
+              paddingHorizontal: 30,
+            }}>
+            Selected 1 item
+          </Text>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              right: 25,
+            }}
+            onPress={() => {
+              handleDeleteComment();
+              setIsOpen(false);
+            }}>
+            {isDeleting ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Feather name="trash" size={25} color="#fff" />
+            )}
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View
           style={{
-            position: 'absolute',
-            right: 25,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
           }}>
-          <ShareIcon width={25} height={25} fill={theme.text} />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="arrowleft" size={30} color={theme.backButton} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: theme.text,
+              paddingHorizontal: 30,
+            }}>
+            Comments
+          </Text>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              right: 25,
+            }}>
+            <ShareIcon width={25} height={25} fill={theme.text} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -198,6 +255,10 @@ const CommentScreen = ({ route, navigation }: any) => {
             content={item.content}
             ownerId={item.ownerId}
             refetch={refetch}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            selectedComment={selectedComment}
+            setSelectedComment={setSelectedComment}
           />
         ))}
       </ScrollView>

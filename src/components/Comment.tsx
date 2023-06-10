@@ -15,6 +15,10 @@ const Comment = ({
   content,
   ownerId,
   refetch,
+  isOpen,
+  setIsOpen,
+  selectedComment,
+  setSelectedComment,
 }: any) => {
   const theme = useCustomTheme();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -31,37 +35,110 @@ const Comment = ({
   };
 
   return (
-    <View style={{ padding: 15 }}>
-      <View style={{ flexDirection: 'row' }}>
-        <Avatar
-          uri={avatar}
-          userId={ownerId}
-          style={{ width: 40, height: 40, borderRadius: 100, marginTop: 8 }}
-        />
-        <View
+    <TouchableOpacity
+      onLongPress={() => {
+        if (isOwner) {
+          setIsOpen(!isOpen);
+          setSelectedComment(commentId);
+        }
+      }}>
+      {isOpen && selectedComment === commentId ? (
+        <View style={{ backgroundColor: '#e0f2ff' }}>
+          <View style={{ flexDirection: 'row', padding: 15 }}>
+            <Avatar
+              uri={avatar}
+              userId={ownerId}
+              style={{ width: 40, height: 40, borderRadius: 100, marginTop: 8 }}
+            />
+            <View
+              style={{
+                flexDirection: 'column',
+                paddingHorizontal: 13,
+              }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 'bold',
+                    color: theme.text,
+                  }}>
+                  {username}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    paddingHorizontal: 10,
+                    color: theme.textSecond,
+                    fontWeight: 'bold',
+                  }}>
+                  {moment.utc(createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+                </Text>
+              </View>
+              <Text
+                style={{ fontSize: 15, color: theme.text, paddingVertical: 7 }}>
+                {content}
+              </Text>
+              {/* <Text
+          style={{
+            fontSize: 13,
+            color: theme.textSecond,
+            fontWeight: 'bold',
+          }}>
+          Reply
+        </Text> */}
+            </View>
+            {/* DELETE COMMENT HERE */}
+            {/* {isOwner && (
+        <TouchableOpacity
+          onPress={handleDeleteComment}
           style={{
             flexDirection: 'column',
-            paddingHorizontal: 13,
+            alignItems: 'center',
+            position: 'absolute',
+            right: 10,
+            marginTop: 10,
           }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              style={{ fontSize: 13, fontWeight: 'bold', color: theme.text }}>
-              {username}
-            </Text>
-            <Text
-              style={{
-                fontSize: 13,
-                paddingHorizontal: 10,
-                color: theme.textSecond,
-                fontWeight: 'bold',
-              }}>
-              {moment.utc(createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
-            </Text>
+          {isDeleting ? (
+            <ActivityIndicator size="small" color={theme.text} />
+          ) : (
+            <Feather name="trash" size={15} color={theme.textSecond} />
+          )}
+        </TouchableOpacity>
+      )} */}
           </View>
-          <Text style={{ fontSize: 15, color: theme.text, paddingVertical: 7 }}>
-            {content}
-          </Text>
-          {/* <Text
+        </View>
+      ) : (
+        <View style={{ flexDirection: 'row', padding: 15 }}>
+          <Avatar
+            uri={avatar}
+            userId={ownerId}
+            style={{ width: 40, height: 40, borderRadius: 100, marginTop: 8 }}
+          />
+          <View
+            style={{
+              flexDirection: 'column',
+              paddingHorizontal: 13,
+            }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={{ fontSize: 13, fontWeight: 'bold', color: theme.text }}>
+                {username}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13,
+                  paddingHorizontal: 10,
+                  color: theme.textSecond,
+                  fontWeight: 'bold',
+                }}>
+                {moment.utc(createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+              </Text>
+            </View>
+            <Text
+              style={{ fontSize: 15, color: theme.text, paddingVertical: 7 }}>
+              {content}
+            </Text>
+            {/* <Text
             style={{
               fontSize: 13,
               color: theme.textSecond,
@@ -69,9 +146,9 @@ const Comment = ({
             }}>
             Reply
           </Text> */}
-        </View>
-        {/* DELETE COMMENT HERE */}
-        {isOwner && (
+          </View>
+          {/* DELETE COMMENT HERE */}
+          {/* {isOwner && (
           <TouchableOpacity
             onPress={handleDeleteComment}
             style={{
@@ -87,9 +164,10 @@ const Comment = ({
               <Feather name="trash" size={15} color={theme.textSecond} />
             )}
           </TouchableOpacity>
-        )}
-      </View>
-    </View>
+        )} */}
+        </View>
+      )}
+    </TouchableOpacity>
   );
 };
 
