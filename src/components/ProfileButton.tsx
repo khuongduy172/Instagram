@@ -159,7 +159,13 @@ const ProfileButton = ({
               </View>
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={{ width: '43%' }}>
+          <TouchableOpacity
+            style={{ width: '43%' }}
+            onPress={() => {
+              navigation.push('Message', {
+                user: { id: userId, name: name, image: profileImage },
+              });
+            }}>
             <View
               style={{
                 width: '100%',

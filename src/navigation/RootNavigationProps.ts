@@ -3,6 +3,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type RootStackParamList = {
   SearchToSendMessage: undefined;
   SearchMain: undefined;
+  Message: { user: any };
 };
 
 type SearchToSendMessageProps = NativeStackScreenProps<
@@ -12,4 +13,6 @@ type SearchToSendMessageProps = NativeStackScreenProps<
 
 type SearchMainProps = NativeStackScreenProps<RootStackParamList, 'SearchMain'>;
 
-export type { SearchToSendMessageProps, SearchMainProps };
+type MessageProps = NativeStackScreenProps<RootStackParamList, 'Message'>;
+
+export type { SearchToSendMessageProps, SearchMainProps, MessageProps };
