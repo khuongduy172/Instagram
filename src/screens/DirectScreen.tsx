@@ -15,6 +15,7 @@ import { useQuery } from 'react-query';
 import useCustomTheme from '../theme/CustomTheme';
 import { getUserMessageList } from '../apis/messageApi';
 import UserMessageItem from '../components/UserMessageItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ErrorMessage {
   message: string;
@@ -31,7 +32,15 @@ const DirectScreen = () => {
   const { data: listMessage }: any = useQuery(
     'list-message',
     getUserMessageList,
+    {
+      refetchInterval: 10000,
+      refetchIntervalInBackground: false,
+    },
   );
+
+  const { data: currentUserId } = useQuery('currentUserId', async () => {
+    return await AsyncStorage.getItem('currentUserId');
+  });
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -160,7 +169,9 @@ const DirectScreen = () => {
         {listMessage ? (
           <FlatList
             data={listMessage}
-            renderItem={({ item }) => <UserMessageItem data={item} />}
+            renderItem={({ item }) => (
+              <UserMessageItem data={item} currentUserId={currentUserId} />
+            )}
           />
         ) : (
           <View

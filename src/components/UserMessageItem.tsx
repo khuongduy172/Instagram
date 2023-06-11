@@ -1,23 +1,18 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Avatar from './Avatar';
 import useCustomTheme from '../theme/CustomTheme';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 interface IUserMessageItemProps {
   data: any;
+  currentUserId: any;
 }
-const UserMessageItem = ({ data }: IUserMessageItemProps) => {
+const UserMessageItem = ({ data, currentUserId }: IUserMessageItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
-
-  const currentUserId = useSelector(
-    (state: any) => state.currentUser.currentUserId,
-  );
-
   const onPress = () => {
     const result =
-      currentUserId == data.receiverId
+      currentUserId === data.receiverId
         ? {
             id: data.senderId,
             name: data.sender.name,
@@ -45,7 +40,7 @@ const UserMessageItem = ({ data }: IUserMessageItemProps) => {
         <View style={{ padding: 5 }}>
           <Avatar
             uri={
-              currentUserId == data.receiverId
+              currentUserId === data.receiverId
                 ? data.sender.avatar
                 : data.receiver.avatar
             }
@@ -66,12 +61,12 @@ const UserMessageItem = ({ data }: IUserMessageItemProps) => {
               color: theme.text,
               fontSize: 18,
             }}>
-            {currentUserId == data.receiverId
+            {currentUserId === data.receiverId
               ? data.sender.name
               : data.receiver.name}
           </Text>
           <Text style={{ marginTop: 1, color: theme.placeholderTextColor }}>
-            {currentUserId == data.receiverId
+            {currentUserId === data.receiverId
               ? data.content
               : `You: ${data.content}`}
           </Text>

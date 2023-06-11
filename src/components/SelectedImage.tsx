@@ -17,7 +17,7 @@ const SelectedImage = () => {
       dispatch({ type: 'SET_MEDIA', payload: photo?.edges });
       dispatch({ type: 'DEFAULT_IMAGE' });
     }
-    getSelectedImage();
+    getSelectedImage().catch(err => console.log(err));
   }, [state.albumName, dispatch]);
 
   const getPhotoFromCamera = async () => {
