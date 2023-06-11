@@ -10,7 +10,7 @@ import {
 
 export const initialState = {
   media: {},
-  albumName: 'Pictures',
+  albumName: 'Camera',
   selectedImage: [],
   albumList: [],
   modalVisible: false,

@@ -3,7 +3,7 @@ import React from 'react';
 import {
   HomeScreen,
   SearchScreen,
-  CreateScreen,
+  InitialScreen,
   Reels,
   ProfileScreen,
 } from '../screens';
@@ -70,7 +70,7 @@ function TabNavigation() {
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="Camera" component={CreateScreen} />
+        <Tab.Screen name="Camera" component={InitialScreen} />
         <Tab.Screen name="Reels" component={Reels} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
@@ -149,7 +149,11 @@ function TabNavigation() {
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="Camera" component={CreateScreen} />
+        <Tab.Screen
+          name="Camera"
+          component={InitialScreen}
+          options={{ tabBarStyle: { display: 'none' } }}
+        />
         <Tab.Screen name="Reels" component={Reels} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>

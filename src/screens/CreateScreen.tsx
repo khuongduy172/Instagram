@@ -58,7 +58,11 @@ const CreateScreen = () => {
   return (
     <>
       {loaded && (
-        <View style={{ flex: 1, backgroundColor: theme.background }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: theme.background,
+          }}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
             <PostContext.Provider value={{ state, dispatch }}>
               <PostHeader />
