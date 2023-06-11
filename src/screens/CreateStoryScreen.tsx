@@ -110,10 +110,13 @@ const CreateStoryScreen = ({ navigation }) => {
     onSuccess: data => {
       if (data) {
         ToastAndroid.show('Posted successfully', ToastAndroid.SHORT);
-        navigation.navigate('InitialScreen');
+        navigation.navigate('Home');
       } else {
         ToastAndroid.show('Posted failed', ToastAndroid.SHORT);
       }
+    },
+    onError: error => {
+      console.log('error', error);
     },
   });
 
