@@ -7,12 +7,10 @@ import {
   IsMultiple,
   getAllAlbumNames,
 } from '../helper/PostController';
-import Media from '../helper/ImageLibrary';
 
 export const initialState = {
   media: {},
-  // albumName: 'Pictures',
-  albumName: Media.getAlbumList().then(albums => albums[0].title),
+  albumName: 'Pictures',
   selectedImage: [],
   albumList: [],
   modalVisible: false,

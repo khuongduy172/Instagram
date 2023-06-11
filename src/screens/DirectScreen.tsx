@@ -29,7 +29,7 @@ const DirectScreen = () => {
     getUserOwner,
   );
 
-  const { data: listMessage }: any = useQuery(
+  const { data: listMessage, isLoading: listMessageLoading }: any = useQuery(
     'list-message',
     getUserMessageList,
     {
@@ -38,9 +38,13 @@ const DirectScreen = () => {
     },
   );
 
-  const { data: currentUserId } = useQuery('currentUserId', async () => {
-    return await AsyncStorage.getItem('currentUserId');
-  });
+  const { data: currentUserId } = useQuery(
+    'currentUserId',
+    async () => {
+      return await AsyncStorage.getItem('currentUserId');
+    },
+    { initialData: '' },
+  );
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -166,7 +170,7 @@ const DirectScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {listMessage ? (
+        {listMessage && currentUserId ? (
           <FlatList
             data={listMessage}
             renderItem={({ item }) => (
@@ -174,38 +178,41 @@ const DirectScreen = () => {
             )}
           />
         ) : (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              paddingVertical: 50,
-            }}>
-            <Text
+          listMessage?.length === 0 &&
+          !listMessageLoading && (
+            <View
               style={{
-                color: theme.text,
-                fontSize: 20,
-                paddingVertical: 10,
-                textAlign: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                paddingVertical: 50,
               }}>
-              Message your friends with Direct
-            </Text>
-            <Text style={{ textAlign: 'center' }}>
-              Private message or directly share favorite articles with friends
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.push('SearchToSendMessage')}>
               <Text
                 style={{
-                  color: theme.colors.primary,
-                  fontSize: 14,
-                  fontWeight: 'bold',
+                  color: theme.text,
+                  fontSize: 20,
                   paddingVertical: 10,
+                  textAlign: 'center',
                 }}>
-                Send Message
+                Message your friends with Direct
               </Text>
-            </TouchableOpacity>
-          </View>
+              <Text style={{ textAlign: 'center' }}>
+                Private message or directly share favorite articles with friends
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.push('SearchToSendMessage')}>
+                <Text
+                  style={{
+                    color: theme.colors.primary,
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    paddingVertical: 10,
+                  }}>
+                  Send Message
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
         )}
       </View>
     </View>
