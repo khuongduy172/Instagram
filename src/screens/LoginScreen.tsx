@@ -19,7 +19,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useCustomTheme from '../theme/CustomTheme';
 import { useMutation } from 'react-query';
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
-import { setCurrentUser } from '../redux/userSlice';
 
 const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
@@ -57,7 +56,6 @@ const LoginScreen = ({ navigation }: any) => {
         await AsyncStorage.setItem('currentUserId', data.userId);
         console.log(data.token);
         dispatch(setLoggedIn(true));
-        dispatch(setCurrentUser(data.userId));
         ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
       }
     },
@@ -72,7 +70,6 @@ const LoginScreen = ({ navigation }: any) => {
           await AsyncStorage.setItem('refreshToken', data.refreshToken);
           await AsyncStorage.setItem('currentUserId', data.userId);
           dispatch(setLoggedIn(true));
-          dispatch(setCurrentUser(data.userId));
           ToastAndroid.show('Login successfully', ToastAndroid.SHORT);
         }
       },
