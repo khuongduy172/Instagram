@@ -2,34 +2,17 @@ import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-import { getUserOwner, UserResponse } from '../apis/userApi';
-import { useQuery } from 'react-query';
 import useCustomTheme from '../theme/CustomTheme';
 import Avatar from '../components/Avatar';
 
-interface ErrorMessage {
-  message: string;
-}
-
-const DirectMessage = () => {
+const DirectMessage = ({ data }: any) => {
   const navigation: any = useNavigation();
   const theme = useCustomTheme();
-
-  const { data, isLoading, error } = useQuery<UserResponse, ErrorMessage>(
-    'userOwner',
-    getUserOwner,
-  );
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-  if (error) {
-    return <Text>Error: {error.message}</Text>;
-  }
   const directInfo = [
     {
       id: 1,
       name: 'Your notes',
-      image: data?.avatar,
+      image: data.avatar,
     },
     {
       id: 0,
@@ -98,8 +81,8 @@ const DirectMessage = () => {
                     source={item.image}
                     style={{
                       resizeMode: 'cover',
-                      width: '100%',
-                      height: '100%',
+                      width: 80,
+                      height: 80,
                       borderRadius: 100,
                       backgroundColor: 'orange',
                     }}
@@ -109,10 +92,9 @@ const DirectMessage = () => {
                     uri={item.image}
                     style={{
                       resizeMode: 'cover',
-                      width: '100%',
-                      height: '100%',
+                      width: 80,
+                      height: 80,
                       borderRadius: 100,
-                      backgroundColor: 'orange',
                     }}
                   />
                 )}
