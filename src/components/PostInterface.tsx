@@ -55,7 +55,7 @@ const PostInterface = ({
   renderSpinner,
   loading,
   fetchData,
-}) => {
+}: any) => {
   const theme = useCustomTheme();
   const width = Dimensions.get('window').width;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -90,7 +90,7 @@ const PostInterface = ({
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   });
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(data.isReacted);
 
   const doubleTapRef = useRef();
   const scale = useSharedValue(0);
@@ -425,8 +425,7 @@ const PostInterface = ({
                         onActivated={() => {
                           onDoubleTap();
                           postReact(item.id);
-                          setLike(prevState => !prevState);
-                          fetchData();
+                          setLike((prevState: any) => !prevState);
                         }}>
                         <Animated.View>
                           <ImageBackground
@@ -475,15 +474,14 @@ const PostInterface = ({
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    setLike(!like);
                     postReact(item.id);
-                    fetchData();
+                    setLike(!like);
                   }}>
                   <AntDesign
-                    name={item.isReacted ? 'heart' : 'hearto'}
+                    name={like ? 'heart' : 'hearto'}
                     style={{
                       fontSize: 20,
-                      color: item.isReacted ? 'red' : theme.text,
+                      color: like ? 'red' : theme.text,
                     }}
                   />
                 </TouchableOpacity>
@@ -520,16 +518,17 @@ const PostInterface = ({
               <FontAwesome name="bookmark-o" size={20} color={theme.text} />
             </View>
             <View style={{ paddingHorizontal: 15 }}>
-              {like ? (
-                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
-                  Liked by {like ? 'you and ' : ''}
-                  {like ? item.isReacted : !item.isReacted}
-                  {item.reactCount} others
-                </Text>
-              ) : (
-                <Text style={{ color: theme.text, fontWeight: 'bold' }}>
-                  {item.reactCount} likes
-                </Text>
+              {(like || item.reactCount > 0) && (
+                like ? (
+                  <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                    Liked by you
+                    {item.reactCount > 1 && (item.reactCount == 2 ? ` and 1 other` : ` and ${item.reactCount - 1} others`)}
+                  </Text>
+                ) : (
+                  <Text style={{ color: theme.text, fontWeight: 'bold' }}>
+                    {item.reactCount} likes
+                  </Text>
+                )
               )}
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -580,9 +579,3 @@ const PostInterface = ({
 };
 
 export default PostInterface;
-
-const styles = StyleSheet.create({
-  refreshControl: {
-    backgroundColor: '#fff',
-  },
-});
