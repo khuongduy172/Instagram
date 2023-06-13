@@ -4,13 +4,7 @@ import PostLoader from './loader/posts';
 import { viewStatus } from '../apis/postApi';
 import Post from './Post';
 
-const PostInterface = ({
-  data,
-  isLoading,
-  renderSpinner,
-  loading,
-  fetchData,
-}: any) => {
+const PostInterface = ({ data, isLoading, renderSpinner, loading }: any) => {
   const previousViewedItems = useRef([]);
   const processedIds = useRef([]);
 
