@@ -8,4 +8,8 @@ const postStory = async (data: any) => {
   });
 };
 
-export { postStory };
+const getStory = async () => {
+  return await axiosInstance.get(`/Story`);
+};
+
+export { postStory, getStory };
