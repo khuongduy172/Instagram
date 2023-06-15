@@ -17,7 +17,7 @@ const Reels = () => {
     const unsubscribe = navigation.addListener('blur', () => {
       setAudioStatus(false);
 
-      playerRef.current.pauseVideo();
+      playerRef?.current?.pauseVideo();
     });
 
     return unsubscribe;
