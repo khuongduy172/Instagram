@@ -16,7 +16,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Feather from 'react-native-vector-icons/Feather';
 import PostLoader from '../components/loader/posts';
 import { useQuery, useInfiniteQuery } from 'react-query';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import HomeStory from '../components/HomeStory';
@@ -26,6 +26,13 @@ import ShareIcon from '../assets/images/instagram-share-icon.svg';
 function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation: any = useNavigation();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      handleRefresh();
+    }
+  }, [isFocused]);
 
   const theme = useCustomTheme();
   const backgroundStyle = {
