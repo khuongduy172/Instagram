@@ -2,6 +2,7 @@ import React from 'react';
 
 import CreateScreen from './CreateScreen';
 import CreateStory from './CreateStoryScreen';
+import CreateReels from './CreateReels';
 import { Image, Text, View, useColorScheme } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
@@ -65,7 +66,11 @@ function InitialScreen() {
           component={CreateStory}
           options={{ tabBarStyle: { display: 'none' } }}
         />
-        <Tab.Screen name="Footage" component={CreateScreen} />
+        <Tab.Screen
+          name="Footage"
+          component={CreateReels}
+          options={{ tabBarStyle: { display: 'none' } }}
+        />
         <Tab.Screen name="Live" component={CreateScreen} />
       </Tab.Navigator>
     </View>

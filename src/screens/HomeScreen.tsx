@@ -161,7 +161,7 @@ function HomeScreen(): JSX.Element {
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':
-              return <HomeStory />;
+              return <HomeStory refreshing={refreshing} />;
             case 'postinterface':
               return (
                 <>

@@ -555,11 +555,7 @@ const CreateStoryScreen = ({ navigation }) => {
             <View style={styles.shutterContainer}>
               <View>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.push('ImageView', {
-                      photoImage,
-                    })
-                  }
+                  onPress={toggleModal}
                   style={{
                     width: 35,
                     height: 35,
@@ -568,14 +564,14 @@ const CreateStoryScreen = ({ navigation }) => {
                     borderWidth: 2,
                     overflow: 'hidden',
                   }}>
-                  {photoImage && photoImage.length > 0 && (
+                  {secondPhotoImage && secondPhotoImage.length > 0 && (
                     <View style={{ width: 30, height: 30 }}>
-                      <Video
+                      <Image
                         style={{ width: 30, height: 30, borderRadius: 10 }}
                         source={{
-                          uri: photoImage[photoImage.length - 1],
+                          uri: secondPhotoImage[secondPhotoImage.length - 1]
+                            .path,
                         }}
-                        paused={true}
                       />
                     </View>
                   )}

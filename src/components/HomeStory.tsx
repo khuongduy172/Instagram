@@ -4,12 +4,15 @@ import { getStory } from '../apis/storyApi';
 import { useQuery } from 'react-query';
 import useCustomTheme from '../theme/CustomTheme';
 
-const HomeStory = () => {
+const HomeStory = ({ refreshing }) => {
   const theme = useCustomTheme();
-  const { data, isLoading, isError } = useQuery('story', getStory);
+  const { data, isLoading, isError, refetch } = useQuery('story', getStory);
 
   if (isLoading) {
     <ActivityIndicator size="large" color={theme.textSecond} />;
+  }
+  if (refreshing) {
+    refetch();
   }
   if (isError) {
     <Text>Something went wrong</Text>;
