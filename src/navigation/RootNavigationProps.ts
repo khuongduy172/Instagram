@@ -4,6 +4,7 @@ type RootStackParamList = {
   SearchToSendMessage: undefined;
   SearchMain: undefined;
   Message: { user: any };
+  Home: { isRefresh?: boolean };
 };
 
 type SearchToSendMessageProps = NativeStackScreenProps<
@@ -15,4 +16,11 @@ type SearchMainProps = NativeStackScreenProps<RootStackParamList, 'SearchMain'>;
 
 type MessageProps = NativeStackScreenProps<RootStackParamList, 'Message'>;
 
-export type { SearchToSendMessageProps, SearchMainProps, MessageProps };
+type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+export type {
+  SearchToSendMessageProps,
+  SearchMainProps,
+  MessageProps,
+  HomeProps,
+};

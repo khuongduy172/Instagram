@@ -3,6 +3,7 @@ import InstaStory from 'react-native-insta-story';
 import { getStory } from '../apis/storyApi';
 import { useQuery } from 'react-query';
 import useCustomTheme from '../theme/CustomTheme';
+import { useEffect } from 'react';
 
 const HomeStory = ({ refreshing }) => {
   const theme = useCustomTheme();
@@ -11,9 +12,11 @@ const HomeStory = ({ refreshing }) => {
   if (isLoading) {
     <ActivityIndicator size="large" color={theme.textSecond} />;
   }
-  if (refreshing) {
-    refetch();
-  }
+  useEffect(() => {
+    if (refreshing) {
+      refetch().catch(error => console.error(error));
+    }
+  }, [refreshing]);
   if (isError) {
     <Text>Something went wrong</Text>;
   }
