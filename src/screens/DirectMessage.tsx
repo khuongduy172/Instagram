@@ -53,7 +53,7 @@ const DirectMessage = ({ data }: any) => {
                     width: 30,
                     height: 30,
                     borderRadius: 100,
-                    backgroundColor: theme.backgroundButton,
+                    backgroundColor: theme.borderColor,
                     borderColor: theme.borderColor,
                     justifyContent: 'center',
                     alignItems: 'center',

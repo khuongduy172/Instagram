@@ -337,7 +337,7 @@ const PostReels = ({ navigation, route }: any) => {
             alignItems: 'center',
           }}>
           {postNewReels ? (
-            <ActivityIndicator size="small" color={theme.textSecond} />
+            <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Text style={{ color: theme.background, fontWeight: 'bold' }}>
               Next
