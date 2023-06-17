@@ -165,7 +165,10 @@ const EditImageScreen = ({ route, navigation }: any) => {
             })}
           </ScrollView>
         ) : (
-          <ScrollView horizontal={true} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            horizontal={true}
+            showsVerticalScrollIndicator={false}
+            style={{ padding: 10 }}>
             {editedImage.map((item, index) => {
               return (
                 <SelectedFilterComponent

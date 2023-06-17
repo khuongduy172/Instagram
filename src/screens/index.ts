@@ -21,3 +21,5 @@ export { default as ActivityScreen } from './ActivityScreen';
 export { default as ClientProfile } from './ClientProfile';
 export { default as CommentScreen } from './CommentScreen';
 export { default as SearchMainScreen } from './SearchMainScreen';
+export { default as CreateStory } from './CreateStoryScreen';
+export { default as InitialScreen } from './InitialScreen';

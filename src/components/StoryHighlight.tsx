@@ -85,14 +85,7 @@ const StoryHighlight = () => {
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {storyInfo.map((data, index) => {
         return (
-          <TouchableOpacity
-            key={index}
-            onPress={() =>
-              navigation.push('StoryScreen', {
-                name: data.name,
-                image: data.imageData,
-              })
-            }>
+          <TouchableOpacity key={index}>
             <View
               style={{
                 flexDirection: 'column',

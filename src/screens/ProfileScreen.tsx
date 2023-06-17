@@ -17,7 +17,6 @@ import StoryHighlight from '../components/StoryHighlight';
 import ProfileBottomTabView from '../components/ProfileBottomTabView';
 import { getUserById, getUserOwner, UserResponse } from '../apis/userApi';
 import { useQuery } from 'react-query';
-import { useFocusEffect } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -31,12 +30,6 @@ import { useNavigation } from '@react-navigation/native';
 interface ErrorMessage {
   message: string;
 }
-
-// export const useRefetchOnFocus = (refetch: () => void) => {
-//   useFocusEffect(() => {
-//     refetch();
-//   });
-// };
 
 const ProfileScreen = ({ route }: any) => {
   const userId = route?.params?.userId;
@@ -68,15 +61,13 @@ const ProfileScreen = ({ route }: any) => {
   const handleRefreshWithoutLoading = () => {
     refetch().catch(e => console.log(e));
   };
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
 
-  return (
+  return isLoading ? (
+    <></>
+  ) : (
     <View
       style={{
         width: '100%',
@@ -116,7 +107,7 @@ const ProfileScreen = ({ route }: any) => {
               followStatus={data.followStatus}
               handleRefresh={handleRefreshWithoutLoading}
             />
-            <StoryHighlight />
+            {/* <StoryHighlight /> */}
           </ScrollView>
         </View>
       ) : null}
@@ -129,18 +120,16 @@ const ProfileScreen = ({ route }: any) => {
         useNativeDriver={true}
         style={{
           justifyContent: 'flex-end',
-          marginTop: 400,
-          marginBottom: 0,
+          height: '100%',
           marginHorizontal: 0,
-          backgroundColor: theme.backgroundColor,
         }}>
-        <TouchableOpacity
-          onPressOut={toggleModal}
-          activeOpacity={1}
-          style={{ height: '150%' }}>
+        <TouchableOpacity style={{ height: '30%' }} onPressOut={toggleModal}>
+          <View style={{ height: '100%', opacity: 0.1 }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ height: '70%' }}>
           <View
             style={{
-              height: '72%',
+              height: '100%',
               marginTop: 'auto',
               backgroundColor: theme.background,
               borderTopLeftRadius: 15,

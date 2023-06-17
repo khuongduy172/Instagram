@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,18 +14,27 @@ import { getStatus } from '../apis/postApi';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import Feather from 'react-native-vector-icons/Feather';
-import PostLoader from '../components/loader/posts';
 import { useQuery, useInfiniteQuery } from 'react-query';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
-import HomeStory from '../components/HomeStory';
 import PostInterface from '../components/PostInterface';
 import ShareIcon from '../assets/images/instagram-share-icon.svg';
+import { getStory } from '../apis/storyApi';
+import StoryList from '../components/StoryList';
+import { HomeProps } from '../navigation/RootNavigationProps';
 
-function HomeScreen(): JSX.Element {
+function HomeScreen({ route }: HomeProps): JSX.Element {
+  const isRefresh = route?.params?.isRefresh;
   const isDarkMode = useColorScheme() === 'dark';
   const navigation: any = useNavigation();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused && isRefresh) {
+      handleRefresh();
+    }
+  }, [isFocused]);
 
   const theme = useCustomTheme();
   const backgroundStyle = {
@@ -70,6 +79,7 @@ function HomeScreen(): JSX.Element {
     setRefreshing(true);
     setData([]);
     fetchData().catch(error => console.error(error));
+    refetch().catch(error => console.error(error));
   };
 
   const [loading, setLoading] = useState(false);
@@ -88,6 +98,13 @@ function HomeScreen(): JSX.Element {
         });
     }
   };
+
+  const {
+    data: storyData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery('story', getStory);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -154,7 +171,7 @@ function HomeScreen(): JSX.Element {
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':
-              return <HomeStory />;
+              return <StoryList data={storyData} isLoading={isLoading} />;
             case 'postinterface':
               return (
                 <>
