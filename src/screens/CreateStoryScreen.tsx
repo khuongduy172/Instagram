@@ -98,13 +98,15 @@ const CreateStoryScreen = ({ navigation }) => {
     ImagePicker.openPicker({
       multiple: true, // To support multiple image selection
       quality: 1.0,
-    }).then(image => {
-      setSecondPhotoImage(...secondPhotoImage, image);
-      setIsPaused(true);
-    });
+    })
+      .then(image => {
+        setSecondPhotoImage(...secondPhotoImage, image);
+        setIsPaused(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
-
-  console.log('test', secondPhotoImage);
 
   const { mutate, isLoading: postNewStory } = useMutation(postStory, {
     onSuccess: data => {
