@@ -123,7 +123,7 @@ const Video = ({ reels }: IVideoTabProps) => {
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image
               source={{ uri: item.thumbnailUrl }}
-              style={{ width: 110, height: 110, margin: 1 }}
+              style={{ width: 120, height: 120, margin: 1 }}
             />
           </View>
         )}
@@ -153,7 +153,7 @@ const Post = ({ images }: IPostTabProps) => {
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image
               source={{ uri: item.url }}
-              style={{ width: 110, height: 110, margin: 1 }}
+              style={{ width: 120, height: 120, margin: 1 }}
             />
           </View>
         )}
