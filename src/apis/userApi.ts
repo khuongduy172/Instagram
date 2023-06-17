@@ -17,6 +17,8 @@ interface UserResponse {
   followStatus: string;
   followers: { userId: string; followerId: string }[];
   followings: { userId: string; followerId: string }[];
+  images: any;
+  reels: any;
 }
 
 interface UserEdit {
