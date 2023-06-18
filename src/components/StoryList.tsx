@@ -51,7 +51,7 @@ const StoryList = ({ data, isLoading }: IStoryListProps) => {
                 name="plus"
                 style={{
                   fontSize: 17,
-                  color: theme.text,
+                  color: '#fff',
                   borderRadius: 100,
                 }}
               />

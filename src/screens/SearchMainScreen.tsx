@@ -4,6 +4,7 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
+  Text,
 } from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -15,6 +16,7 @@ import {
   SearchMainProps,
   SearchToSendMessageProps,
 } from '../navigation/RootNavigationProps';
+import Ionic from 'react-native-vector-icons/Ionicons';
 
 const SearchMainScreen = ({
   route,
@@ -44,7 +46,7 @@ const SearchMainScreen = ({
         backgroundColor: theme.background,
         width: '100%',
         height: '100%',
-        padding: 10,
+        paddingVertical: 10,
       }}>
       <View
         style={{
@@ -53,33 +55,60 @@ const SearchMainScreen = ({
           justifyContent: 'space-between',
           marginBottom: 5,
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ marginLeft: 15 }}>
           <AntDesign name="arrowleft" size={30} color={theme.text} />
         </TouchableOpacity>
-        <TextInput
-          placeholder="Search"
-          autoFocus={true}
-          onChangeText={onChangeText}
+        <View
           style={{
-            backgroundColor: theme.background,
-            borderRadius: 15,
             justifyContent: 'center',
             alignItems: 'center',
-            width: '100%',
-            color: theme.text,
-            fontSize: 20,
-            paddingTop: 5,
-            paddingBottom: 5,
-            paddingLeft: 10,
-          }}
-        />
+            width: '85%',
+            position: 'relative',
+          }}>
+          <Ionic
+            name="search"
+            style={{
+              fontSize: 18,
+              opacity: 0.7,
+              position: 'absolute',
+              zIndex: 1,
+              left: 25,
+            }}
+          />
+          <TextInput
+            placeholder="Search"
+            autoFocus={true}
+            onChangeText={onChangeText}
+            style={{
+              width: '94%',
+              backgroundColor: theme.backgroundColor,
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 15,
+              padding: 4,
+              paddingLeft: 40,
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
-          borderBottomColor: theme.text,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}
-      />
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingVertical: 10,
+          paddingHorizontal: 15,
+        }}>
+        <Text style={{ color: theme.text, fontWeight: 'bold', fontSize: 17 }}>
+          Recent
+        </Text>
+        <TouchableOpacity>
+          <Text style={{ color: theme.mainButtonColor }}>See all</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={data}
         renderItem={({ item }) => (

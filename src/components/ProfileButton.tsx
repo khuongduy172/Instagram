@@ -69,7 +69,7 @@ const ProfileButton = ({
               style={{
                 height: 30,
                 borderRadius: 7,
-                backgroundColor: theme.backgroundButton,
+                backgroundColor: theme.borderColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -90,7 +90,7 @@ const ProfileButton = ({
                 width: '100%',
                 height: 30,
                 borderRadius: 7,
-                backgroundColor: theme.backgroundButton,
+                backgroundColor: theme.borderColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -123,7 +123,7 @@ const ProfileButton = ({
                 }}>
                 <Text
                   style={{
-                    color: theme.text,
+                    color: '#fff',
                     fontWeight: 'bold',
                   }}>
                   {followStatus === 'None' ? 'Follow' : 'Follow Back'}
@@ -138,7 +138,7 @@ const ProfileButton = ({
                   width: '100%',
                   height: 30,
                   borderRadius: 7,
-                  backgroundColor: theme.backgroundButton,
+                  backgroundColor: theme.borderColor,
                   justifyContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -171,7 +171,7 @@ const ProfileButton = ({
                 width: '100%',
                 height: 30,
                 borderRadius: 7,
-                backgroundColor: theme.backgroundButton,
+                backgroundColor: theme.borderColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -192,7 +192,7 @@ const ProfileButton = ({
                 width: '100%',
                 height: 30,
                 borderRadius: 7,
-                backgroundColor: theme.backgroundButton,
+                backgroundColor: theme.borderColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
