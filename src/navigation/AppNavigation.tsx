@@ -35,6 +35,8 @@ import { ActivityIndicator } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import useCustomTheme from '../theme/CustomTheme';
 import PushNotification from 'react-native-push-notification';
+import useSignalR from '../hooks/useSignalR';
+import { navigationRef } from './RootNavigation';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -64,15 +66,42 @@ const AppNavigation = () => {
   };
 
   useEffect(() => {
-    checkLoginStatus();
+    checkLoginStatus().catch(err => console.error(err));
   }, []);
+
+  const connection = useSignalR();
+
+  useEffect(() => {
+    if (connection && connection.state === 'Connected') {
+      AsyncStorage.getItem('currentUserId')
+        .then(currentUserId => {
+          if (currentUserId) {
+            console.log('join room: ', currentUserId);
+            connection
+              .invoke('JoinRoom', currentUserId)
+              .catch(err => console.error(err));
+
+            connection.on('Notification', data => {
+              console.log(data);
+              PushNotification.localNotification({
+                channelId: currentUserId,
+                message: 'You have a new notification!',
+              });
+            });
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [connection]);
 
   if (!isLoading) {
     SplashScreen.hide();
   }
 
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar
         barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor={scheme === 'dark' ? '#000' : '#fff'}
