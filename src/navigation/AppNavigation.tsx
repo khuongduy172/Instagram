@@ -84,10 +84,24 @@ const AppNavigation = () => {
 
             connection.on('Notification', data => {
               console.log(data);
-              PushNotification.localNotification({
-                channelId: currentUserId,
-                message: 'You have a new notification!',
-              });
+              if (data.typeNoti === 'Follow') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Someone have just followed you!',
+                });
+              }
+              if (data.typeNoti === 'Comment') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Your post have new comment!',
+                });
+              }
+              if (data.typeNoti === 'React') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Someone loved your post!',
+                });
+              }
             });
           }
         })
