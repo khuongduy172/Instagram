@@ -242,6 +242,7 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
                 padding: 10,
                 borderRadius: 14,
                 marginLeft: 5,
+                maxWidth: '70%',
               }}>
               <Text
                 style={{

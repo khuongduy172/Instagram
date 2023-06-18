@@ -37,58 +37,60 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
             ? theme.background
             : theme.notificationBackground,
         }}>
-        <TouchableOpacity
-          onPress={navigateToProfile}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            maxWidth: '63%',
-          }}>
-          <Avatar
-            uri={data.fromUser.avatar}
-            disable={true}
+        <TouchableOpacity onPress={navigateToProfile}>
+          <View
             style={{
-              width: 45,
-              height: 45,
-              borderRadius: 100,
-              marginRight: 10,
-            }}
-          />
-
-          <View style={{ flexDirection: 'column' }}>
-            <Text style={{ fontWeight: 'bold', color: theme.text }}>
-              {data.fromUser.name} {` `}
-              <Text style={{ fontWeight: 'normal' }}>
-                started following you
-              </Text>
-            </Text>
-            <View
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            <Avatar
+              uri={data.fromUser.avatar}
+              disable={true}
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: 5,
-              }}>
-              <Text
-                style={{ color: theme.text, opacity: 0.5, marginRight: 50 }}>
-                {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+                width: 45,
+                height: 45,
+                borderRadius: 100,
+                marginRight: 10,
+              }}
+            />
+
+            <View style={{ flexDirection: 'column', maxWidth: '55%' }}>
+              <Text style={{ fontWeight: 'bold', color: theme.text }}>
+                {data.fromUser.name} {` `}
+                <Text style={{ fontWeight: 'normal' }}>
+                  started following you
+                </Text>
               </Text>
-              <TouchableOpacity onPress={navigateToProfile}>
-                <View
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    paddingHorizontal: 10,
-                    paddingVertical: 5,
-                    borderRadius: 5,
-                    right: 0,
-                  }}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>
-                    View profile
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 5,
+                }}>
+                <Text
+                  style={{ color: theme.text, opacity: 0.5, marginRight: 50 }}>
+                  {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+                </Text>
+              </View>
             </View>
+            <TouchableOpacity
+              onPress={navigateToProfile}
+              style={{ marginLeft: 5 }}>
+              <View
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  borderRadius: 5,
+                }}>
+                <Text style={{ color: '#fff', fontWeight: 'bold' }}>
+                  View profile
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </View>
