@@ -28,6 +28,8 @@ import {
   ProfileScreen,
   CommentScreen,
   SearchMainScreen,
+  PostScreen,
+  ReelByIdScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
@@ -35,6 +37,8 @@ import { ActivityIndicator } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import useCustomTheme from '../theme/CustomTheme';
 import PushNotification from 'react-native-push-notification';
+import useSignalR from '../hooks/useSignalR';
+import { navigationRef } from './RootNavigation';
 
 const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -64,15 +68,56 @@ const AppNavigation = () => {
   };
 
   useEffect(() => {
-    checkLoginStatus();
+    checkLoginStatus().catch(err => console.error(err));
   }, []);
+
+  const connection = useSignalR();
+
+  useEffect(() => {
+    if (connection && connection.state === 'Connected') {
+      AsyncStorage.getItem('currentUserId')
+        .then(currentUserId => {
+          if (currentUserId) {
+            console.log('join room: ', currentUserId);
+            connection
+              .invoke('JoinRoom', currentUserId)
+              .catch(err => console.error(err));
+
+            connection.on('Notification', data => {
+              console.log(data);
+              if (data.typeNoti === 'Follow') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Someone have just followed you!',
+                });
+              }
+              if (data.typeNoti === 'Comment') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Your post have new comment!',
+                });
+              }
+              if (data.typeNoti === 'React') {
+                PushNotification.localNotification({
+                  channelId: currentUserId,
+                  message: 'Someone loved your post!',
+                });
+              }
+            });
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [connection]);
 
   if (!isLoading) {
     SplashScreen.hide();
   }
 
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar
         barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor={scheme === 'dark' ? '#000' : '#fff'}
@@ -122,6 +167,8 @@ const AppNavigation = () => {
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="ClientProfile" component={ProfileScreen} />
               <Stack.Screen name="Comment" component={CommentScreen} />
+              <Stack.Screen name="Post" component={PostScreen} />
+              <Stack.Screen name="ReelById" component={ReelByIdScreen} />
             </>
           ) : (
             <>

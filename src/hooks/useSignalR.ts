@@ -21,12 +21,12 @@ const useSignalR = () => {
       }
     };
 
-    createConnection();
+    createConnection().catch(error => console.log(error));
 
     // Clean up the connection when the component unmounts
     return () => {
       if (connectionRef.current) {
-        connectionRef.current.stop();
+        connectionRef.current.stop().catch(error => console.log(error));
         setConnection(null);
       }
     };

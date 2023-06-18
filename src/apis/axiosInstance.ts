@@ -55,6 +55,7 @@ axiosInstance.interceptors.response.use(
         if (result?.token) {
           await AsyncStorage.setItem('accessToken', result.token);
           await AsyncStorage.setItem('refreshToken', result.refreshToken);
+          await AsyncStorage.setItem('currentUserId', result.userId);
           config.headers = {
             ...config.headers,
             authorization: `Bearer ${result?.token}`,
@@ -65,12 +66,14 @@ axiosInstance.interceptors.response.use(
           console.log("Can't refresh token");
           await AsyncStorage.removeItem('accessToken');
           await AsyncStorage.removeItem('refreshToken');
+          await AsyncStorage.removeItem('currentUserId');
           store.dispatch(setLoggedIn(false));
         }
       } catch (error) {
         console.log(error);
         await AsyncStorage.removeItem('accessToken');
         await AsyncStorage.removeItem('refreshToken');
+        await AsyncStorage.removeItem('currentUserId');
         store.dispatch(setLoggedIn(false));
       }
     }

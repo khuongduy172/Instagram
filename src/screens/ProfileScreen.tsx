@@ -108,11 +108,11 @@ const ProfileScreen = ({ route }: any) => {
               handleRefresh={handleRefreshWithoutLoading}
             />
             {/* <StoryHighlight /> */}
+            <ProfileBottomTabView images={data.images} reels={data.reels} />
           </ScrollView>
         </View>
       ) : null}
 
-      <ProfileBottomTabView />
       <Modal
         isVisible={isModalVisible}
         swipeDirection="down"
