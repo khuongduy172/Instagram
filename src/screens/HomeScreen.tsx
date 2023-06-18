@@ -155,6 +155,7 @@ function HomeScreen({ route }: HomeProps): JSX.Element {
         </View>
       </View>
       <FlatList
+        style={{ backgroundColor: theme.background }}
         showsVerticalScrollIndicator={false}
         data={[{ key: 'homestory' }, { key: 'postinterface' }]}
         viewabilityConfig={_viewabilityConfig.current}

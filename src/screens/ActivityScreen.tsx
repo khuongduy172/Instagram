@@ -84,7 +84,7 @@ const ActivityScreen = () => {
           <ActivityIndicator color={theme.text} size="large" />
         </View>
       ) : (
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 15 }}>
           <Text style={{ fontWeight: 'bold', color: theme.text }}>Earlier</Text>
           <FlatList
             data={pageData}

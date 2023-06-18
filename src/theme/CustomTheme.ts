@@ -16,6 +16,7 @@ const darkColor = {
   storyBackground: '#000000',
   textSecond: '#ffffff',
   backgroundButton: '#404040',
+  notificationBackground: '#252d34',
   isDark: true,
 };
 
@@ -34,6 +35,7 @@ const lightColor = {
   storyBackground: '#000000',
   textSecond: '#a0a0a0',
   backgroundButton: '#808080',
+  notificationBackground: '#e7f3ff',
   isDark: false,
 };
 
