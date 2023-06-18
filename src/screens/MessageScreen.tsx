@@ -280,21 +280,20 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
           </View>
           <TextInput
             placeholder="Send message..."
-            style={{ width: '55%', marginLeft: 5, fontSize: 16 }}
+            style={{ width: '75%', marginLeft: 5, fontSize: 16 }}
             value={textInput}
             onChangeText={text => setTextInput(text)}
           />
-        </View>
-
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity onPress={handleSend}>
-            <Feather
-              name="send"
-              size={25}
-              color={theme.text}
-              style={{ paddingHorizontal: 10 }}
-            />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={handleSend}>
+              <Feather
+                name="send"
+                size={25}
+                color={theme.text}
+                style={{ paddingHorizontal: 10 }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

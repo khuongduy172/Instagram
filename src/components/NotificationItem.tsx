@@ -53,16 +53,18 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
               marginRight: 10,
             }}
           />
-          <Text style={{ fontSize: 14, color: theme.text }}>
-            <Text style={{ fontWeight: 'bold', color: theme.text }}>
-              {data.fromUser.name}
+          <View>
+            <Text style={{ fontSize: 14, color: theme.text }}>
+              <Text style={{ fontWeight: 'bold', color: theme.text }}>
+                {data.fromUser.name}
+              </Text>
+              {` `}followed you.
             </Text>
-            {` `}followed you.
-          </Text>
-          <Text style={{ color: theme.text, opacity: 0.5 }}>
-            {' '}
-            {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
-          </Text>
+            <Text style={{ color: theme.text, opacity: 0.5 }}>
+              {' '}
+              {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={navigateToProfile}>
           <View
