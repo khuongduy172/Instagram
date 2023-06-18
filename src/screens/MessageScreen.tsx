@@ -243,7 +243,15 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
                 borderRadius: 14,
                 marginLeft: 5,
               }}>
-              <Text style={{ color: 'white' }}>{item.content}</Text>
+              <Text
+                style={{
+                  color: item.senderId === id ? theme.text : '#fff',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  paddingRight: item.senderId === id ? 5 : 0,
+                }}>
+                {item.content}
+              </Text>
             </View>
           </View>
         )}

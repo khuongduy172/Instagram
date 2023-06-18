@@ -30,10 +30,12 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingVertical: 20,
+          paddingHorizontal: 10,
+          marginVertical: 10,
           width: '100%',
           backgroundColor: data.isRead
             ? theme.background
-            : theme.backgroundColor,
+            : theme.notificationBackground,
         }}>
         <TouchableOpacity
           onPress={navigateToProfile}
@@ -53,30 +55,40 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
               marginRight: 10,
             }}
           />
-          <View>
-            <Text style={{ fontSize: 14, color: theme.text }}>
-              <Text style={{ fontWeight: 'bold', color: theme.text }}>
-                {data.fromUser.name}
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={{ fontWeight: 'bold', color: theme.text }}>
+              {data.fromUser.name} {` `}
+              <Text style={{ fontWeight: 'normal' }}>
+                started following you
               </Text>
-              {` `}followed you.
             </Text>
-            <Text style={{ color: theme.text, opacity: 0.5 }}>
-              {' '}
-              {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={navigateToProfile}>
-          <View
-            style={{
-              backgroundColor: theme.colors.primary,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}>
-            <Text style={{ color: '#fff', fontWeight: 'bold' }}>
-              View profile
-            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 5,
+              }}>
+              <Text
+                style={{ color: theme.text, opacity: 0.5, marginRight: 50 }}>
+                {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
+              </Text>
+              <TouchableOpacity onPress={navigateToProfile}>
+                <View
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 5,
+                    right: 0,
+                  }}>
+                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>
+                    View profile
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableOpacity>
       </View>
@@ -98,47 +110,42 @@ const CommentNoti = ({ data }: INotificationItemProps) => {
   };
   return (
     <View style={{ width: '100%' }}>
-      <View
+      <TouchableOpacity
+        onPress={navigateToPost}
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
           alignItems: 'center',
           paddingVertical: 20,
+          marginVertical: 10,
+          paddingHorizontal: 10,
+          flexWrap: 'wrap',
           width: '100%',
           backgroundColor: data.isRead
             ? theme.background
-            : theme.backgroundColor,
+            : theme.notificationBackground,
         }}>
-        <TouchableOpacity
-          onPress={navigateToPost}
+        <Avatar
+          uri={data.fromUser.avatar}
+          disable={true}
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            maxWidth: '100%',
-          }}>
-          <Avatar
-            uri={data.fromUser.avatar}
-            disable={true}
-            style={{
-              width: 45,
-              height: 45,
-              borderRadius: 100,
-              marginRight: 10,
-            }}
-          />
-          <Text style={{ fontSize: 14, color: theme.text }}>
-            <Text style={{ fontWeight: 'bold', color: theme.text }}>
-              {data.fromUser.name}
+            width: 45,
+            height: 45,
+            borderRadius: 100,
+            marginRight: 10,
+          }}
+        />
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={{ fontWeight: 'bold', color: theme.text }}>
+            {data.fromUser.name} {` `}
+            <Text style={{ fontWeight: 'normal' }}>
+              commented on your post.
             </Text>
-            {` `}commented on your post.
           </Text>
-          <Text style={{ color: theme.text, opacity: 0.5 }}>
-            {' '}
+          <Text style={{ color: theme.text, opacity: 0.5, marginTop: 5 }}>
             {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -156,47 +163,40 @@ const ReactNoti = ({ data }: INotificationItemProps) => {
   };
   return (
     <View style={{ width: '100%' }}>
-      <View
+      <TouchableOpacity
+        onPress={navigateToPost}
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
           alignItems: 'center',
           paddingVertical: 20,
+          marginVertical: 10,
+          paddingHorizontal: 10,
+          flexWrap: 'wrap',
           width: '100%',
           backgroundColor: data.isRead
             ? theme.background
-            : theme.backgroundColor,
+            : theme.notificationBackground,
         }}>
-        <TouchableOpacity
-          onPress={navigateToPost}
+        <Avatar
+          uri={data.fromUser.avatar}
+          disable={true}
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            maxWidth: '100%',
-          }}>
-          <Avatar
-            uri={data.fromUser.avatar}
-            disable={true}
-            style={{
-              width: 45,
-              height: 45,
-              borderRadius: 100,
-              marginRight: 10,
-            }}
-          />
-          <Text style={{ fontSize: 14, color: theme.text }}>
-            <Text style={{ fontWeight: 'bold', color: theme.text }}>
-              {data.fromUser.name}
-            </Text>
-            {` `}loved your post.
+            width: 45,
+            height: 45,
+            borderRadius: 100,
+            marginRight: 10,
+          }}
+        />
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={{ fontWeight: 'bold', color: theme.text }}>
+            {data.fromUser.name} {` `}
+            <Text style={{ fontWeight: 'normal' }}>loved your post.</Text>
           </Text>
-          <Text style={{ color: theme.text, opacity: 0.5 }}>
-            {' '}
+          <Text style={{ color: theme.text, opacity: 0.5, marginTop: 5 }}>
             {moment.utc(data.createdAt).tz('Asia/Ho_Chi_Minh').fromNow()}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
