@@ -5,6 +5,7 @@ type RootStackParamList = {
   SearchMain: undefined;
   Message: { user: any };
   Home: { isRefresh?: boolean };
+  Post: { postId: string };
 };
 
 type SearchToSendMessageProps = NativeStackScreenProps<
@@ -18,9 +19,12 @@ type MessageProps = NativeStackScreenProps<RootStackParamList, 'Message'>;
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
+type PostProps = NativeStackScreenProps<RootStackParamList, 'Post'>;
+
 export type {
   SearchToSendMessageProps,
   SearchMainProps,
   MessageProps,
   HomeProps,
+  PostProps,
 };

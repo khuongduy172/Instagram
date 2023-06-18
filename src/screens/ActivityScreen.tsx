@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useCustomTheme from '../theme/CustomTheme';
 import { useInfiniteQuery } from 'react-query';
 import { getNoti } from '../apis/notificationApi';
@@ -18,6 +18,7 @@ import PushNotification from 'react-native-push-notification';
 const ActivityScreen = () => {
   const navigation = useNavigation();
   const theme = useCustomTheme();
+  const isFocused = useIsFocused();
   const [pageData, setPageData] = useState([]);
 
   const {
@@ -40,6 +41,11 @@ const ActivityScreen = () => {
   useEffect(() => {
     PushNotification.cancelAllLocalNotifications();
   }, []);
+  useEffect(() => {
+    if (isFocused) {
+      refetch().catch(err => console.error(err));
+    }
+  }, [isFocused]);
   return (
     <View
       style={{

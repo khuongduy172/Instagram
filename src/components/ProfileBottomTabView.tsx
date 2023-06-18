@@ -3,6 +3,7 @@ import React from 'react';
 import useCustomTheme from '../theme/CustomTheme';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import { SimpleGrid } from 'react-native-super-grid';
+import { useNavigation } from '@react-navigation/native';
 
 interface IProfileBottomTabViewProps {
   images: any;
@@ -106,6 +107,7 @@ const ProfileBottomTabView = ({
 
 const Video = ({ reels }: IVideoTabProps) => {
   const theme = useCustomTheme();
+  const navigation: any = useNavigation();
   return (
     <View
       style={{
@@ -121,10 +123,15 @@ const Video = ({ reels }: IVideoTabProps) => {
         data={reels}
         renderItem={({ item }) => (
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Image
-              source={{ uri: item.thumbnailUrl }}
-              style={{ width: 120, height: 120, margin: 1 }}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                // navigation.push('Post', { postId: item.statusId });
+              }}>
+              <Image
+                source={{ uri: item.thumbnailUrl }}
+                style={{ width: 120, height: 120, margin: 1 }}
+              />
+            </TouchableOpacity>
           </View>
         )}
         style={{ flex: 1 }}
@@ -136,6 +143,7 @@ const Video = ({ reels }: IVideoTabProps) => {
 
 const Post = ({ images }: IPostTabProps) => {
   const theme = useCustomTheme();
+  const navigation: any = useNavigation();
   return (
     <View
       style={{
@@ -151,10 +159,15 @@ const Post = ({ images }: IPostTabProps) => {
         data={images}
         renderItem={({ item }) => (
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Image
-              source={{ uri: item.url }}
-              style={{ width: 120, height: 120, margin: 1 }}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push('Post', { postId: item.statusId });
+              }}>
+              <Image
+                source={{ uri: item.url }}
+                style={{ width: 120, height: 120, margin: 1 }}
+              />
+            </TouchableOpacity>
           </View>
         )}
         style={{ flex: 1 }}

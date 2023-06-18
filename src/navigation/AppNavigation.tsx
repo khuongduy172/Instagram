@@ -28,6 +28,7 @@ import {
   ProfileScreen,
   CommentScreen,
   SearchMainScreen,
+  PostScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
@@ -151,6 +152,7 @@ const AppNavigation = () => {
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="ClientProfile" component={ProfileScreen} />
               <Stack.Screen name="Comment" component={CommentScreen} />
+              <Stack.Screen name="Post" component={PostScreen} />
             </>
           ) : (
             <>

@@ -4,6 +4,7 @@ import Avatar from './Avatar';
 import useCustomTheme from '../theme/CustomTheme';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment-timezone';
+import { readNoti } from '../apis/notificationApi';
 
 interface INotificationItemProps {
   data: any;
@@ -14,6 +15,7 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
   const navigation: any = useNavigation();
   const navigateToProfile = () => {
     if (data.fromId) {
+      readNoti(data.id).catch(err => console.error(err));
       navigation.push('ClientProfile', { userId: data.fromId });
     }
   };
@@ -26,8 +28,12 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
           alignItems: 'center',
           paddingVertical: 20,
           width: '100%',
+          backgroundColor: data.isRead
+            ? theme.background
+            : theme.backgroundColor,
         }}>
         <TouchableOpacity
+          onPress={navigateToProfile}
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -77,7 +83,9 @@ const CommentNoti = ({ data }: INotificationItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
   const navigateToPost = () => {
+    readNoti(data.id).catch(err => console.error(err));
     if (data.statusId) {
+      navigation.push('Post', { postId: data.statusId });
     }
   };
   return (
@@ -89,6 +97,9 @@ const CommentNoti = ({ data }: INotificationItemProps) => {
           alignItems: 'center',
           paddingVertical: 20,
           width: '100%',
+          backgroundColor: data.isRead
+            ? theme.background
+            : theme.backgroundColor,
         }}>
         <TouchableOpacity
           onPress={navigateToPost}
@@ -128,7 +139,9 @@ const ReactNoti = ({ data }: INotificationItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
   const navigateToPost = () => {
+    readNoti(data.id).catch(err => console.error(err));
     if (data.statusId) {
+      navigation.push('Post', { postId: data.statusId });
     }
   };
   return (
@@ -140,6 +153,9 @@ const ReactNoti = ({ data }: INotificationItemProps) => {
           alignItems: 'center',
           paddingVertical: 20,
           width: '100%',
+          backgroundColor: data.isRead
+            ? theme.background
+            : theme.backgroundColor,
         }}>
         <TouchableOpacity
           onPress={navigateToPost}
