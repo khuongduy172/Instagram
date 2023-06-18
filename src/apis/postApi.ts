@@ -12,6 +12,10 @@ const getStatus = async () => {
   return await axiosInstance.get('/Status/home');
 };
 
+const getStatusById = async (id: string) => {
+  return await axiosInstance.get(`/Status/${id}`);
+};
+
 const viewStatus = async (id: string) => {
   return await axiosInstance.post(`/Status/${id}/view`);
 };
@@ -47,4 +51,5 @@ export {
   postComment,
   getStatusCommentByPage,
   deleteComment,
+  getStatusById,
 };

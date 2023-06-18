@@ -31,7 +31,7 @@ const ProfileBottomTabView = ({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-around',
-          marginBottom: 20,
+          marginBottom: 10,
           width: '100%',
         }}>
         <TouchableOpacity
