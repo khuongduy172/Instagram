@@ -15,7 +15,10 @@ const FollowNoti = ({ data }: INotificationItemProps) => {
   const navigation: any = useNavigation();
   const navigateToProfile = () => {
     if (data.fromId) {
-      readNoti(data.id).catch(err => console.error(err));
+      if (!data.isRead) {
+        readNoti(data.id).catch(err => console.error(err));
+      }
+
       navigation.push('ClientProfile', { userId: data.fromId });
     }
   };
@@ -83,7 +86,10 @@ const CommentNoti = ({ data }: INotificationItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
   const navigateToPost = () => {
-    readNoti(data.id).catch(err => console.error(err));
+    if (!data.isRead) {
+      readNoti(data.id).catch(err => console.error(err));
+    }
+
     if (data.statusId) {
       navigation.push('Post', { postId: data.statusId });
     }
@@ -139,7 +145,9 @@ const ReactNoti = ({ data }: INotificationItemProps) => {
   const theme = useCustomTheme();
   const navigation: any = useNavigation();
   const navigateToPost = () => {
-    readNoti(data.id).catch(err => console.error(err));
+    if (!data.isRead) {
+      readNoti(data.id).catch(err => console.error(err));
+    }
     if (data.statusId) {
       navigation.push('Post', { postId: data.statusId });
     }
