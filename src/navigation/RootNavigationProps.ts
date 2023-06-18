@@ -6,6 +6,7 @@ type RootStackParamList = {
   Message: { user: any };
   Home: { isRefresh?: boolean };
   Post: { postId: string };
+  ReelById: { reel: any; listReel: any };
 };
 
 type SearchToSendMessageProps = NativeStackScreenProps<
@@ -21,10 +22,13 @@ type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 type PostProps = NativeStackScreenProps<RootStackParamList, 'Post'>;
 
+type ReelByIdProps = NativeStackScreenProps<RootStackParamList, 'ReelById'>;
+
 export type {
   SearchToSendMessageProps,
   SearchMainProps,
   MessageProps,
   HomeProps,
   PostProps,
+  ReelByIdProps,
 };

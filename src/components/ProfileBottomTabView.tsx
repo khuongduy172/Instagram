@@ -125,7 +125,7 @@ const Video = ({ reels }: IVideoTabProps) => {
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
               onPress={() => {
-                // navigation.push('Post', { postId: item.statusId });
+                navigation.push('ReelById', { reel: item, listReel: reels });
               }}>
               <Image
                 source={{ uri: item.thumbnailUrl }}

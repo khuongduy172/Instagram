@@ -24,3 +24,4 @@ export { default as SearchMainScreen } from './SearchMainScreen';
 export { default as CreateStory } from './CreateStoryScreen';
 export { default as InitialScreen } from './InitialScreen';
 export { default as PostScreen } from './PostScreen';
+export { default as ReelByIdScreen } from './ReelByIdScreen';
