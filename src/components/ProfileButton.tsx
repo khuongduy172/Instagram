@@ -123,7 +123,7 @@ const ProfileButton = ({
                 }}>
                 <Text
                   style={{
-                    color: theme.text,
+                    color: '#fff',
                     fontWeight: 'bold',
                   }}>
                   {followStatus === 'None' ? 'Follow' : 'Follow Back'}
