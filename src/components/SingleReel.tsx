@@ -26,6 +26,7 @@ import RNFS from 'react-native-fs';
 import PostLoader from './loader/posts';
 import ContentLoader, { Rect, Circle, Path } from 'react-content-loader/native';
 import Avatar from './Avatar';
+import { postReelReact } from '../apis/reactApi';
 
 const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
   const navigation = useNavigation();
@@ -135,6 +136,14 @@ const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
   useImperativeHandle(playerRef, () => ({
     pauseVideo: () => setPaused(true),
   }));
+
+  const [reactCount, setReactCount] = useState(item.reactCount);
+
+  const handleReact = (item: any) => {
+    postReelReact(item.id).catch(err => console.log(err));
+    setReactCount(like ? reactCount - 1 : reactCount + 1);
+    setLike(!like);
+  };
 
   if (!localUrl) {
     return (
@@ -314,7 +323,7 @@ const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
         }}>
         <TouchableOpacity
           style={{ padding: 10, alignItems: 'center' }}
-          onPress={() => setLike(!like)}>
+          onPress={handleReact}>
           <AntDesign
             name={like ? 'heart' : 'hearto'}
             size={25}

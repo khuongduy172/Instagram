@@ -4,4 +4,8 @@ const postReact = async (id: string) => {
   return await axiosInstance.post(`/Status/${id}/react`);
 };
 
-export { postReact };
+const postReelReact = async (id: string) => {
+  return await axiosInstance.post(`/Reel/${id}/react`);
+};
+
+export { postReact, postReelReact };
