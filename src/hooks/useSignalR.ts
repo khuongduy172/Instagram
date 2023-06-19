@@ -9,7 +9,9 @@ const useSignalR = () => {
     // Create the SignalR connection
     const createConnection = async () => {
       const hubConnection = new HubConnectionBuilder()
-        .withUrl('http://192.168.55.32/corehub')
+        // .withUrl('https://f9f7-116-109-70-149.ngrok-free.app/corehub')
+        // .withUrl('http://192.168.213.32/corehub')
+        .withUrl('http://146.190.81.231/corehub')
         .build();
 
       try {

@@ -5,8 +5,9 @@ import store from '../redux/store';
 import { setLoggedIn } from '../redux/authSlice';
 
 const axiosInstance = axios.create({
-  // baseURL: 'https://83ba-123-21-33-87.ngrok-free.app/api',
-  baseURL: 'http://192.168.218.32/api',
+  baseURL: 'http://146.190.81.231/api',
+  // baseURL: 'http://192.168.213.32/api',
+  // baseURL: 'https://f9f7-116-109-70-149.ngrok-free.app/api',
 });
 
 axiosInstance.interceptors.request.use(
