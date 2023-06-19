@@ -323,14 +323,16 @@ const SingleReel = React.memo(({ item, index, currentIndex, playerRef }) => {
         }}>
         <TouchableOpacity
           style={{ padding: 10, alignItems: 'center' }}
-          onPress={handleReact}>
+          onPress={() => {
+            handleReact(item);
+          }}>
           <AntDesign
             name={like ? 'heart' : 'hearto'}
             size={25}
             color={like ? 'red' : 'white'}
           />
           <Text style={{ color: 'white', fontWeight: 'bold' }}>
-            {item.reactCount}
+            {reactCount}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10, alignItems: 'center' }}>
