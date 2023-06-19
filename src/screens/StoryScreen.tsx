@@ -182,21 +182,29 @@ const StoryScreen = ({ route, navigation }: any) => {
           onEnded={() => {
             start();
           }}
-          minDurationMs={10}>
-          <Image
-            source={{ uri: current.stories[currentIndex].story_image }}
-            onLoadEnd={() => {
-              progress.setValue(0);
-              start();
-            }}
+          minDurationMs={100}>
+          <View
             style={{
               position: 'absolute',
-              width: '100%',
-              height: '100%',
-              zIndex: -1,
+              width: width,
+              height: height * 0.9,
+              bottom: 0,
             }}
           />
         </LongPressGestureHandler>
+        <Image
+          source={{ uri: current.stories[currentIndex].story_image }}
+          onLoadEnd={() => {
+            progress.setValue(0);
+            start();
+          }}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: -1,
+          }}
+        />
         <TouchableOpacity
           onPress={prev}
           style={{

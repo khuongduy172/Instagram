@@ -168,9 +168,9 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
                 style={{ color: theme.text, fontSize: 15, fontWeight: 'bold' }}>
                 {name}
               </Text>
-              <Text style={{ fontSize: 13, opacity: 0.8 }}>
+              {/* <Text style={{ fontSize: 13, opacity: 0.8 }}>
                 Active 2 hours ago
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
