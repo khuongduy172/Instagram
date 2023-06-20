@@ -8,6 +8,7 @@ import {
   TextInput,
   ToastAndroid,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import React, { useState } from 'react';
 import useCustomTheme from '../theme/CustomTheme';
@@ -50,6 +51,7 @@ const ForgotPasswordScreen = () => {
   });
 
   const handleForgot = () => {
+    Keyboard.dismiss();
     mutate(email);
   };
 
