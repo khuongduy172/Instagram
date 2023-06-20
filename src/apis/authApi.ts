@@ -33,7 +33,7 @@ const postRegister = async (data: any) => {
 };
 
 const forgotPassword = async (email: string) => {
-  return await axiosInstance.put('/Auth/password-reset', email);
+  return await axiosInstance.put('/Auth/password-reset', { email });
 };
 
 export { postLogin, postRegister, postExternalLogin, forgotPassword };
