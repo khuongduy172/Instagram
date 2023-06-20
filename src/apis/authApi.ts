@@ -32,5 +32,9 @@ const postRegister = async (data: any) => {
   return await axiosInstance.post('/Auth/register', data);
 };
 
-export { postLogin, postRegister, postExternalLogin };
+const forgotPassword = async (email: string) => {
+  return await axiosInstance.put('/Auth/password-reset', { email });
+};
+
+export { postLogin, postRegister, postExternalLogin, forgotPassword };
 export type { AuthResponse, ExternalLoginBody };

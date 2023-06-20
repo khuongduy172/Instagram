@@ -197,7 +197,9 @@ const LoginScreen = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ justifyContent: 'flex-end' }}>
+        <TouchableOpacity
+          style={{ justifyContent: 'flex-end' }}
+          onPress={() => navigation.push('ForgotPassword')}>
           <Text
             style={{
               textAlign: 'right',
@@ -206,7 +208,7 @@ const LoginScreen = ({ navigation }: any) => {
             }}>
             Forgot password?
           </Text>
-        </View>
+        </TouchableOpacity>
 
         {email == '' || password == '' || checkEmailValid == true ? (
           <TouchableOpacity
