@@ -49,8 +49,6 @@ const ForgotPasswordScreen = () => {
     },
   });
 
-  console.log('test', email);
-
   const handleForgot = () => {
     mutate(email);
   };
@@ -98,7 +96,7 @@ const ForgotPasswordScreen = () => {
           }}>
           <TextInput
             style={{ padding: 10, width: '100%', color: theme.colors.text }}
-            placeholder="Phone number, username or email"
+            placeholder="Email"
             placeholderTextColor={theme.placeholderTextColor}
             value={email}
             keyboardType="email-address"
