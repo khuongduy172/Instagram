@@ -117,13 +117,15 @@ const SignUpScreen = ({ navigation }: any) => {
       ? require('../assets/images/insta-dark.png')
       : require('../assets/images/insta.png');
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={keyboardVerticalOffset}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={keyboardVerticalOffset}>
       <ScrollView
         style={{
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.background,
           width: '100%',
           height: '100%',
-          flex: 1
+          flex: 1,
         }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -294,7 +296,8 @@ const SignUpScreen = ({ navigation }: any) => {
               alignItems: 'center',
               marginTop: 30,
             }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 14, paddingRight: 30 }}>
+            <Text
+              style={{ fontWeight: 'bold', fontSize: 14, paddingRight: 30 }}>
               Gender
             </Text>
             <View
@@ -359,7 +362,9 @@ const SignUpScreen = ({ navigation }: any) => {
               {isLoading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
-                <Text style={{ color: 'white', fontWeight: '700' }}>Sign Up</Text>
+                <Text style={{ color: 'white', fontWeight: '700' }}>
+                  Sign Up
+                </Text>
               )}
             </TouchableOpacity>
           )}

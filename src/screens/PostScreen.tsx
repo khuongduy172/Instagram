@@ -14,7 +14,12 @@ const PostScreen = ({ route, navigation }: PostProps) => {
     getStatusById(postId),
   );
   return (
-    <View>
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: theme.background,
+      }}>
       <View
         style={{
           flexDirection: 'row',

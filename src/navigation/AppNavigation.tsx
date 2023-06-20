@@ -30,6 +30,7 @@ import {
   SearchMainScreen,
   PostScreen,
   ReelByIdScreen,
+  ForgotPasswordScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getUserOwner } from '../apis/userApi';
@@ -175,6 +176,10 @@ const AppNavigation = () => {
               <Stack.Screen name="Onboarding" component={OnboardingScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen
+                name="ForgotPassword"
+                component={ForgotPasswordScreen}
+              />
             </>
           )}
         </Stack.Navigator>
