@@ -48,7 +48,7 @@ width="200"
 
 ## Permissions
 
-On Android versions prior to Android 6.0, Instagram requires the following permissions:
+On Android versions prior to Android 11.0, Instagram requires the following permissions:
 
 - Full Network Access.
 - Read and write access to external storage.
