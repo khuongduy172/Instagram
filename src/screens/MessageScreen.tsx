@@ -98,17 +98,18 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
     setTextInput('');
   };
 
-  const { fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    `${id}-message`,
-    ({ pageParam = 1 }) => getMessages(pageParam, id),
-    {
-      getNextPageParam: (lastPage: any) =>
-        lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-      onSuccess: data => {
-        setData([...data.pages.flatMap(page => page.data)]);
+  const { fetchNextPage, isFetchingNextPage, refetch, hasNextPage } =
+    useInfiniteQuery(
+      `${id}-message`,
+      ({ pageParam = 1 }) => getMessages(pageParam, id),
+      {
+        getNextPageParam: (lastPage: any) =>
+          lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+        onSuccess: data => {
+          setData([...data.pages.flatMap(page => page.data)]);
+        },
       },
-    },
-  );
+    );
 
   return (
     <View
@@ -194,15 +195,18 @@ const MessageScreen = ({ route, navigation }: MessageProps) => {
         initialScrollIndex={0}
         showsVerticalScrollIndicator={false}
         onEndReached={() => {
-          fetchNextPage().catch(err => console.log(err));
+          if (hasNextPage) {
+            fetchNextPage().catch(err => console.log(err));
+          }
         }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isFetchingNextPage}
-            colors={[theme.text]}
-            progressBackgroundColor={theme.background}
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={isFetchingNextPage}
+        //     onRefresh={refetch}
+        //     colors={[theme.text]}
+        //     progressBackgroundColor={theme.background}
+        //   />
+        // }
         onEndReachedThreshold={0}
         keyExtractor={(item, index) => index.toString()}
         style={{
