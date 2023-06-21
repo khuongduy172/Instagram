@@ -42,11 +42,9 @@ function HomeScreen({ route }: HomeProps): JSX.Element {
     width: '100%',
     height: '100%',
   };
-  const scheme = useColorScheme();
-  const instaLogo =
-    scheme === 'dark'
-      ? require('../assets/images/insta-dark.png')
-      : require('../assets/images/insta.png');
+  const instaLogo = theme.isDark
+    ? require('../assets/images/insta-dark.png')
+    : require('../assets/images/insta.png');
 
   const _viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,

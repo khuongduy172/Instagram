@@ -108,14 +108,12 @@ const SignUpScreen = ({ navigation }: any) => {
   };
 
   const theme = useCustomTheme();
-  const scheme = useColorScheme();
 
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 200;
 
-  const instaLogo =
-    scheme === 'dark'
-      ? require('../assets/images/insta-dark.png')
-      : require('../assets/images/insta.png');
+  const instaLogo = theme.isDark
+    ? require('../assets/images/insta-dark.png')
+    : require('../assets/images/insta.png');
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

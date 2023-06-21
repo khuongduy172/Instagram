@@ -22,12 +22,10 @@ import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 
 const LoginScreen = ({ navigation }: any) => {
   const theme = useCustomTheme();
-  const scheme = useColorScheme();
 
-  const instaLogo =
-    scheme === 'dark'
-      ? require('../assets/images/insta-dark.png')
-      : require('../assets/images/insta.png');
+  const instaLogo = theme.isDark
+    ? require('../assets/images/insta-dark.png')
+    : require('../assets/images/insta.png');
 
   const dispatch = useDispatch();
 

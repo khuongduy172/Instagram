@@ -20,7 +20,7 @@ import { useMutation } from 'react-query';
 const ForgotPasswordScreen = () => {
   const theme = useCustomTheme();
   const scheme = useColorScheme();
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const instaLogo =
     scheme === 'dark'
@@ -46,6 +46,7 @@ const ForgotPasswordScreen = () => {
     onSuccess: async data => {
       if (data) {
         ToastAndroid.show('Email sent successfully', ToastAndroid.SHORT);
+        navigation.navigate('Login');
       }
     },
   });

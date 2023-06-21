@@ -13,12 +13,10 @@ import useCustomTheme from '../theme/CustomTheme';
 const OnboardingScreen = () => {
   const navigation: any = useNavigation();
   const theme = useTheme();
-  const scheme = useColorScheme();
   const themeSecond = useCustomTheme();
-  const instaLogo =
-    scheme === 'dark'
-      ? require('../assets/images/insta-dark.png')
-      : require('../assets/images/insta.png');
+  const instaLogo = themeSecond.isDark
+    ? require('../assets/images/insta-dark.png')
+    : require('../assets/images/insta.png');
   return (
     <View
       style={{
