@@ -167,8 +167,8 @@ function HomeScreen({ route }: HomeProps): JSX.Element {
             progressBackgroundColor="#ffffff"
           />
         }
-        onEndReached={fetchMoreData}
-        onEndReachedThreshold={0}
+        // onEndReached={fetchMoreData}
+        // onEndReachedThreshold={0}
         renderItem={({ item }) => {
           switch (item.key) {
             case 'homestory':

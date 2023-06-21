@@ -10,9 +10,51 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 const PostScreen = ({ route, navigation }: PostProps) => {
   const { postId } = route.params;
   const theme = useCustomTheme();
-  const { data, isLoading } = useQuery(`status-${postId}`, () =>
+  const { data, isLoading, error } = useQuery(`status-${postId}`, () =>
     getStatusById(postId),
   );
+  if (error) {
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: theme.background,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+          }}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="arrowleft" size={30} color={theme.backButton} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: theme.text,
+              paddingHorizontal: 30,
+            }}>
+            Post
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}>
+          <Text style={{ color: theme.text }}>
+            This resource is unreachable!
+          </Text>
+        </View>
+      </View>
+    );
+  }
   return (
     <View
       style={{
